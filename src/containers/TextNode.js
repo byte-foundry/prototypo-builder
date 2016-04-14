@@ -4,7 +4,6 @@ import React, {
 } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import Main from '../components/Main';
 
 class TextNode extends Component {
   constructor(props) {
@@ -17,7 +16,8 @@ class TextNode extends Component {
   handleAddChildClick(e) {
     e.preventDefault();
 
-    const { addChild, createNode, id } = this.props;
+    const { id } = this.props;
+    const { addChild, createNode } = this.props.actions;
     const childId = createNode().nodeId;
     addChild(id, childId);
   }
@@ -25,7 +25,8 @@ class TextNode extends Component {
   handleRemoveClick(e) {
     e.preventDefault();
 
-    const { removeChild, deleteNode, parentId, id } = this.props;
+    const { parentId, id } = this.props;
+    const { removeChild, deleteNode } = this.props.actions;
     removeChild(parentId, id);
     deleteNode(id);
   }
@@ -40,22 +41,17 @@ class TextNode extends Component {
   }
 
   render() {
-    const { parentId, childIds } = this.props
+    const { id, type, parentId, childIds } = this.props
     return (
-      <div>
+      <div>id: {id}, type: {type}
         {typeof parentId !== 'undefined' ?
-          <a href="#" onClick={this.handleRemoveClick}
-             style={{ color: 'lightgray', textDecoration: 'none' }}>
-            ×
-          </a> :
+          <input type="button" value="×" onClick={this.handleRemoveClick} /> :
           null
         }
         <ul>
           {childIds.map(this.renderChild)}
           <li key="add">
-            <a href="#" onClick={this.handleAddChildClick}>
-              Add child
-            </a>
+            <input type="button" value="+" onClick={this.handleAddChildClick} />
           </li>
         </ul>
       </div>
@@ -68,11 +64,16 @@ TextNode.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  return state[ownProps.id];
+  return state.nodes[ownProps.id];
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = {};
+  const actions = {
+    createNode: require('../actions/nodes/createNode.js'),
+    deleteNode: require('../actions/nodes/deleteNode.js'),
+    addChild: require('../actions/nodes/addChild.js'),
+    removeChild: require('../actions/nodes/removeChild.js')
+  };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
 }

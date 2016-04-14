@@ -4,7 +4,15 @@ import { Provider } from 'react-redux';
 import configureStore from './stores';
 import App from './containers/App';
 
-const store = configureStore();
+const store = configureStore({
+  nodes: {
+    'root': {
+      id: 'root',
+      type: 'root',
+      childIds: []
+    }
+  }
+});
 
 render(
   <Provider store={store}>
