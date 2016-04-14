@@ -1,0 +1,7 @@
+{
+  "generator-react-webpack": {
+    "appName": "prototypoBuilder",
+    "style": "scss",
+    "postcss": true
+  }
+}
