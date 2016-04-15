@@ -54,46 +54,4 @@ describe('reducer: nodes (glyphs)', () => {
 
     expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
   });
-
-  it('should prevent ADD_GLYPH action on non-font parent', () => {
-    const stateBefore = {
-      'node-0': {
-        id: 'node-0',
-        type: 'anything-but-font',
-        childIds: []
-      },
-      'node-1': {
-        id: 'node-1',
-        type: 'glyph',
-        childIds: []
-      }
-    };
-    const action = addGlyph('node-0', 'node-1');
-
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-
-    expect(reducer.bind(reducer, stateBefore, action)).to.throw(Error);
-  });
-
-  it('should prevent ADD_GLYPH action on non-glyph child', () => {
-    const stateBefore = {
-      'node-0': {
-        id: 'node-0',
-        type: 'font',
-        childIds: []
-      },
-      'node-1': {
-        id: 'node-1',
-        type: 'anything-but-glyph',
-        childIds: []
-      }
-    };
-    const action = addGlyph('node-0', 'node-1');
-
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-
-    expect(reducer.bind(reducer, stateBefore, action)).to.throw(Error);
-  });
 });

@@ -8,8 +8,22 @@ import {
   ADD_FONT,
 
   CREATE_GLYPH,
-  ADD_GLYPH
+  ADD_GLYPH,
+
+  CREATE_CONTOUR,
+  ADD_CONTOUR,
+
+  CREATE_PATH,
+  ADD_PATH,
+
+  CREATE_ONCURVE,
+  ADD_ONCURVE,
+
+  CREATE_OFFCURVE,
+  ADD_OFFCURVE
 } from './../actions/const';
+
+import { validateAdd } from './../fontModels';
 
 /* Define your initial state here.
  *
@@ -38,6 +52,10 @@ function node(state = initialState, action) {
     case CREATE_NODE:
     case CREATE_FONT:
     case CREATE_GLYPH:
+    case CREATE_CONTOUR:
+    case CREATE_PATH:
+    case CREATE_ONCURVE:
+    case CREATE_OFFCURVE:
       return {
         id: nodeId,
         type: action.args.nodeType,
@@ -51,19 +69,12 @@ function node(state = initialState, action) {
       });
 
     case ADD_FONT:
-      // fonts can only be added to the root node
-      if ( state.type !== 'root' ) {
-        throw new Error(`Can't use action ${type} on parent node ${nodeId}.`);
-      }
-      return Object.assign({}, state, {
-        childIds: childIds(state.childIds, action)
-      });
-
     case ADD_GLYPH:
-      // glyphs can only be added to a font
-      if ( state.type !== 'font' ) {
-        throw new Error(`Can't use action ${type} on parent node ${nodeId}.`);
-      }
+    case ADD_CONTOUR:
+    case ADD_PATH:
+    case ADD_ONCURVE:
+    case ADD_OFFCURVE:
+      validateAdd(type, state.type);
       return Object.assign({}, state, {
         childIds: childIds(state.childIds, action)
       });

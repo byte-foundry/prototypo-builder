@@ -42,7 +42,15 @@ function mapDispatchToProps(dispatch) {
     createGlyph: require('../actions/glyphs/createGlyph.js'),
     createFont: require('../actions/fonts/createFont.js'),
     addFont: require('../actions/fonts/addFont.js'),
-    addGlyph: require('../actions/glyphs/addGlyph.js')
+    addGlyph: require('../actions/glyphs/addGlyph.js'),
+    createContour: require('../actions/contours/createContour.js'),
+    addContour: require('../actions/contours/addContour.js'),
+    createPath: require('../actions/paths/createPath.js'),
+    addPath: require('../actions/paths/addPath.js'),
+    createOncurve: require('../actions/oncurves/createOncurve.js'),
+    addOncurve: require('../actions/oncurves/addOncurve.js'),
+    createOffcurve: require('../actions/offcurves/createOffcurve.js'),
+    addOffcurve: require('../actions/offcurves/addOffcurve.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

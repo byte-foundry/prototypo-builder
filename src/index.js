@@ -9,6 +9,21 @@ const store = configureStore({
     'root': {
       id: 'root',
       type: 'root',
+      childIds: ['font-0']
+    },
+    'font-0': {
+      id: 'font-0',
+      type: 'font',
+      childIds: ['glyph-0']
+    },
+    'glyph-0': {
+      id: 'glyph-0',
+      type: 'glyph',
+      childIds: ['path-0']
+    },
+    'path-0': {
+      id: 'path-0',
+      type: 'path',
       childIds: []
     }
   }

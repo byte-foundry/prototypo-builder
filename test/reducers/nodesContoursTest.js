@@ -1,17 +1,17 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '../../src/reducers/nodes';
-import createFont from '../../src/actions/fonts/createFont';
-import addFont from '../../src/actions/fonts/addFont';
+import createContour from '../../src/actions/contours/createContour';
+import addContour from '../../src/actions/contours/addContour';
 
-describe('reducer: nodes (fonts)', () => {
-  it('should handle CREATE_FONT action', () => {
+describe('reducer: nodes (contours)', () => {
+  it('should handle CREATE_CONTOUR action', () => {
     const stateBefore = {};
-    const action = createFont();
+    const action = createContour();
     const stateAfter = {
       [action.nodeId]: {
         id: action.nodeId,
-        type: 'font',
+        type: 'contour',
         childIds: []
       }
     };
@@ -22,29 +22,29 @@ describe('reducer: nodes (fonts)', () => {
     expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
   });
 
-  it('should handle ADD_FONT action', () => {
+  it('should handle ADD_CONTOUR action', () => {
     const stateBefore = {
       'node-0': {
         id: 'node-0',
-        type: 'root',
+        type: 'glyph',
         childIds: []
       },
       'node-1': {
         id: 'node-1',
-        type: 'font',
+        type: 'contour',
         childIds: []
       }
     };
-    const action = addFont('node-0', 'node-1');
+    const action = addContour('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
-        type: 'root',
+        type: 'glyph',
         childIds: [ 'node-1' ]
       },
       'node-1': {
         id: 'node-1',
-        type: 'font',
+        type: 'contour',
         childIds: []
       }
     };
