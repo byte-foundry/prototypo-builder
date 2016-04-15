@@ -1,0 +1,99 @@
+import deepFreeze from 'deep-freeze';
+
+import reducer from '../../src/reducers/nodes';
+import createGlyph from '../../src/actions/glyphs/createGlyph';
+import addGlyph from '../../src/actions/glyphs/addGlyph';
+
+describe('reducer: nodes (glyphs)', () => {
+  it('should handle CREATE_GLYPH action', () => {
+    const stateBefore = {};
+    const action = createGlyph();
+    const stateAfter = {
+      [action.nodeId]: {
+        id: action.nodeId,
+        type: 'glyph',
+        childIds: []
+      }
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
+  });
+
+  it('should handle ADD_GLYPH action', () => {
+    const stateBefore = {
+      'node-0': {
+        id: 'node-0',
+        type: 'font',
+        childIds: []
+      },
+      'node-1': {
+        id: 'node-1',
+        type: 'glyph',
+        childIds: []
+      }
+    };
+    const action = addGlyph('node-0', 'node-1');
+    const stateAfter = {
+      'node-0': {
+        id: 'node-0',
+        type: 'font',
+        childIds: [ 'node-1' ]
+      },
+      'node-1': {
+        id: 'node-1',
+        type: 'glyph',
+        childIds: []
+      }
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
+  });
+
+  it('should prevent ADD_GLYPH action on non-font parent', () => {
+    const stateBefore = {
+      'node-0': {
+        id: 'node-0',
+        type: 'anything-but-font',
+        childIds: []
+      },
+      'node-1': {
+        id: 'node-1',
+        type: 'glyph',
+        childIds: []
+      }
+    };
+    const action = addGlyph('node-0', 'node-1');
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer.bind(reducer, stateBefore, action)).to.throw(Error);
+  });
+
+  it('should prevent ADD_GLYPH action on non-glyph child', () => {
+    const stateBefore = {
+      'node-0': {
+        id: 'node-0',
+        type: 'font',
+        childIds: []
+      },
+      'node-1': {
+        id: 'node-1',
+        type: 'anything-but-glyph',
+        childIds: []
+      }
+    };
+    const action = addGlyph('node-0', 'node-1');
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer.bind(reducer, stateBefore, action)).to.throw(Error);
+  });
+});

@@ -1,4 +1,15 @@
-import { ADD_CHILD, REMOVE_CHILD, CREATE_NODE, DELETE_NODE } from './../actions/const';
+import {
+  ADD_CHILD,
+  REMOVE_CHILD,
+  CREATE_NODE,
+  DELETE_NODE,
+
+  CREATE_FONT,
+  ADD_FONT,
+
+  CREATE_GLYPH,
+  ADD_GLYPH
+} from './../actions/const';
 
 /* Define your initial state here.
  *
@@ -8,22 +19,27 @@ import { ADD_CHILD, REMOVE_CHILD, CREATE_NODE, DELETE_NODE } from './../actions/
 const initialState = {};
 
 function childIds(state, action) {
-  switch(action.type) {
-    case ADD_CHILD:
+  switch(action.type.split('_')[0]) {
+    case 'ADD':
       return [...state, action.childId ];
-    case REMOVE_CHILD:
+
+    case 'REMOVE':
       return state.filter(id => id !== action.childId);
+
     default:
       return state;
   }
 }
 
 function node(state = initialState, action) {
-  switch(action.type) {
+  const { type, nodeId } = action;
+
+  switch(type) {
     case CREATE_NODE:
-      // Modify next state depending on the action and return it
+    case CREATE_FONT:
+    case CREATE_GLYPH:
       return {
-        id: action.nodeId,
+        id: nodeId,
         type: action.args.nodeType,
         childIds: []
       };
@@ -34,8 +50,25 @@ function node(state = initialState, action) {
         childIds: childIds(state.childIds, action)
       });
 
+    case ADD_FONT:
+      // fonts can only be added to the root node
+      if ( state.type !== 'root' ) {
+        throw new Error(`Can't use action ${type} on parent node ${nodeId}.`);
+      }
+      return Object.assign({}, state, {
+        childIds: childIds(state.childIds, action)
+      });
+
+    case ADD_GLYPH:
+      // glyphs can only be added to a font
+      if ( state.type !== 'font' ) {
+        throw new Error(`Can't use action ${type} on parent node ${nodeId}.`);
+      }
+      return Object.assign({}, state, {
+        childIds: childIds(state.childIds, action)
+      });
+
     default:
-      // Return original state if no actions were consumed.
       return state;
   }
 }
@@ -43,7 +76,7 @@ function node(state = initialState, action) {
 function getAllDescendantIds(state, nodeId) {
   return state[nodeId].childIds.reduce((acc, childId) => (
     [ ...acc, childId, ...getAllDescendantIds(state, childId) ]
-  ), [])
+  ), []);
 }
 
 function deleteMany(state, ids) {
@@ -53,9 +86,22 @@ function deleteMany(state, ids) {
 }
 
 module.exports = function(state = {}, action) {
-  const { type, nodeId } = action;
-  if ( typeof nodeId === 'undefined' ) {
+  const { type, nodeId, childId } = action;
+
+  if ( typeof type === 'undefined' || typeof nodeId === 'undefined' ) {
     return state;
+  }
+
+  // When a childId is specified in the action, prevent the action in
+  // case the type of the child doesn't match the suffix of the action.
+  // This prevents trying to addFont
+  const suffix = type.split('_').pop().toLowerCase();
+  if (
+    typeof childId !== 'undefined' &&
+    suffix !== 'child' &&
+    suffix !== state[childId].type
+  ) {
+    throw new Error(`Can't use action ${type} on child node ${childId}.`);
   }
 
   if ( type === DELETE_NODE ) {
@@ -64,6 +110,6 @@ module.exports = function(state = {}, action) {
   }
 
   return Object.assign({}, state, {
-    [nodeId]: node(state[nodeId], action)
+    [nodeId]: node( state[nodeId], action )
   });
 }

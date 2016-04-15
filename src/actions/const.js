@@ -3,3 +3,7 @@ export const CREATE_NODE = 'CREATE_NODE';
 export const DELETE_NODE = 'DELETE_NODE';
 export const ADD_CHILD = 'ADD_CHILD';
 export const REMOVE_CHILD = 'REMOVE_CHILD';
+export const CREATE_GLYPH = 'CREATE_GLYPH';
+export const CREATE_FONT = 'CREATE_FONT';
+export const ADD_FONT = 'ADD_FONT';
+export const ADD_GLYPH = 'ADD_GLYPH';

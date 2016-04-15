@@ -1,10 +1,10 @@
-const deepFreeze = require('deep-freeze');
+import deepFreeze from 'deep-freeze';
 
-const reducer = require('../../src/reducers/nodes');
-const createNode = require('../../src/actions/nodes/createNode');
-const deleteNode = require('../../src/actions/nodes/deleteNode');
-const addChild = require('../../src/actions/nodes/addChild');
-const removeChild = require('../../src/actions/nodes/removeChild');
+import reducer from '../../src/reducers/nodes';
+import createNode from '../../src/actions/nodes/createNode';
+import deleteNode from '../../src/actions/nodes/deleteNode';
+import addChild from '../../src/actions/nodes/addChild';
+import removeChild from '../../src/actions/nodes/removeChild';
 
 describe('reducer: nodes', () => {
 
@@ -127,56 +127,4 @@ describe('reducer: nodes', () => {
 
     expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
   });
-
-  // describe('CREATE_NODE', () => {
-  //   it('should create a node with given id, type and empty childIds list', (done) => {
-  //
-  //     const state = Object.freeze({});
-  //     let nextState = reducer(state, {
-  //       type: 'CREATE_NODE',
-  //       args: { nodeId: 'xyz', nodeType: 'abc' }
-  //     });
-  //
-  //     expect(nextState.childIds).to.be.an.instanceOf(Array);
-  //     expect(nextState.childIds).to.be.empty;
-  //     expect(nextState.id).to.deep.equal('xyz');
-  //     expect(nextState.type).to.deep.equal('abc');
-  //
-  //     done();
-  //   });
-  // });
-  //
-  // describe('ADD_CHILD', () => {
-  //   it('should add the childId to the list of childIds', (done) => {
-  //
-  //     const state = Object.freeze({ childIds: [34] });
-  //     let nextState = reducer(state, {
-  //       type: 'ADD_CHILD',
-  //       nodeId: 12,
-  //       childId: 56
-  //     });
-  //
-  //     expect(nextState.childIds).to.have.length(2);
-  //     expect(nextState.childIds[1]).to.deep.equal(56);
-  //
-  //     done();
-  //   });
-  // });
-  //
-  // describe('REMOVE_CHILD', () => {
-  //   it('should add the childId to the list of childIds', (done) => {
-  //
-  //     const state = Object.freeze({ childIds: [34, 56, 78] });
-  //     let nextState = reducer(state, {
-  //       type: 'REMOVE_CHILD',
-  //       nodeId: 12,
-  //       childId: 56
-  //
-  //     });
-  //     expect(nextState.childIds).to.have.length(2);
-  //     expect(nextState.childIds[1]).to.deep.equal(78);
-  //
-  //     done();
-  //   });
-  // });
 });

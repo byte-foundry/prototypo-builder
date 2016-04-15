@@ -38,7 +38,11 @@ function mapDispatchToProps(dispatch) {
     createNode: require('../actions/nodes/createNode.js'),
     deleteNode: require('../actions/nodes/deleteNode.js'),
     addChild: require('../actions/nodes/addChild.js'),
-    removeChild: require('../actions/nodes/removeChild.js')
+    removeChild: require('../actions/nodes/removeChild.js'),
+    createGlyph: require('../actions/glyphs/createGlyph.js'),
+    createFont: require('../actions/fonts/createFont.js'),
+    addFont: require('../actions/fonts/addFont.js'),
+    addGlyph: require('../actions/glyphs/addGlyph.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
