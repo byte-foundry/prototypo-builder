@@ -46,25 +46,17 @@ describe('fontModels', () => {
   });
 
   describe('validateAdd', () => {
-    before(() => {
-      Object.assign( flatModel, {
+    it('should validate node insertion actions against the model', (done) => {
+      const testModel = {
         abc: { def: true },
         def: { ghi: true },
         ghi: {}
-      });
-    });
+      };
 
-    after(() => {
-      delete flatModel.abc;
-      delete flatModel.def;
-      delete flatModel.ghi;
-    });
+      expect( validateAdd('ADD_DEF', 'abc', testModel) ).to.equal(true);
+      expect( validateAdd('ADD_GHI', 'def', testModel) ).to.equal(true);
 
-    it('should validate node insertion actions against the model', (done) => {
-      expect( validateAdd('ADD_FONT', 'root') ).to.equal(true);
-      expect( validateAdd('ADD_GLYPH', 'font') ).to.equal(true);
-
-      expect( validateAdd.bind(validateAdd, 'ADD_GLYPH', 'root') )
+      expect( validateAdd.bind(validateAdd, 'ADD_GHI', 'abc', testModel) )
         .to.throw(Error);
 
       done();

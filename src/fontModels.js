@@ -43,13 +43,13 @@ const flatModel = populateFlatModelRecurs( {}, treeModel );
 
 // validating any ADD_ action against the model is useful during development
 // and tests, but a waist of ressources in production.
-// TODO: make this function stateless
 const validateAdd = config.appEnv === 'dev' ?
   function() {} :
-  function(actionType, parentType) {
+  // the 3rd argument is only used to make the function stateless during tests
+  function(actionType, parentType, model = flatModel) {
     const suffix = actionType.split('_').pop().toLowerCase();
 
-    if ( !(suffix in flatModel[parentType]) ) {
+    if ( !(suffix in model[parentType]) ) {
       throw new Error(`Can't ${actionType} to type ${parentType}.`)
     }
 
