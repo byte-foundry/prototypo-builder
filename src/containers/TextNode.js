@@ -1,3 +1,5 @@
+// /!\ This container is no longer in use but it's kept for reference (for now)
+
 import React, {
   Component,
   PropTypes

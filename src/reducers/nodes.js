@@ -1,5 +1,7 @@
 const config = require('config');
 
+import logError from './../_utils/logError';
+
 import {
   ADD_CHILD,
   REMOVE_CHILD,
@@ -22,10 +24,18 @@ import {
   ADD_ONCURVE,
 
   CREATE_OFFCURVE,
-  ADD_OFFCURVE
+  ADD_OFFCURVE,
+
+  UPDATE_X,
+  UPDATE_Y
 } from './../actions/const';
 
-import { flatModel } from './../_utils/fontModels';
+import {
+  validateAction,
+  validateAdd,
+  validateUpdate,
+  validateGraph
+} from './_nodesValidateActions';
 
 /* Define your initial state here.
  *
@@ -46,21 +56,6 @@ function childIds(state, action) {
       return state;
   }
 }
-
-// validating any ADD_ action against the model is useful during development
-// and tests, but a waste of ressources in production.
-export const validateAdd = config.appEnv === 'dev' ?
-  function() {} :
-  // the 3rd argument is only used to make the function stateless during tests
-  function(actionType, parentType, model = flatModel) {
-    const suffix = actionType.split('_').pop().toLowerCase();
-
-    if ( !(suffix in model[parentType]) ) {
-      throw new Error(`Can't ${actionType} to type ${parentType}.`)
-    }
-
-    return true;
-  };
 
 function node(state = initialState, action) {
   const { type, nodeId } = action;
@@ -91,11 +86,17 @@ function node(state = initialState, action) {
     case ADD_PATH:
     case ADD_ONCURVE:
     case ADD_OFFCURVE:
-      // Not sure this extra validation is actually useful, as node types
-      // hierarchy are validated by component PropTypes
-      //validateAdd(type, state.type);
       return Object.assign({}, state, {
         childIds: childIds(state.childIds, action)
+      });
+
+    case UPDATE_X:
+      return Object.assign({}, state, {
+        x: action.value
+      });
+    case UPDATE_Y:
+      return Object.assign({}, state, {
+        y: action.value
       });
 
     default:
@@ -116,22 +117,25 @@ function deleteMany(state, ids) {
 }
 
 export default function(state = {}, action) {
-  const { type, nodeId, childId } = action;
+  const { type, nodeId } = action;
 
   if ( typeof type === 'undefined' || typeof nodeId === 'undefined' ) {
     return state;
   }
 
-  // When a childId is specified in the action, prevent the action in
-  // case the type of the child doesn't match the suffix of the action.
-  // This prevents trying to addFont
-  const suffix = type.split('_').pop().toLowerCase();
-  if (
-    typeof childId !== 'undefined' &&
-    suffix !== 'child' &&
-    suffix !== state[childId].type
-  ) {
-    throw new Error(`Can't use action ${type} on child node ${childId}.`);
+  // During dev, we're validating that the UI prevents impossible actions
+  // such as adding a font to a glyph or updating the coordinates of a non-point
+  if (  config.appEnv === 'dev' ) {
+    logError( validateAction(state, action) );
+
+    if ( /^ADD_/.test(type) && type !== ADD_GLYPH ) {
+      logError( validateAdd(state, action) );
+      logError( validateGraph(state, action) );
+    }
+
+    if ( /^UPDATE_/.test(type) ) {
+      logError( validateUpdate(state, action) );
+    }
   }
 
   if ( type === DELETE_NODE ) {
@@ -139,7 +143,11 @@ export default function(state = {}, action) {
     return deleteMany(state, [ nodeId, ...descendantIds ]);
   }
 
-  return Object.assign({}, state, {
+  const nodes = Object.assign({}, state, {
     [nodeId]: node( state[nodeId], action )
   });
+
+
+
+  return nodes;
 }

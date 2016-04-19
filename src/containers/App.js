@@ -39,6 +39,7 @@ function mapDispatchToProps(dispatch) {
     deleteNode: require('../actions/nodes/deleteNode.js'),
     addChild: require('../actions/nodes/addChild.js'),
     removeChild: require('../actions/nodes/removeChild.js'),
+    updateProp: require('../actions/nodes/updateProp.js'),
     createGlyph: require('../actions/glyphs/createGlyph.js'),
     createFont: require('../actions/fonts/createFont.js'),
     addFont: require('../actions/fonts/addFont.js'),
@@ -50,7 +51,9 @@ function mapDispatchToProps(dispatch) {
     createOncurve: require('../actions/oncurves/createOncurve.js'),
     addOncurve: require('../actions/oncurves/addOncurve.js'),
     createOffcurve: require('../actions/offcurves/createOffcurve.js'),
-    addOffcurve: require('../actions/offcurves/addOffcurve.js')
+    addOffcurve: require('../actions/offcurves/addOffcurve.js'),
+    updateX: require('../actions/points/updateX.js'),
+    updateY: require('../actions/points/updateY.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

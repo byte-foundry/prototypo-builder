@@ -8,10 +8,12 @@ import {
   createOncurve,
   addOncurve,
   createOffcurve,
-  addOffcurve
+  addOffcurve,
+  updateXCoord,
+  updateYCoord
 } from './../../actions/all';
 
-import { flatModel } from './../../_utils/fontModels';
+import fontModel from './../../_utils/fontModel';
 
 import TextContour from './TextContour';
 import TextFont from './TextFont';
@@ -46,7 +48,7 @@ export function mapStateToProps(state, ownProps) {
 }
 
 // The last argument is used to make this function stateless during tests
-export function validateChildTypes(props, propName, componentName, prop, model = flatModel) {
+export function validateChildTypes(props, propName, componentName, prop, model = fontModel) {
   const componentType = (
     componentName.replace(/^.*?([A-Z][a-z]+?)(Component)?$/, function($0, $1) {
       return $1.toLowerCase();
@@ -58,9 +60,8 @@ export function validateChildTypes(props, propName, componentName, prop, model =
     const childType = props[propName][childId];
     if ( !(childType in validChildTypes) ) {
       return new Error(
-        'Invalid prop `' + propName + '` supplied to' +
-        ' `' + componentName + '`: `' + childType + '` child found.' +
-        ' Validation failed.'
+        `Invalid prop '${propName}' supplied to '${componentName}':
+         '${childType}' child found. Validation failed.`
       );
     }
   }
@@ -73,7 +74,9 @@ export function mapDispatchToProps(dispatch) {
     createOncurve,
     addOncurve,
     createOffcurve,
-    addOffcurve
+    addOffcurve,
+    updateXCoord,
+    updateYCoord
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

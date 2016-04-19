@@ -15,3 +15,6 @@ export const CREATE_ONCURVE = 'CREATE_ONCURVE';
 export const ADD_ONCURVE = 'ADD_ONCURVE';
 export const CREATE_OFFCURVE = 'CREATE_OFFCURVE';
 export const ADD_OFFCURVE = 'ADD_OFFCURVE';
+export const UPDATE_X = 'UPDATE_X';
+export const UPDATE_Y = 'UPDATE_Y';
+export const UPDATE_PROP = 'UPDATE_PROP';

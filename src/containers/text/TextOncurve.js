@@ -7,10 +7,30 @@ import {
 } from './_utils';
 
 class TextOncurve extends Component {
+  constructor(props) {
+    super(props);
+    // this.handleXInput = handleXInput.bind(this);
+    // this.handleYInput = handleYInput.bind(this);
+  }
+
+  handleXInput(e) {
+
+  }
+
+  handleYInput(e) {
+
+  }
+
   render() {
-    const { id, type } = this.props;
+    const { id, type, x, y } = this.props;
     return (
-      <span>{id}: {type}</span>
+      <ul className="unstyled">
+        <li>{id}: {type}</li>
+        <li>
+          <label>x: <input type="number" value={x || ''} onInput={this.handleXInput} /></label>
+          <label>y: <input type="number" value={y || ''} onInput={this.handleYInput} /></label>
+        </li>
+      </ul>
     );
   }
 }
