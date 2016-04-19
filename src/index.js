@@ -4,33 +4,36 @@ import { Provider } from 'react-redux';
 import configureStore from './stores';
 import App from './containers/App';
 
-// We'll use -00 suffix for ids to make sure we avoid collisions with
-// auto-generated ids
 const store = configureStore({
   nodes: {
     'root': {
       id: 'root',
       type: 'root',
-      childIds: ['font-00']
+      childIds: ['font-initial']
     },
-    'font-00': {
-      id: 'font-00',
+    'font-initial': {
+      id: 'font-initial',
       type: 'font',
-      childIds: ['glyph-00']
+      childIds: ['glyph-initial']
     },
-    'glyph-00': {
-      id: 'glyph-00',
+    'glyph-initial': {
+      id: 'glyph-initial',
       type: 'glyph',
-      childIds: ['contour-00']
+      childIds: ['contour-initial']
     },
-    'contour-00': {
-      id: 'contour-00',
+    'contour-initial': {
+      id: 'contour-initial',
       type: 'contour',
-      childIds: ['path-00']
+      childIds: ['path-initial']
     },
-    'path-00': {
-      id: 'path-00',
+    'path-initial': {
+      id: 'path-initial',
       type: 'path',
+      childIds: ['oncurve-initial']
+    },
+    'oncurve-initial': {
+      id: 'oncurve-initial',
+      type: 'oncurve',
       childIds: []
     }
   }

@@ -12,6 +12,7 @@ class TextContour extends Component {
   constructor(props) {
     super(props);
     this.handleAddPathClick = this.handleAddPathClick.bind(this);
+    this.handleAddStartingPathClick = this.handleAddStartingPathClick.bind(this);
     this.renderTextChild = renderTextChild.bind(this);
   }
 
@@ -24,14 +25,32 @@ class TextContour extends Component {
     addPath(id, childId);
   }
 
+  handleAddStartingPathClick(e) {
+    e.preventDefault();
+
+    const { id } = this.props;
+    const {
+      createOncurve,
+      addOncurve,
+      createPath,
+      addPath
+    } = this.props.actions;
+
+    const pathId = createPath().nodeId;
+    addPath(id, pathId);
+
+    const oncurveId = createOncurve().nodeId;
+    addOncurve(pathId, oncurveId);
+  }
+
   render() {
     const { childIds } = this.props;
     return (
-      <ul>
+      <ul className="unstyled">
         <li>Paths:
           <ul>
             {childIds.map(this.renderTextChild)}
-            <li><button onClick={this.handleAddPathClick}>Add Path</button></li>
+            <li><button onClick={this.handleAddStartingPathClick}>Add Path</button></li>
           </ul>
         </li>
       </ul>

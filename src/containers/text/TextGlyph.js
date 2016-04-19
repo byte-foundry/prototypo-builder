@@ -12,7 +12,7 @@ class TextGlyph extends Component {
   render() {
     const { childIds } = this.props;
     return (
-      <ul>
+      <ul className="unstyled">
         {childIds.map(renderTextChild.bind(this))}
       </ul>
     );

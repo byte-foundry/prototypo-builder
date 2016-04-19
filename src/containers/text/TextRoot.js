@@ -17,7 +17,7 @@ class TextRoot extends Component {
   render() {
     const { childIds } = this.props;
     return (
-      <ul>
+      <ul className="unstyled">
         {childIds.map(this.renderTextChild)}
       </ul>
     );

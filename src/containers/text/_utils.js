@@ -7,7 +7,7 @@ import {
   addPath,
   createOncurve,
   addOncurve,
-  createOffcure,
+  createOffcurve,
   addOffcurve
 } from './../../actions/all';
 
@@ -16,12 +16,16 @@ import { flatModel } from './../../_utils/fontModels';
 import TextContour from './TextContour';
 import TextFont from './TextFont';
 import TextGlyph from './TextGlyph';
+import TextOffcurve from './TextOffcurve';
+import TextOncurve from './TextOncurve';
 import TextPath from './TextPath';
 
 const textNodes = {
   TextContour,
   TextFont,
   TextGlyph,
+  TextOffcurve,
+  TextOncurve,
   TextPath
 }
 
@@ -68,7 +72,7 @@ export function mapDispatchToProps(dispatch) {
     addPath,
     createOncurve,
     addOncurve,
-    createOffcure,
+    createOffcurve,
     addOffcurve
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };

@@ -1,4 +1,4 @@
-require('normalize.css/normalize.css');
+require('styles/knacss/knacss.scss');
 require('styles/App.css');
 
 import React from 'react';

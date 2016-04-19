@@ -14,43 +14,38 @@ import {
 class TextGlyph extends Component {
   constructor(props) {
     super(props);
-    this.handleAddOncurveClick = this.handleAddOncurveClick.bind(this);
-    this.handleAddOffcurveClick = this.handleAddOffcurveClick.bind(this);
+    this.handleAddCurveClick = this.handleAddCurveClick.bind(this);
+    this.renderTextChild = renderTextChild.bind(this);
   }
 
-  handleAddOncurveClick(e) {
+  handleAddCurveClick(e) {
     e.preventDefault();
 
     const { id } = this.props;
-    const { addChild, createNode } = this.props.actions;
-    const childId = createNode().nodeId;
-    addChild(id, childId);
-  }
-
-  handleAddOffcurveClick(e) {
-    e.preventDefault();
-
-    const { id } = this.props;
-    const { addChild, createNode } = this.props.actions;
-    const childId = createNode().nodeId;
-    addChild(id, childId);
+    const {
+      createOffcurve,
+      addOffcurve,
+      createOncurve,
+      addOncurve
+    } = this.props.actions;
+    const offcurve1Id = createOffcurve().nodeId;
+    const offcurve2Id = createOffcurve().nodeId;
+    const oncurveId = createOncurve().nodeId;
+    addOffcurve(id, offcurve1Id);
+    addOffcurve(id, offcurve2Id);
+    addOncurve(id, oncurveId);
   }
 
   render() {
-    const { id, childIds, type } = this.props;
+    const { id, childIds } = this.props;
     return (
       <ul>
         <li>Path: {id}</li>
         <li>Points:
           <ul>
-            {childIds.map((childId) => {
-              return (
-                <li key={childId}>type: {type}</li>
-              );
-            })}
+            {childIds.map(this.renderTextChild)}
             <li>
-              <button onClick={this.handleAddOncurveClick}>Add Oncurve</button>
-              <button onClick={this.handleAddOffcurveClick}>Add Offcurve</button>
+              <button onClick={this.handleAddCurveClick}>Add Curve</button>
             </li>
           </ul>
         </li>
