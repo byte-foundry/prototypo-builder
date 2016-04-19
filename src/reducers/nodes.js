@@ -1,3 +1,5 @@
+const config = require('config');
+
 import {
   ADD_CHILD,
   REMOVE_CHILD,
@@ -23,7 +25,7 @@ import {
   ADD_OFFCURVE
 } from './../actions/const';
 
-import { validateAdd } from './../fontModels';
+import { flatModel } from './../_utils/fontModels';
 
 /* Define your initial state here.
  *
@@ -44,6 +46,21 @@ function childIds(state, action) {
       return state;
   }
 }
+
+// validating any ADD_ action against the model is useful during development
+// and tests, but a waste of ressources in production.
+export const validateAdd = config.appEnv === 'dev' ?
+  function() {} :
+  // the 3rd argument is only used to make the function stateless during tests
+  function(actionType, parentType, model = flatModel) {
+    const suffix = actionType.split('_').pop().toLowerCase();
+
+    if ( !(suffix in model[parentType]) ) {
+      throw new Error(`Can't ${actionType} to type ${parentType}.`)
+    }
+
+    return true;
+  };
 
 function node(state = initialState, action) {
   const { type, nodeId } = action;
@@ -74,7 +91,9 @@ function node(state = initialState, action) {
     case ADD_PATH:
     case ADD_ONCURVE:
     case ADD_OFFCURVE:
-      validateAdd(type, state.type);
+      // Not sure this extra validation is actually useful, as node types
+      // hierarchy are validated by component PropTypes
+      //validateAdd(type, state.type);
       return Object.assign({}, state, {
         childIds: childIds(state.childIds, action)
       });
@@ -96,7 +115,7 @@ function deleteMany(state, ids) {
   return state;
 }
 
-module.exports = function(state = {}, action) {
+export default function(state = {}, action) {
   const { type, nodeId, childId } = action;
 
   if ( typeof type === 'undefined' || typeof nodeId === 'undefined' ) {

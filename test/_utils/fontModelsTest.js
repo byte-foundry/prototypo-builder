@@ -1,8 +1,7 @@
 import {
-  flatModel,
   populateFlatModelRecurs,
   validateAdd
-} from '../src/fontModels';
+} from '../../src/_utils/fontModels';
 
 describe('fontModels', () => {
   describe('populateFlatModelRecurs', () => {
@@ -40,24 +39,6 @@ describe('fontModels', () => {
 
       expect( populateFlatModelRecurs( {}, treeModel ) )
         .to.deep.equal( expectedFlatModel );
-
-      done();
-    });
-  });
-
-  describe('validateAdd', () => {
-    it('should validate node insertion actions against the model', (done) => {
-      const testModel = {
-        abc: { def: true },
-        def: { ghi: true },
-        ghi: {}
-      };
-
-      expect( validateAdd('ADD_DEF', 'abc', testModel) ).to.equal(true);
-      expect( validateAdd('ADD_GHI', 'def', testModel) ).to.equal(true);
-
-      expect( validateAdd.bind(validateAdd, 'ADD_GHI', 'abc', testModel) )
-        .to.throw(Error);
 
       done();
     });

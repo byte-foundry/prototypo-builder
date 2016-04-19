@@ -1,9 +1,11 @@
 import {CREATE_NODE} from './../const';
 
 function createNode(args = {}) {
+  const prefix = args.nodeType || 'node';
+
   return {
     type: CREATE_NODE,
-    nodeId: `node-${createNode.nextId++}`,
+    nodeId: `${prefix}-${createNode.nextId++}`,
     args
   };
 }

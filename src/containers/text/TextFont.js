@@ -8,7 +8,7 @@ import {
   mapDispatchToProps
 } from './_utils';
 
-class TextGlyph extends Component {
+class TextFont extends Component {
   render() {
     const { childIds } = this.props;
     return (
@@ -19,9 +19,9 @@ class TextGlyph extends Component {
   }
 }
 
-TextGlyph.propTypes = {
+TextFont.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextGlyph);
+export default connect(mapStateToProps, mapDispatchToProps)(TextFont);

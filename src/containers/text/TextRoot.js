@@ -8,20 +8,25 @@ import {
   mapDispatchToProps
 } from './_utils';
 
-class TextGlyph extends Component {
+class TextRoot extends Component {
+  constructor(props) {
+    super(props);
+    this.renderTextChild = renderTextChild.bind(this);
+  }
+
   render() {
     const { childIds } = this.props;
     return (
       <ul>
-        {childIds.map(renderTextChild.bind(this))}
+        {childIds.map(this.renderTextChild)}
       </ul>
     );
   }
 }
 
-TextGlyph.propTypes = {
+TextRoot.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextGlyph);
+export default connect(mapStateToProps, mapDispatchToProps)(TextRoot);

@@ -1,5 +1,7 @@
 import deepFreeze from 'deep-freeze';
 
+import { validateAdd } from '../../src/reducers/nodes';
+
 import reducer from '../../src/reducers/nodes';
 import createNode from '../../src/actions/nodes/createNode';
 import deleteNode from '../../src/actions/nodes/deleteNode';
@@ -7,6 +9,23 @@ import addChild from '../../src/actions/nodes/addChild';
 import removeChild from '../../src/actions/nodes/removeChild';
 
 describe('reducer: nodes', () => {
+  describe('validateAdd', () => {
+    it('should validate node insertion actions against the model', (done) => {
+      const testModel = {
+        abc: { def: true },
+        def: { ghi: true },
+        ghi: {}
+      };
+
+      expect( validateAdd('ADD_DEF', 'abc', testModel) ).to.equal(true);
+      expect( validateAdd('ADD_GHI', 'def', testModel) ).to.equal(true);
+
+      expect( validateAdd.bind(validateAdd, 'ADD_GHI', 'abc', testModel) )
+        .to.throw(Error);
+
+      done();
+    });
+  });
 
   it('should provide the initial state', () => {
     expect(reducer(undefined, {})).to.deep.equal({});
