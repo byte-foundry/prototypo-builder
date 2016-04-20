@@ -123,7 +123,7 @@ export default function(state = {}, action) {
     return state;
   }
 
-  // During dev, we're validating that the UI prevents impossible actions
+  // During dev, we're verifying that the UI prevents impossible actions
   // such as adding a font to a glyph or updating the coordinates of a non-point
   if (  config.appEnv === 'dev' ) {
     logError( validateAction(state, action) );

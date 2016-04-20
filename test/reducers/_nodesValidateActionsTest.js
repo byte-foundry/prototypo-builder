@@ -75,10 +75,39 @@ describe('reducers/_nodesValidateAction', () => {
   });
 
   describe('validateAction', () => {
-    it(`should check that actions that have a node type in their type
-        (e.g. ADD_GLYPH) target a node of the appropriate type`, (done) => {
+    it(`should check that the type of the node about the be added matches the
+        suffix of the action`, (done) => {
 
-      expect(false).to.be.true;
+      const state = {
+        'node-0': {
+          id: 'node-0',
+          type: 'ab'
+        }
+      };
+      const actionAllowed = {
+        type: 'ADD_AB',
+        childId: 'node-0'
+      };
+      const actionIgnored = {
+        type: 'ADD_CHILD',
+        childId: 'node-0'
+      };
+      const actionForbidden = {
+        type: 'ADD_CD',
+        childId: 'node-0'
+      };
+
+      deepFreeze(state);
+      deepFreeze(actionAllowed);
+      deepFreeze(actionIgnored);
+      deepFreeze(actionForbidden);
+
+      expect(validateAction(state, actionAllowed))
+        .to.not.be.an('error');
+      expect(validateAction(state, actionIgnored))
+        .to.not.be.an('error');
+      expect(validateAction(state, actionForbidden))
+        .to.be.an('error');
 
       done();
     });
@@ -88,7 +117,32 @@ describe('reducers/_nodesValidateAction', () => {
     it(`should check that the node about to be added in the graph is not
         already present in the graph`, (done) => {
 
-      expect(false).to.be.true;
+      const state = {
+        'node-0': {
+          id: 'node-0',
+          childIds: ['node-2']
+        },
+        'node-1': {
+          id: 'node-1',
+          childIds: []
+        },
+        'node-2': {
+          id: 'node-2',
+          childIds: []
+        }
+      };
+
+      const actionAllowed = addChild('node-0', 'node-1');
+      const actionForbidden = addChild('node-1', 'node-2');
+
+      deepFreeze(state);
+      deepFreeze(actionAllowed);
+      deepFreeze(actionForbidden);
+
+      expect(validateGraph(state, actionAllowed))
+        .to.not.be.an('error');
+      expect(validateGraph(state, actionForbidden))
+        .to.be.an('error');
 
       done();
     });

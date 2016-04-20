@@ -41,7 +41,7 @@ export function validateAction(state, action) {
     suffix !== 'child' &&
     suffix !== state[childId].type
   ) {
-    return new Error(`Can't use action ${type} on child node ${childId}.`);
+    return new Error(`Can't use action '${type}' on child node '${childId}'.`);
   }
 
   return true;
@@ -54,8 +54,8 @@ export function validateGraph(state, action) {
   for ( let key in state ) {
     if ( state[key].childIds.includes( childId ) ) {
       return new Error(
-        `Can't make ${childId} a child of ${nodeId}:
-        It's already a child of ${key}.`
+        `Can't make '${childId}' a child of '${nodeId}':
+        It's already a child of '${key}'.`
       );
     }
   }
