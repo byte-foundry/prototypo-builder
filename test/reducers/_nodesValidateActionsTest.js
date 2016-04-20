@@ -2,13 +2,13 @@ import deepFreeze from 'deep-freeze';
 
 import {
   updateProp,
-  addChild
+  addChild,
+  addChildren
 } from '../../src/actions/all';
 
 import {
   validateUpdate,
   validateAdd,
-  validateAction,
   validateGraph
 } from '../../src/reducers/_nodesValidateActions';
 
@@ -51,62 +51,41 @@ describe('reducers/_nodesValidateAction', () => {
         'node-1': {
           id: 'node-1',
           type: 'cd'
+        },
+        'node-2': {
+          id: 'node-2',
+          type: 'ef'
+        },
+        'node-3': {
+          id: 'node-2',
+          type: 'gh'
         }
       };
       const model = {
-        ab: { children: { cd: true } },
-        cd: { children: {} }
+        ab: { children: { cd: true, ef: true } },
+        cd: { children: {} },
+        ef: { children: {} },
+        gh: { children: {} }
       };
       const actionAllowed = addChild('node-0', 'node-1');
+      const actionMultiAllowed = addChildren('node-0', ['node-1', 'node-2']);
       const actionForbidden = addChild('node-1', 'node-0');
+      const actionMultiForbidden = addChildren('node-0', ['node-1', 'node-3']);
 
       deepFreeze(state);
       deepFreeze(model);
       deepFreeze(actionAllowed);
+      deepFreeze(actionMultiAllowed)
       deepFreeze(actionForbidden);
+      deepFreeze(actionMultiForbidden)
 
       expect(validateAdd( state, actionAllowed, model ))
         .to.not.be.an('error');
+      expect(validateAdd( state, actionMultiAllowed, model ))
+        .to.not.be.an('error');
       expect(validateAdd( state, actionForbidden, model ))
         .to.be.an('error');
-
-      done();
-    });
-  });
-
-  describe('validateAction', () => {
-    it(`should check that the type of the node about the be added matches the
-        suffix of the action`, (done) => {
-
-      const state = {
-        'node-0': {
-          id: 'node-0',
-          type: 'ab'
-        }
-      };
-      const actionAllowed = {
-        type: 'ADD_AB',
-        childId: 'node-0'
-      };
-      const actionIgnored = {
-        type: 'ADD_CHILD',
-        childId: 'node-0'
-      };
-      const actionForbidden = {
-        type: 'ADD_CD',
-        childId: 'node-0'
-      };
-
-      deepFreeze(state);
-      deepFreeze(actionAllowed);
-      deepFreeze(actionIgnored);
-      deepFreeze(actionForbidden);
-
-      expect(validateAction(state, actionAllowed))
-        .to.not.be.an('error');
-      expect(validateAction(state, actionIgnored))
-        .to.not.be.an('error');
-      expect(validateAction(state, actionForbidden))
+      expect(validateAdd( state, actionMultiForbidden, model ))
         .to.be.an('error');
 
       done();
@@ -120,7 +99,7 @@ describe('reducers/_nodesValidateAction', () => {
       const state = {
         'node-0': {
           id: 'node-0',
-          childIds: ['node-2']
+          childIds: ['node-1']
         },
         'node-1': {
           id: 'node-1',
@@ -129,19 +108,31 @@ describe('reducers/_nodesValidateAction', () => {
         'node-2': {
           id: 'node-2',
           childIds: []
+        },
+        'node-3': {
+          id: 'node-3',
+          childIds: []
         }
       };
 
-      const actionAllowed = addChild('node-0', 'node-1');
-      const actionForbidden = addChild('node-1', 'node-2');
+      const actionAllowed = addChild('node-0', 'node-2');
+      const actionMultiAllowed = addChildren('node-0', ['node-2', 'node-3']);
+      const actionForbidden = addChild('node-2', 'node-1');
+      const actionMultiForbidden = addChildren('node-2', ['node-3', 'node-1']);
 
       deepFreeze(state);
       deepFreeze(actionAllowed);
+      deepFreeze(actionMultiAllowed)
       deepFreeze(actionForbidden);
+      deepFreeze(actionMultiForbidden)
 
-      expect(validateGraph(state, actionAllowed))
+      expect(validateGraph( state, actionAllowed ))
         .to.not.be.an('error');
-      expect(validateGraph(state, actionForbidden))
+      expect(validateGraph( state, actionMultiAllowed ))
+        .to.not.be.an('error');
+      expect(validateGraph( state, actionForbidden ))
+        .to.be.an('error');
+      expect(validateGraph( state, actionMultiForbidden ))
         .to.be.an('error');
 
       done();

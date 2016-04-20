@@ -1,16 +1,27 @@
+require('styles/text/TextNode.scss');
+
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  renderTextProperties,
+  handleInput
 } from './_utils';
 
 class TextOffcurve extends Component {
+  constructor(props) {
+    super(props);
+    this.handleInput = handleInput.bind(this);
+    this.renderTextProperties = renderTextProperties.bind(this);
+  }
+
   render() {
-    const { id, type } = this.props;
     return (
-      <span>{id}: {type}</span>
+      <ul className="text-node text-node--offcurve unstyled">
+        <li>{this.renderTextProperties()}</li>
+      </ul>
     );
   }
 }

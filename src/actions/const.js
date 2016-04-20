@@ -18,3 +18,6 @@ export const ADD_OFFCURVE = 'ADD_OFFCURVE';
 export const UPDATE_X = 'UPDATE_X';
 export const UPDATE_Y = 'UPDATE_Y';
 export const UPDATE_PROP = 'UPDATE_PROP';
+export const ADD_CURVE = 'ADD_CURVE';
+export const CREATE_CURVE = 'CREATE_CURVE';
+export const ADD_CHILDREN = 'ADD_CHILDREN';

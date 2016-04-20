@@ -38,6 +38,7 @@ function mapDispatchToProps(dispatch) {
     createNode: require('../actions/nodes/createNode.js'),
     deleteNode: require('../actions/nodes/deleteNode.js'),
     addChild: require('../actions/nodes/addChild.js'),
+    addChildren: require('../actions/nodes/addChildren.js'),
     removeChild: require('../actions/nodes/removeChild.js'),
     updateProp: require('../actions/nodes/updateProp.js'),
     createGlyph: require('../actions/glyphs/createGlyph.js'),
@@ -48,12 +49,15 @@ function mapDispatchToProps(dispatch) {
     addContour: require('../actions/contours/addContour.js'),
     createPath: require('../actions/paths/createPath.js'),
     addPath: require('../actions/paths/addPath.js'),
+    addCurve: require('../actions/paths/addCurve.js'),
+    createCurve: require('../actions/paths/createCurve.js'),
     createOncurve: require('../actions/oncurves/createOncurve.js'),
     addOncurve: require('../actions/oncurves/addOncurve.js'),
     createOffcurve: require('../actions/offcurves/createOffcurve.js'),
     addOffcurve: require('../actions/offcurves/addOffcurve.js'),
     updateX: require('../actions/points/updateX.js'),
-    updateY: require('../actions/points/updateY.js')
+    updateY: require('../actions/points/updateY.js'),
+    addChildren: require('../actions/nodes/addChildren.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

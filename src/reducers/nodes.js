@@ -4,6 +4,7 @@ import logError from './../_utils/logError';
 
 import {
   ADD_CHILD,
+  ADD_CHILDREN,
   REMOVE_CHILD,
   CREATE_NODE,
   DELETE_NODE,
@@ -19,6 +20,9 @@ import {
 
   CREATE_PATH,
   ADD_PATH,
+
+  CREATE_CURVE,
+  ADD_CURVE,
 
   CREATE_ONCURVE,
   ADD_ONCURVE,
@@ -44,13 +48,27 @@ import {
  */
 const initialState = {};
 
+function createNode(action) {
+  const { nodeId, nodeType } = action;
+
+  return {
+    id: nodeId,
+    type: nodeType,
+    childIds: []
+  }
+}
+
 function childIds(state, action) {
   switch(action.type.split('_')[0]) {
     case 'ADD':
-      return [...state, action.childId ];
+      return action.childIds ?
+        [...state, ...action.childIds ] :
+        [...state, action.childId ];
 
     case 'REMOVE':
-      return state.filter(id => id !== action.childId);
+      return action.childIds ?
+        state.filter((id) => !(action.childIds.includes(id))) :
+        state.filter((id) => id !== action.childId);
 
     default:
       return state;
@@ -58,7 +76,7 @@ function childIds(state, action) {
 }
 
 function node(state = initialState, action) {
-  const { type, nodeId } = action;
+  const { type } = action;
 
   switch(type) {
     case CREATE_NODE:
@@ -68,22 +86,16 @@ function node(state = initialState, action) {
     case CREATE_PATH:
     case CREATE_ONCURVE:
     case CREATE_OFFCURVE:
-      return {
-        id: nodeId,
-        type: action.args.nodeType,
-        childIds: []
-      };
+      return createNode(action);
 
     case ADD_CHILD:
+    case ADD_CHILDREN:
     case REMOVE_CHILD:
-      return Object.assign({}, state, {
-        childIds: childIds(state.childIds, action)
-      });
-
     case ADD_FONT:
     case ADD_GLYPH:
     case ADD_CONTOUR:
     case ADD_PATH:
+    case ADD_CURVE:
     case ADD_ONCURVE:
     case ADD_OFFCURVE:
       return Object.assign({}, state, {
@@ -117,7 +129,7 @@ function deleteMany(state, ids) {
 }
 
 export default function(state = {}, action) {
-  const { type, nodeId } = action;
+  const { type, nodeId, nodeIds } = action;
 
   if ( typeof type === 'undefined' || typeof nodeId === 'undefined' ) {
     return state;
@@ -137,17 +149,27 @@ export default function(state = {}, action) {
       logError( validateUpdate(state, action) );
     }
   }
+console.log(type);
+  switch (type) {
+    case DELETE_NODE:
+      const descendantIds = getAllDescendantIds(state, nodeId);
+      return deleteMany(state, [ nodeId, ...descendantIds ]);
 
-  if ( type === DELETE_NODE ) {
-    const descendantIds = getAllDescendantIds(state, nodeId);
-    return deleteMany(state, [ nodeId, ...descendantIds ]);
+    case CREATE_CURVE:
+console.log('HEEEEEEERE', nodeIds);
+      const nodes = {};
+      nodeIds.forEach((nodeId, i) => {
+        nodes[nodeId] = createNode({
+          nodeId,
+          nodeType: i === 2 ? 'oncurve' : 'offcurve'
+        });
+      });
+console.log(nodes);
+      return Object.assign({}, state, nodes);
+
+    default:
+      return Object.assign({}, state, {
+        [nodeId]: node( state[nodeId], action )
+      });
   }
-
-  const nodes = Object.assign({}, state, {
-    [nodeId]: node( state[nodeId], action )
-  });
-
-
-
-  return nodes;
 }

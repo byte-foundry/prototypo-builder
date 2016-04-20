@@ -1,15 +1,13 @@
 import {CREATE_NODE} from './../const';
+import {getNodeId} from './../_utils';
 
-function createNode(args = {}) {
-  const prefix = args.nodeType || 'node';
+function createNode(nodeType = 'node') {
 
   return {
     type: CREATE_NODE,
-    nodeId: `${prefix}-${createNode.nextId++}`,
-    args
+    nodeId: getNodeId(nodeType),
+    nodeType
   };
 }
-
-createNode.nextId = 0;
 
 module.exports = createNode;

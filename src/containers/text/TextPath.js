@@ -1,21 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-// import TextOncurve from './TextOncurve';
-// import TextOffcurve from './TextOffcurve';
-
 import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  renderTextProperties
 } from './_utils';
 
 class TextGlyph extends Component {
   constructor(props) {
     super(props);
-    this.handleAddCurveClick = this.handleAddCurveClick.bind(this);
+    this.renderTextProperties = renderTextProperties.bind(this);
     this.renderTextChild = renderTextChild.bind(this);
+    this.handleAddCurveClick = this.handleAddCurveClick.bind(this);
   }
 
   handleAddCurveClick(e) {
@@ -37,11 +36,12 @@ class TextGlyph extends Component {
   }
 
   render() {
-    const { id, childIds } = this.props;
+    const { childIds } = this.props;
+
     return (
-      <ul>
-        <li>Path: {id}</li>
-        <li>Points:
+      <ul className="text-node text-node--path unstyled">
+        <li>{this.renderTextProperties()}</li>
+        <li>
           <ul>
             {childIds.map(this.renderTextChild)}
             <li>

@@ -1,7 +1,9 @@
-export default function( error ) {
-  if ( error instanceof Error && typeof console !== undefined ) {
+export default function( error, logger ) {
+  if ( error instanceof Error && ( logger || typeof console !== undefined ) ) {
     /* eslint-disable no-console */
-    console.error( error );
+    ( logger || console.error )( error );
     /* eslint-enable no-console */
   }
+
+  return error;
 }
