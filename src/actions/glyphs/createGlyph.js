@@ -1,8 +1,11 @@
 import {CREATE_GLYPH} from './../const';
-import createNode from './../nodes/createNode';
+import {getNodeId} from './../_utils';
 
 module.exports = function() {
-  const action = createNode({ nodeType: 'glyph' });
-  action.type = CREATE_GLYPH;
-  return action;
+  const nodeType = 'glyph';
+  return {
+    type: CREATE_GLYPH,
+    nodeId: getNodeId(nodeType),
+    nodeType
+  };
 };

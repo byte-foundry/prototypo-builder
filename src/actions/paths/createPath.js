@@ -1,8 +1,11 @@
 import {CREATE_PATH} from './../const';
-import createNode from './../nodes/createNode';
+import {getNodeId} from './../_utils';
 
 module.exports = function() {
-  const action = createNode({ nodeType: 'path' });
-  action.type = CREATE_PATH;
-  return action;
+  const nodeType = 'path';
+  return {
+    type: CREATE_PATH,
+    nodeId: getNodeId(nodeType),
+    nodeType
+  };
 };

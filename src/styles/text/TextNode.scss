@@ -1,0 +1,15 @@
+.text-node {
+
+}
+
+.text-node__property {
+
+}
+
+.text-node__property-name:after {
+  content: ': ';
+}
+
+.text-node__property-input {
+  border-width: 0;
+}

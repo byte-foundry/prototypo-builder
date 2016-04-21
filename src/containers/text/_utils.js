@@ -1,6 +1,5 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
-import capitalize from 'lodash/capitalize';
 
 import {
   createPath,
@@ -9,11 +8,13 @@ import {
   addOncurve,
   createOffcurve,
   addOffcurve,
-  updateXCoord,
-  updateYCoord
+  updateX,
+  updateY
 } from './../../actions/all';
 
 import fontModel from './../../_utils/fontModel';
+
+import TextNodeProperty from 'components/text/TextNodePropertyComponent';
 
 import TextContour from './TextContour';
 import TextFont from './TextFont';
@@ -22,24 +23,41 @@ import TextOffcurve from './TextOffcurve';
 import TextOncurve from './TextOncurve';
 import TextPath from './TextPath';
 
-const textNodes = {
-  TextContour,
-  TextFont,
-  TextGlyph,
-  TextOffcurve,
-  TextOncurve,
-  TextPath
+const componentMap = {
+  contour: TextContour,
+  font: TextFont,
+  glyph: TextGlyph,
+  offcurve: TextOffcurve,
+  oncurve: TextOncurve,
+  path: TextPath
 }
 
 export function renderTextChild(childId) {
   const { id } = this.props;
   const childType = childId.split('-')[0];
-  const TextNode = textNodes[`Text${capitalize(childType)}`];
+  const TextNode = componentMap[childType];
 
   return (
     <li key={childId}>
       <TextNode id={childId} parentId={id} />
     </li>
+  );
+}
+
+export function renderTextProperties() {
+  const { id, type } = this.props;
+  const { propertyOrder } = fontModel[type];
+
+  return (
+    <ul className="text-node__property-list unstyled">
+      <li><small><i>{id}</i></small></li>
+      { propertyOrder.map((propName) => {
+        const value = this.props[propName];
+        return (
+          <TextNodeProperty key={propName} name={propName} value={value} onInput={this.handleInput} />
+        );
+      }) }
+    </ul>
   );
 }
 
@@ -75,8 +93,8 @@ export function mapDispatchToProps(dispatch) {
     addOncurve,
     createOffcurve,
     addOffcurve,
-    updateXCoord,
-    updateYCoord
+    updateX,
+    updateY
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

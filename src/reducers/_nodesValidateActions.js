@@ -17,31 +17,18 @@ export function validateUpdate(state, action, model = fontModel) {
 }
 
 export function validateAdd(state, action, model = fontModel) {
-  const { nodeId, childId } = action;
+  const { nodeId } = action;
+  const childIds = action.childIds || [action.childId];
   const parentType = state[nodeId].type;
-  const childType = state[childId].type;
 
-  if ( !(childType in model[parentType].children) ) {
-    return new Error(
-      `Can't make '${childId}' a child of '${nodeId}':
-      The model doesn't allow a '${childType}' as a child of a '${parentType}'.`
-    );
-  }
-
-  return true;
-}
-
-// Validate that the type of the node about the be added matches the suffix
-// of the action
-export function validateAction(state, action) {
-  const { type, childId } = action;
-  const suffix = type.split('_').pop().toLowerCase();
-  if (
-    typeof childId !== 'undefined' &&
-    suffix !== 'child' &&
-    suffix !== state[childId].type
-  ) {
-    return new Error(`Can't use action '${type}' on child node '${childId}'.`);
+  for ( let childId of childIds ) {
+    const childType = state[childId].type;
+    if ( !(childType in model[parentType].children) ) {
+      return new Error(
+        `Can't make '${childId}' a child of '${nodeId}':
+        The model doesn't allow a '${childType}' as a child of a '${parentType}'.`
+      );
+    }
   }
 
   return true;
@@ -50,13 +37,17 @@ export function validateAction(state, action) {
 // Check that the nodeId that is about to be added to the graph is not already
 // present in a childIds
 export function validateGraph(state, action) {
-  const { nodeId, childId } = action;
+  const { nodeId } = action;
+  const childIds = action.childIds || [action.childId];
+
   for ( let key in state ) {
-    if ( state[key].childIds.includes( childId ) ) {
-      return new Error(
-        `Can't make '${childId}' a child of '${nodeId}':
-        It's already a child of '${key}'.`
-      );
+    for ( let childId of childIds ) {
+      if ( state[key].childIds.includes( childId ) ) {
+        return new Error(
+          `Can't make '${childId}' a child of '${nodeId}':
+          '${childId}' is already a child of '${key}'.`
+        );
+      }
     }
   }
 

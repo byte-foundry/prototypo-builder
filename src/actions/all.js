@@ -1,6 +1,7 @@
 export const createNode = require('../actions/nodes/createNode.js');
 export const deleteNode = require('../actions/nodes/deleteNode.js');
 export const addChild = require('../actions/nodes/addChild.js');
+export const addChildren = require('../actions/nodes/addChildren.js');
 export const removeChild = require('../actions/nodes/removeChild.js');
 export const updateProp = require('../actions/nodes/updateProp.js');
 export const createGlyph = require('../actions/glyphs/createGlyph.js');
@@ -11,6 +12,8 @@ export const createContour = require('../actions/contours/createContour.js');
 export const addContour = require('../actions/contours/addContour.js');
 export const createPath = require('../actions/paths/createPath.js');
 export const addPath = require('../actions/paths/addPath.js');
+export const addCurve = require('../actions/paths/addCurve.js');
+export const createCurve = require('../actions/paths/createCurve.js');
 export const createOncurve = require('../actions/oncurves/createOncurve.js');
 export const addOncurve = require('../actions/oncurves/addOncurve.js');
 export const createOffcurve = require('../actions/offcurves/createOffcurve.js');
