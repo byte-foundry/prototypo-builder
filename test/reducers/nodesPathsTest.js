@@ -9,18 +9,18 @@ describe('reducer: nodes (curves)', () => {
     const stateBefore = {};
     const action = createCurve();
     const stateAfter = {
-      [action.nodes[0]]: {
-        id: action.nodes[0],
+      [action.nodeIds[0]]: {
+        id: action.nodeIds[0],
         type: 'offcurve',
         childIds: []
       },
-      [action.nodes[1]]: {
-        id: action.nodes[1],
+      [action.nodeIds[1]]: {
+        id: action.nodeIds[1],
         type: 'offcurve',
         childIds: []
       },
-      [action.nodes[2]]: {
-        id: action.nodes[2],
+      [action.nodeIds[2]]: {
+        id: action.nodeIds[2],
         type: 'oncurve',
         childIds: []
       }

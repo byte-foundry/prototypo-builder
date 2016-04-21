@@ -131,7 +131,7 @@ function deleteMany(state, ids) {
 export default function(state = {}, action) {
   const { type, nodeId, nodeIds } = action;
 
-  if ( typeof type === 'undefined' || typeof nodeId === 'undefined' ) {
+  if ( typeof type === 'undefined' ) {
     return state;
   }
 
@@ -149,14 +149,13 @@ export default function(state = {}, action) {
       logError( validateUpdate(state, action) );
     }
   }
-console.log(type);
+
   switch (type) {
     case DELETE_NODE:
       const descendantIds = getAllDescendantIds(state, nodeId);
       return deleteMany(state, [ nodeId, ...descendantIds ]);
 
     case CREATE_CURVE:
-console.log('HEEEEEEERE', nodeIds);
       const nodes = {};
       nodeIds.forEach((nodeId, i) => {
         nodes[nodeId] = createNode({
@@ -164,7 +163,7 @@ console.log('HEEEEEEERE', nodeIds);
           nodeType: i === 2 ? 'oncurve' : 'offcurve'
         });
       });
-console.log(nodes);
+
       return Object.assign({}, state, nodes);
 
     default:

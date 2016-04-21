@@ -4,7 +4,7 @@ import {getNodeId} from './../_utils';
 module.exports = function() {
   return {
     type: CREATE_CURVE,
-    nodes: [
+    nodeIds: [
       getNodeId('offcurve'),
       getNodeId('offcurve'),
       getNodeId('oncurve')

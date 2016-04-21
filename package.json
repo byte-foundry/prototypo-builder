@@ -36,6 +36,7 @@
     "deep-freeze": "0.0.1",
     "eslint": "^2.2.0",
     "eslint-loader": "^1.0.0",
+    "eslint-plugin-mocha": "^2.2.0",
     "eslint-plugin-react": "^4.0.0",
     "file-loader": "^0.8.4",
     "glob": "^7.0.0",
