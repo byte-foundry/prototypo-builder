@@ -5,7 +5,7 @@ import createCurve from '../../src/actions/paths/createCurve';
 import addCurve from '../../src/actions/paths/addCurve';
 
 describe('reducer: nodes (curves)', () => {
-  it('should handle CREATE_CURVE action', () => {
+  it.only('should handle CREATE_CURVE action', () => {
     const stateBefore = {};
     const action = createCurve();
     const stateAfter = {
