@@ -48,7 +48,7 @@ class TextContour extends Component {
     return (
       <ul className="unstyled">
         <li>Paths:
-          <ul>
+          <ul className="unstyled">
             {childIds.map(this.renderTextChild)}
             <li><button onClick={this.handleAddStartingPathClick}>Add Path</button></li>
           </ul>

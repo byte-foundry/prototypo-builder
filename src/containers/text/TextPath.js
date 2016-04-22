@@ -11,11 +11,13 @@ import {
 
 import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
+import TextOncurve from './TextOncurve';
 
 class TextGlyph extends Component {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
+    this.renderTextCurve = this.renderTextCurve.bind(this);
     this.handleAddCurveClick = this.handleAddCurveClick.bind(this);
   }
 
@@ -37,6 +39,30 @@ class TextGlyph extends Component {
     addOncurve(id, oncurveId);
   }
 
+  renderTextCurve(childId, i) {
+    const { id, childIds, isClosed } = this.props;
+    const isOncurve = /^oncurve-/.test(childId);
+
+    // We only render oncurve points, and wrap following offcurves in a Foldable
+    if ( !isOncurve ) {
+      return;
+    }
+
+    const offcurveIds = [];
+    if ( /^offcurve-/.test(childIds[i-1]) ) {
+        offcurveIds.push(childIds[i-1]);
+    }
+    if ( /^offcurve-/.test(childIds[i+1]) ) {
+        offcurveIds.push(childIds[i+1]);
+    }
+
+    return (
+      <li key={childId}>
+        <TextOncurve id={childId} parentId={id} offcurveIds={offcurveIds} />
+      </li>
+    );
+  }
+
   render() {
     const { id, type, childIds, _isUnfolded } = this.props;
     const nodeClass = classNames({
@@ -51,7 +77,7 @@ class TextGlyph extends Component {
           <li><NodeProperties id={id} type={type} /></li>
           <li>
             <ul className="text-node__children-list unstyled">
-              {childIds.map(this.renderTextChild)}
+              {childIds.map(this.renderTextCurve)}
               <li>
                 <button onClick={this.handleAddCurveClick}>Add Curve</button>
               </li>
