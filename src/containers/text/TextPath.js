@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import {
   renderTextChild,
@@ -8,7 +9,8 @@ import {
   mapDispatchToProps
 } from './_utils';
 
-import TextNodeProperties from './TextNodeProperties';
+import NodeProperties from './NodeProperties';
+import Foldable from './Foldable';
 
 class TextGlyph extends Component {
   constructor(props) {
@@ -36,20 +38,27 @@ class TextGlyph extends Component {
   }
 
   render() {
-    const { id, type, childIds } = this.props;
+    const { id, type, childIds, _isUnfolded } = this.props;
+    const nodeClass = classNames({
+      'text-node': true,
+      'text-node--path': true,
+      'text-node--unfolded': _isUnfolded
+    });
 
     return (
-      <ul className="text-node text-node--path unstyled">
-        <li><TextNodeProperties id={id} type={type} /></li>
-        <li>
-          <ul className="text-node__children-list unstyled">
-            {childIds.map(this.renderTextChild)}
-            <li>
-              <button onClick={this.handleAddCurveClick}>Add Curve</button>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <Foldable id={id}>
+        <ul className={nodeClass}>
+          <li><NodeProperties id={id} type={type} /></li>
+          <li>
+            <ul className="text-node__children-list unstyled">
+              {childIds.map(this.renderTextChild)}
+              <li>
+                <button onClick={this.handleAddCurveClick}>Add Curve</button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </Foldable>
     );
   }
 }

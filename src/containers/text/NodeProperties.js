@@ -8,9 +8,9 @@ import {
   mapDispatchToProps
 } from './_utils';
 
-import TextNodeProperty from 'components/text/TextNodePropertyComponent';
+import NodeProperty from 'components/text/NodePropertyComponent';
 
-class TextNodeProperties extends Component {
+class NodeProperties extends Component {
   constructor(props) {
     super(props);
     this.handleUpdate = this.handleUpdate.bind(this);
@@ -44,7 +44,7 @@ class TextNodeProperties extends Component {
   }
 
   render() {
-    const { id, type } = this.props;
+    const { type } = this.props;
     const { propertyOrder, properties } = fontModel[type];
 
     return (
@@ -52,13 +52,12 @@ class TextNodeProperties extends Component {
         onInput={this.handleUpdate}
         onChange={this.handleUpdate}
       >
-        <li><small><i>{id}</i></small></li>
         { propertyOrder.map((propName) => {
           const value = this.props[propName];
           const propType = properties[propName];
 
           return (
-            <TextNodeProperty
+            <NodeProperty
               key={propName}
               name={propName}
               value={value}
@@ -71,8 +70,8 @@ class TextNodeProperties extends Component {
   }
 }
 
-TextNodeProperties.propTypes = {
+NodeProperties.propTypes = {
   actions: PropTypes.object.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextNodeProperties);
+export default connect(mapStateToProps, mapDispatchToProps)(NodeProperties);

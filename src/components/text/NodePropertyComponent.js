@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-require('styles/text/TextNodeProperty.scss');
+require('styles/text/NodeProperty.scss');
 
 const typeMap = {
   number: 'number',
@@ -10,7 +10,7 @@ const typeMap = {
   boolean: 'checkbox'
 }
 
-class TextNodePropertyComponent extends React.Component {
+class NodePropertyComponent extends React.Component {
   render() {
     const { name, value, type, disabled } = this.props;
     const inputType = typeMap[type];
@@ -30,10 +30,10 @@ class TextNodePropertyComponent extends React.Component {
   }
 }
 
-TextNodePropertyComponent.displayName = 'TextNodePropertyComponent';
+NodePropertyComponent.displayName = 'NodePropertyComponent';
 
 // Uncomment properties you need
-// TextNodePropertyComponent.propTypes = {};
-// TextNodePropertyComponent.defaultProps = {};
+// NodePropertyComponent.propTypes = {};
+// NodePropertyComponent.defaultProps = {};
 
-export default TextNodePropertyComponent;
+export default NodePropertyComponent;

@@ -1,15 +1,24 @@
 .text-node {
+  display: none;
+  list-style: none;
 
-}
+  &--unfolded {
+    display: block;
+  }
 
-.text-node__property {
+  &__fold-button {
+    cursor: default;
+  }
 
-}
+  &__property {
 
-.text-node__property-name:after {
-  content: ': ';
-}
+  }
 
-.text-node__property-input {
-  border-width: 0;
+  &__property-name:after {
+    content: ': ';
+  }
+
+  &__property-input {
+    border-width: 0;
+  }
 }

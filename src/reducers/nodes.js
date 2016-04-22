@@ -36,7 +36,6 @@ import {
 } from './../actions/const';
 
 import {
-  validateAction,
   validateAdd,
   validateUpdate,
   validateGraph
@@ -137,15 +136,16 @@ function deleteMany(state, ids) {
 export default function(state = {}, action) {
   const { type, nodeId, nodeIds } = action;
 
-  if ( typeof type === 'undefined' ) {
+  if (
+    typeof type === 'undefined' ||
+    ( typeof nodeId === 'undefined' && typeof nodeIds === 'undefined' )
+  ) {
     return state;
   }
 
   // During dev, we're verifying that the UI prevents impossible actions
   // such as adding a font to a glyph or updating the coordinates of a non-point
   if (  config.appEnv === 'dev' ) {
-    logError( validateAction(state, action) );
-
     if ( /^ADD_/.test(type) && type !== ADD_GLYPH ) {
       logError( validateAdd(state, action) );
       logError( validateGraph(state, action) );
