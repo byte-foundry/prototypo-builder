@@ -30,6 +30,7 @@ import {
   CREATE_OFFCURVE,
   ADD_OFFCURVE,
 
+  UPDATE_PROP,
   UPDATE_X,
   UPDATE_Y
 } from './../actions/const';
@@ -109,6 +110,11 @@ function node(state = initialState, action) {
     case UPDATE_Y:
       return Object.assign({}, state, {
         y: action.value
+      });
+
+    case UPDATE_PROP:
+      return Object.assign({}, state, {
+        [action.propName]: action.value
       });
 
     default:

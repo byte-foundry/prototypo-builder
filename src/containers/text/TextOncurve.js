@@ -5,22 +5,18 @@ import { connect } from 'react-redux';
 
 import {
   mapStateToProps,
-  mapDispatchToProps,
-  renderTextProperties,
-  handleInput
+  mapDispatchToProps
 } from './_utils';
 
-class TextOncurve extends Component {
-  constructor(props) {
-    super(props);
-    // this.handleInput = handleInput.bind(this);
-    this.renderTextProperties = renderTextProperties.bind(this);
-  }
+import TextNodeProperties from './TextNodeProperties';
 
+class TextOncurve extends Component {
   render() {
+    const { id, type } = this.props;
+
     return (
       <ul className="text-node text-node--oncurve unstyled">
-        <li>{this.renderTextProperties()}</li>
+        <li><TextNodeProperties id={id} type={type} /></li>
       </ul>
     );
   }

@@ -8,13 +8,10 @@ import {
   addOncurve,
   createOffcurve,
   addOffcurve,
-  updateX,
-  updateY
+  updateProp
 } from './../../actions/all';
 
 import fontModel from './../../_utils/fontModel';
-
-import TextNodeProperty from 'components/text/TextNodePropertyComponent';
 
 import TextContour from './TextContour';
 import TextFont from './TextFont';
@@ -30,7 +27,7 @@ const componentMap = {
   offcurve: TextOffcurve,
   oncurve: TextOncurve,
   path: TextPath
-}
+};
 
 export function renderTextChild(childId) {
   const { id } = this.props;
@@ -41,23 +38,6 @@ export function renderTextChild(childId) {
     <li key={childId}>
       <TextNode id={childId} parentId={id} />
     </li>
-  );
-}
-
-export function renderTextProperties() {
-  const { id, type } = this.props;
-  const { propertyOrder } = fontModel[type];
-
-  return (
-    <ul className="text-node__property-list unstyled">
-      <li><small><i>{id}</i></small></li>
-      { propertyOrder.map((propName) => {
-        const value = this.props[propName];
-        return (
-          <TextNodeProperty key={propName} name={propName} value={value} onInput={this.handleInput} />
-        );
-      }) }
-    </ul>
   );
 }
 
@@ -93,8 +73,7 @@ export function mapDispatchToProps(dispatch) {
     addOncurve,
     createOffcurve,
     addOffcurve,
-    updateX,
-    updateY
+    updateProp
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

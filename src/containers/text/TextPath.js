@@ -5,14 +5,14 @@ import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps,
-  renderTextProperties
+  mapDispatchToProps
 } from './_utils';
+
+import TextNodeProperties from './TextNodeProperties';
 
 class TextGlyph extends Component {
   constructor(props) {
     super(props);
-    this.renderTextProperties = renderTextProperties.bind(this);
     this.renderTextChild = renderTextChild.bind(this);
     this.handleAddCurveClick = this.handleAddCurveClick.bind(this);
   }
@@ -36,13 +36,13 @@ class TextGlyph extends Component {
   }
 
   render() {
-    const { childIds } = this.props;
+    const { id, type, childIds } = this.props;
 
     return (
       <ul className="text-node text-node--path unstyled">
-        <li>{this.renderTextProperties()}</li>
+        <li><TextNodeProperties id={id} type={type} /></li>
         <li>
-          <ul>
+          <ul className="text-node__children-list unstyled">
             {childIds.map(this.renderTextChild)}
             <li>
               <button onClick={this.handleAddCurveClick}>Add Curve</button>

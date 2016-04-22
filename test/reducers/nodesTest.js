@@ -1,10 +1,13 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '../../src/reducers/nodes';
-import createNode from '../../src/actions/nodes/createNode';
-import deleteNode from '../../src/actions/nodes/deleteNode';
-import addChild from '../../src/actions/nodes/addChild';
-import removeChild from '../../src/actions/nodes/removeChild';
+import {
+  createNode,
+  deleteNode,
+  addChild,
+  removeChild,
+  updateProp
+} from 'actions/all';
 
 describe('reducer: nodes', () => {
 
@@ -119,6 +122,30 @@ describe('reducer: nodes', () => {
       'node-1': {
         id: 'node-1',
         childIds: []
+      }
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
+  });
+
+  it('should handle UPDATE_PROP action', () => {
+    const stateBefore = {
+      'node-0': {
+        id: 'node-0',
+        type: 'offcurve',
+        childIds: []
+      }
+    };
+    const action = updateProp('node-0', 'x', 123);
+    const stateAfter = {
+      'node-0': {
+        id: 'node-0',
+        type: 'offcurve',
+        childIds: [],
+        x: 123
       }
     };
 
