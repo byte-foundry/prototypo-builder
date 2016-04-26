@@ -11,6 +11,6 @@ import nodeReducer from './nodes';
 /* Populated by react-webpack-redux:reducer */
 const reducers = {
   nodes: nodeReducer,
-  ui: require('../reducers/ui.js')
+  ui: require('../reducers/ui.js'),
 };
 module.exports = combineReducers(reducers);

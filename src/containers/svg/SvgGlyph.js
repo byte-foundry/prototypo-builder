@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import {
   renderSvgChild,
+  renderSelectionAreas,
   mapStateToProps,
   mapDispatchToProps
 } from './_utils';
@@ -10,9 +11,12 @@ import {
 class SvgGlyph extends Component {
   render() {
     const { childIds } = this.props;
+    const children = childIds.map(renderSvgChild.bind(this));
+    const selectionAreas = childIds.map(renderSelectionAreas.bind(this));
     return (
       <g>
-        {childIds.map(renderSvgChild.bind(this))}
+        {children}
+        {selectionAreas}
       </g>
     );
   }

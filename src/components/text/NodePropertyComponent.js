@@ -5,7 +5,7 @@ import React from 'react';
 require('styles/text/NodeProperty.scss');
 
 const typeMap = {
-  number: 'number',
+  number: 'text',
   string: 'text',
   boolean: 'checkbox'
 }

@@ -83,24 +83,26 @@ export default {
   },
   oncurve: {
     children: {},
-    propertyOrder: [ 'x', 'y' ],
+    propertyOrder: [ 'x', 'y', 'selected' ],
     properties: {
       _isUnfolded: 'boolean',
       x: 'number',
       y: 'number',
       _adjustX: 'number',
-      _adjustY: 'number'
+      _adjustY: 'number',
+      selected: 'boolean'
     }
   },
   offcurve: {
     children: {},
-    propertyOrder: [ 'x', 'y' ],
+    propertyOrder: [ 'x', 'y', 'selected' ],
     properties: {
       _isUnfolded: 'boolean',
       x: 'number',
       y: 'number',
       _adjustX: 'number',
-      _adjustY: 'number'
+      _adjustY: 'number',
+      selected: 'boolean'
     }
   }
 };
