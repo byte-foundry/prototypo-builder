@@ -7,9 +7,10 @@
  *          you edit them, they are not updated again.
  */
 import { combineReducers } from 'redux';
-
 import nodeReducer from './nodes';
-
 /* Populated by react-webpack-redux:reducer */
-const reducers = { nodes: nodeReducer };
+const reducers = {
+  nodes: nodeReducer,
+  ui: require('../reducers/ui.js')
+};
 module.exports = combineReducers(reducers);

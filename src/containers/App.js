@@ -14,8 +14,8 @@ import Main from '../components/Main';
 /* Populated by react-webpack-redux:reducer */
 class App extends Component {
   render() {
-    const {actions, nodes} = this.props;
-    return <Main actions={actions} nodes={nodes}/>;
+    const {actions, nodes, ui} = this.props;
+    return <Main actions={actions} nodes={nodes} ui={ui}/>;
   }
 }
 /* Populated by react-webpack-redux:reducer
@@ -25,11 +25,15 @@ class App extends Component {
  */
 App.propTypes = {
   actions: PropTypes.object.isRequired,
-  nodes: PropTypes.object.isRequired
+  nodes: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired
 };
 function mapStateToProps(state) {
   /* Populated by react-webpack-redux:reducer */
-  const props = { nodes: state.nodes };
+  const props = {
+    nodes: state.nodes,
+    ui: state.ui
+  };
   return props;
 }
 function mapDispatchToProps(dispatch) {
@@ -57,7 +61,8 @@ function mapDispatchToProps(dispatch) {
     addOffcurve: require('../actions/offcurves/addOffcurve.js'),
     updateX: require('../actions/points/updateX.js'),
     updateY: require('../actions/points/updateY.js'),
-    addChildren: require('../actions/nodes/addChildren.js')
+    updateNodeX: require('../actions/nodes/updateNodeX.js'),
+    updateNodeY: require('../actions/nodes/updateNodeY.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

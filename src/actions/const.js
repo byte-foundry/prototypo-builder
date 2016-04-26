@@ -21,3 +21,5 @@ export const UPDATE_PROP = 'UPDATE_PROP';
 export const ADD_CURVE = 'ADD_CURVE';
 export const CREATE_CURVE = 'CREATE_CURVE';
 export const ADD_CHILDREN = 'ADD_CHILDREN';
+export const UPDATE_NODE_X = 'UPDATE_NODE_X';
+export const UPDATE_NODE_Y = 'UPDATE_NODE_Y';

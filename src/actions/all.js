@@ -20,3 +20,5 @@ export const createOffcurve = require('../actions/offcurves/createOffcurve.js');
 export const addOffcurve = require('../actions/offcurves/addOffcurve.js');
 export const updateX = require('../actions/points/updateX.js');
 export const updateY = require('../actions/points/updateY.js');
+export const updateNodeX = require('../actions/points/updateNodeX.js');
+export const updateNodeY = require('../actions/points/updateNodeY.js');

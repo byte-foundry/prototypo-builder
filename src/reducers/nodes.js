@@ -32,7 +32,9 @@ import {
 
   UPDATE_PROP,
   UPDATE_X,
-  UPDATE_Y
+  UPDATE_Y,
+  UPDATE_NODE_X,
+  UPDATE_NODE_Y
 } from './../actions/const';
 
 import {
@@ -134,7 +136,7 @@ function deleteMany(state, ids) {
 }
 
 export default function(state = {}, action) {
-  const { type, nodeId, nodeIds } = action;
+  const { type, nodeId, parentId, nodeIds } = action;
 
   if (
     typeof type === 'undefined' ||
@@ -169,8 +171,15 @@ export default function(state = {}, action) {
           nodeType: i === 2 ? 'oncurve' : 'offcurve'
         });
       });
-
       return Object.assign({}, state, nodes);
+
+    case UPDATE_NODE_X:
+    case UPDATE_NODE_Y:
+      const path = state[parentId];
+      // const updatedNodes = {
+      //   [nodeId]:
+      // };
+      return;
 
     default:
       return Object.assign({}, state, {
