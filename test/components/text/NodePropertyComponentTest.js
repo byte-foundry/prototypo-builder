@@ -7,13 +7,13 @@
 // import TestUtils from 'react-addons-test-utils';
 import createComponent from 'helpers/shallowRenderHelper';
 
-import TextNodePropertyComponent from 'components/text/TextNodePropertyComponent.js';
+import NodePropertyComponent from 'components/text/NodePropertyComponent.js';
 
-describe('TextNodePropertyComponent', () => {
+describe('NodePropertyComponent', () => {
   let component;
 
   beforeEach(() => {
-    component = createComponent(TextNodePropertyComponent);
+    component = createComponent(NodePropertyComponent);
   });
 
   it('should have its default className formatted as CEM ', () => {

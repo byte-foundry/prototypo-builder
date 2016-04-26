@@ -87,7 +87,9 @@ export default {
     properties: {
       _isUnfolded: 'boolean',
       x: 'number',
-      y: 'number'
+      y: 'number',
+      _adjustX: 'number',
+      _adjustY: 'number'
     }
   },
   offcurve: {
@@ -96,7 +98,9 @@ export default {
     properties: {
       _isUnfolded: 'boolean',
       x: 'number',
-      y: 'number'
+      y: 'number',
+      _adjustX: 'number',
+      _adjustY: 'number'
     }
   }
 };

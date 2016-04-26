@@ -40,7 +40,7 @@ class TextGlyph extends Component {
   }
 
   renderTextCurve(childId, i) {
-    const { id, childIds, isClosed } = this.props;
+    const { id, childIds } = this.props;
     const isOncurve = /^oncurve-/.test(childId);
 
     // We only render oncurve points, and wrap following offcurves in a Foldable

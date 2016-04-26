@@ -1,4 +1,4 @@
-import logError from '_utils/logError';
+import logError from '../../src/_utils/logError';
 
 describe('logError', () => {
   it('should pass errors to the provided logger function', (done) => {
