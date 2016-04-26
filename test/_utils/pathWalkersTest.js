@@ -58,7 +58,8 @@ describe('pathWalkers', () => {
         { id: 'node-2' },
         { id: 'node-3' },
         { id: 'node-4' },
-        0
+        0,
+        1
       ];
 
       forEachCurve('node-0', state, callback);
@@ -104,14 +105,16 @@ describe('pathWalkers', () => {
         { id: 'node-2' },
         { id: 'node-3' },
         { id: 'node-4' },
-        0
+        0,
+        2
       ];
       const curve1 = [
         { id: 'node-4' },
         { id: 'node-5' },
         { id: 'node-6' },
         { id: 'node-7' },
-        1
+        1,
+        2
       ]
 
       forEachCurve('node-0', state, callback);
@@ -127,7 +130,7 @@ describe('pathWalkers', () => {
 
   describe('mapCurve', () => {
     const callback = function() {
-      return [...arguments, arguments[arguments.length - 1] * 10 + 1];
+      return [...arguments, arguments[arguments.length - 2] * 10 + 1];
     }
 
     it('should return the mapped curves', (done) => {
@@ -167,6 +170,7 @@ describe('pathWalkers', () => {
           { id: 'node-3' },
           { id: 'node-4' },
           0,
+          2,
           1
         ],
         [
@@ -175,6 +179,7 @@ describe('pathWalkers', () => {
           { id: 'node-6' },
           { id: 'node-7' },
           1,
+          2,
           11
         ]
       ];
@@ -212,7 +217,8 @@ describe('pathWalkers', () => {
           { id: 'node-1' },
           null,
           null,
-          0
+          0,
+          1
         ];
 
         forEachNode('node-0', state, callback);
@@ -246,13 +252,15 @@ describe('pathWalkers', () => {
           { id: 'node-1' },
           null,
           { id: 'node-2' },
-          0
+          0,
+          2
         ];
         const node1 = [
           { id: 'node-4' },
           { id: 'node-3' },
           null,
-          1
+          1,
+          2
         ];
 
         forEachNode('node-0', state, callback);
@@ -298,19 +306,22 @@ describe('pathWalkers', () => {
           { id: 'node-1' },
           null,
           { id: 'node-2' },
-          0
+          0,
+          3
         ];
         const node1 = [
           { id: 'node-4' },
           { id: 'node-3' },
           { id: 'node-5' },
-          1
+          1,
+          3
         ];
         const node2 = [
           { id: 'node-7' },
           { id: 'node-6' },
           null,
-          2
+          2,
+          3
         ];
 
         forEachNode('node-0', state, callback);
@@ -349,7 +360,8 @@ describe('pathWalkers', () => {
           { id: 'node-1' },
           null,
           null,
-          0
+          0,
+          1
         ];
 
         forEachNode('node-0', state, callback);
@@ -384,13 +396,15 @@ describe('pathWalkers', () => {
           { id: 'node-1' },
           { id: 'node-3' },
           { id: 'node-2' },
-          0
+          0,
+          2
         ];
         const node1 = [
           { id: 'node-4' },
           { id: 'node-3' },
           { id: 'node-2' },
-          1
+          1,
+          2
         ];
 
         forEachNode('node-0', state, callback);
@@ -437,19 +451,22 @@ describe('pathWalkers', () => {
           { id: 'node-1' },
           { id: 'node-6' },
           { id: 'node-2' },
-          0
+          0,
+          3
         ];
         const node1 = [
           { id: 'node-4' },
           { id: 'node-3' },
           { id: 'node-5' },
-          1
+          1,
+          3
         ];
         const node2 = [
           { id: 'node-7' },
           { id: 'node-6' },
           { id: 'node-2' },
-          2
+          2,
+          3
         ];
 
         forEachNode('node-0', state, callback);
@@ -466,7 +483,7 @@ describe('pathWalkers', () => {
 
   describe('mapNode', () => {
     const callback = function() {
-      return [...arguments, arguments[arguments.length - 1] * 10 + 1];
+      return [...arguments, arguments[arguments.length - 2] * 10 + 1];
     }
 
     it('should return mapped Nodes', (done) => {
@@ -506,6 +523,7 @@ describe('pathWalkers', () => {
           { id: 'node-6' },
           { id: 'node-2' },
           0,
+          3,
           1
         ],
         [
@@ -513,6 +531,7 @@ describe('pathWalkers', () => {
           { id: 'node-3' },
           { id: 'node-5' },
           1,
+          3,
           11
         ],
         [
@@ -520,6 +539,7 @@ describe('pathWalkers', () => {
           { id: 'node-6' },
           { id: 'node-2' },
           2,
+          3,
           21
         ]
       ];

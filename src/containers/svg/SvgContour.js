@@ -18,7 +18,7 @@ class SvgContour extends Component {
     const { childIds } = nodes[id];
 
     return childIds.map((pathId) => {
-      return mapCurve(pathId, nodes, (start, c1, c2, end, i) => {
+      return mapCurve(pathId, nodes, (start, c1, c2, end, i, length) => {
         let sPoint = '';
 
         if ( i === 0 ) {
@@ -28,34 +28,12 @@ class SvgContour extends Component {
         sPoint +=
           `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
 
-
+        if ( i === length-1 && nodes[pathId].isClosed ) {
+          sPoint += 'Z';
+        }
 
         return sPoint;
       }).join(' ');
-
-      // return path.childIds.map((pointId, i) => {
-      //   const point = nodes[pointId];
-      //   let sPoint = '';
-      //
-      //   if ( i === 0 ) {
-      //     sPoint += 'M';
-      //   }
-      //
-      //   sPoint += ( point.x || '0' ) + ',' + ( point.y || '0' );
-      //
-      //   if ( i !== path.childIds.length -1 ) {
-      //     // prepare the next curve
-      //     if ( point.type === 'oncurve' ) {
-      //       sPoint += 'C';
-      //     }
-      //   }
-      //   // close path on last point
-      //   else if ( path.isClosed ) {
-      //     sPoint += 'Z'
-      //   }
-      //
-      //   return sPoint;
-      // }).join(' ');
     }).join(' ');
   }
 

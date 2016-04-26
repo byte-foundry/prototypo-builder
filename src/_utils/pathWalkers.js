@@ -1,5 +1,6 @@
 export function mapCurve(nodeId, nodes, callback, dontMap) {
   const { childIds } = nodes[nodeId];
+  const length = ( childIds.length -1 ) / 3;
   const result = [];
   let curr;
 
@@ -9,7 +10,8 @@ export function mapCurve(nodeId, nodes, callback, dontMap) {
       nodes[childIds[i+1]],
       nodes[childIds[i+2]],
       nodes[childIds[i+3]],
-      i / 3
+      i / 3,
+      length
     );
 
     if ( !dontMap ) {
@@ -28,6 +30,7 @@ export function forEachCurve() {
 
 export function mapNode(nodeId, nodes, callback, dontMap) {
   const { childIds, isClosed } = nodes[nodeId];
+  const length = Math.floor( childIds.length / 3 ) + 1;
   const result = [];
   let curr;
 
@@ -37,7 +40,8 @@ export function mapNode(nodeId, nodes, callback, dontMap) {
         nodes[childIds[i]],
         null,
         null,
-        i / 3
+        i / 3,
+        length
       );
     }
     else if ( i === 0 ) {
@@ -45,7 +49,8 @@ export function mapNode(nodeId, nodes, callback, dontMap) {
         nodes[childIds[i]],
         isClosed ? nodes[childIds[childIds.length-2]] : null,
         nodes[childIds[i+1]],
-        i / 3
+        i / 3,
+        length
       );
     }
     else if ( i === childIds.length-1 ) {
@@ -53,7 +58,8 @@ export function mapNode(nodeId, nodes, callback, dontMap) {
         nodes[childIds[i]],
         nodes[childIds[i-1]],
         isClosed ? nodes[childIds[1]] : null,
-        i / 3
+        i / 3,
+        length
       );
     }
     else {
@@ -61,7 +67,8 @@ export function mapNode(nodeId, nodes, callback, dontMap) {
         nodes[childIds[i]],
         nodes[childIds[i-1]],
         nodes[childIds[i+1]],
-        i / 3
+        i / 3,
+        length
       );
     }
 
