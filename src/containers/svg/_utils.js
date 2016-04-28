@@ -17,7 +17,15 @@ import SvgGlyph from './SvgGlyph';
 import SvgContourSelection from './SvgContourSelection';
 
 import {
-  updateProp
+  updateProp,
+  setCoords,
+  setMouseState,
+  createOffcurve,
+  createOncurve,
+  addOffcurve,
+  addOncurve,
+  moveNode,
+  setNodeSelected
 } from './../../actions/all';
 
 const componentMap = {
@@ -56,8 +64,31 @@ export function mapStateToProps(state, ownProps) {
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    updateProp
+    updateProp,
+    setCoords,
+    setMouseState,
+    createOncurve,
+    createOffcurve,
+    addOffcurve,
+    addOncurve,
+    moveNode,
+    setNodeSelected
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
+}
+
+export function getSvgCoordsFromClientCoords( clientCoord, elem ) {
+  const svg = document.querySelector('svg');
+  const target = elem || svg;
+
+  const svgPoint = svg.createSVGPoint();
+  svgPoint.x = clientCoord.x;
+  svgPoint.y = clientCoord.y;
+  //create global space coords
+  const globalPoint = svgPoint.matrixTransform(svg.getScreenCTM().inverse());
+
+  //create local space coords for the element being manipulated, returns identity if elem = svg
+  const local = globalPoint.matrixTransform(svg.getScreenCTM().inverse().multiply(target.getScreenCTM()));
+  return local;
 }

@@ -2,7 +2,8 @@ import {
   forEachCurve,
   forEachNode,
   mapCurve,
-  mapNode
+  mapNode,
+  getNode
 } from '../../src/_utils/pathWalkers';
 
 describe('pathWalkers', () => {
@@ -400,7 +401,7 @@ describe('pathWalkers', () => {
           2
         ];
         const node1 = [
-          { id: 'node-4' },
+          { id: 'node-1' },
           { id: 'node-3' },
           { id: 'node-2' },
           1,
@@ -462,7 +463,7 @@ describe('pathWalkers', () => {
           3
         ];
         const node2 = [
-          { id: 'node-7' },
+          { id: 'node-1' },
           { id: 'node-6' },
           { id: 'node-2' },
           2,
@@ -535,7 +536,7 @@ describe('pathWalkers', () => {
           11
         ],
         [
-          { id: 'node-7' },
+          { id: 'node-1' },
           { id: 'node-6' },
           { id: 'node-2' },
           2,
@@ -548,6 +549,86 @@ describe('pathWalkers', () => {
 
       expect(result).to.deep.equal(expected);
 
+      done();
+    });
+  });
+
+  describe('getNode', () => {
+    it('should get me the correct node', (done) => {
+      const state = {
+        'node-0': {
+          id: 'node-0',
+          isClosed: true,
+          childIds: [
+            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
+          ]
+        },
+        'node-1': {
+          id: 'node-1'
+        },
+        'node-2': {
+          id: 'node-2'
+        },
+        'node-3': {
+          id: 'node-3'
+        },
+        'node-4': {
+          id: 'node-4'
+        },
+        'node-5': {
+          id: 'node-5'
+        },
+        'node-6': {
+          id: 'node-6'
+        },
+        'node-7': {
+          id: 'node-7'
+        }
+      };
+
+      const expected0 = [
+        {
+          id: 'node-1'
+        },
+        {
+          id: 'node-6'
+        },
+        {
+          id: 'node-2'
+        }
+      ];
+
+      const expected1 = [
+        {
+          id: 'node-4'
+        },
+        {
+          id: 'node-3'
+        },
+        {
+          id: 'node-5'
+        }
+      ];
+
+      const expected2 = [
+        {
+          id: 'node-1'
+        },
+        {
+          id: 'node-6'
+        },
+        {
+          id: 'node-2'
+        }
+      ];
+
+      const result0 = getNode('node-0', 'node-1', state);
+      const result1 = getNode('node-0', 'node-4', state);
+      const result2 = getNode('node-0', 'node-7', state);
+
+      expect(result0).to.deep.equal(expected0);
+      expect(result1).to.deep.equal(expected1);
+      expect(result2).to.deep.equal(expected2);
       done();
     });
   });

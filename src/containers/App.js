@@ -61,8 +61,7 @@ function mapDispatchToProps(dispatch) {
     addOffcurve: require('../actions/offcurves/addOffcurve.js'),
     updateX: require('../actions/points/updateX.js'),
     updateY: require('../actions/points/updateY.js'),
-    updateNodeX: require('../actions/nodes/updateNodeX.js'),
-    updateNodeY: require('../actions/nodes/updateNodeY.js')
+    moveNode: require('../actions/nodes/moveNode.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

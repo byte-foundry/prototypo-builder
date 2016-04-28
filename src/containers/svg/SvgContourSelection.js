@@ -19,32 +19,67 @@ class SvgContourSelection extends Component {
     const { nodes, id } = this.props;
     const { childIds } = nodes[id];
     const result = [];
+    const pathResult = [];
 
     childIds.forEach((pathId) => {
       const path = nodes[pathId];
       forEachNode(pathId, nodes, (point, inControl, outControl, i) => {
         result.push(
-          <SvgSelector point={point} key={i} className="contour-point" updateProp={this.props.actions.updateProp}/>
+          <SvgSelector
+            point={point}
+            key={i}
+            className="contour-point"
+            mouse={this.props.mouse}
+            parentId={pathId}
+            nodes={ this.props.nodes }
+            setCoords={this.props.actions.setCoords}
+            moveNode={this.props.actions.moveNode}
+            updateProp={this.props.actions.updateProp}
+            setNodeSelected={this.props.actions.setNodeSelected}
+            setMouseState={this.props.actions.setMouseState}
+          />
         );
         if (inControl) {
-          result.push(
+          pathResult.push(
             <path className="point-control" key={`point-in-${i}`} d={`M${point.x} ${point.y} L${inControl.x} ${inControl.y}`}/>
           );
           result.push(
-            <SvgSelector point={inControl} key={`in${i}`} className="control-point"/>
+            <SvgSelector
+              point={inControl}
+              key={`in${i}`}
+              className="control-point"
+              mouse={this.props.mouse}
+              parentId={pathId}
+              setCoords={this.props.actions.setCoords}
+              moveNode={this.props.actions.moveNode}
+              updateProp={this.props.actions.updateProp}
+              setNodeSelected={this.props.actions.setNodeSelected}
+              setMouseState={this.props.actions.setMouseState}
+            />
           );
         }
         if (outControl) {
-          result.push(
+          pathResult.push(
             <path className="point-control" key={`point-out-${i}`} d={`M${point.x} ${point.y} L${outControl.x} ${outControl.y}`}/>
           );
           result.push(
-            <SvgSelector point={outControl} key={`out${i}`} className="control-point"/>
+            <SvgSelector
+              point={outControl}
+              key={`out${i}`}
+              className="control-point"
+              parentId={pathId}
+              mouse={this.props.mouse}
+              setCoords={this.props.actions.setCoords}
+              moveNode={this.props.actions.moveNode}
+              updateProp={this.props.actions.updateProp}
+              setNodeSelected={this.props.actions.setNodeSelected}
+              setMouseState={this.props.actions.setMouseState}
+            />
           );
         }
       });
     });
-    return result;
+    return pathResult.concat(result);
   }
 
   render() {
@@ -61,7 +96,7 @@ SvgContourSelection.propTypes = {
 }
 
 function mapStateToProps(state) {
-  return { nodes: state.nodes };
+  return { nodes: state.nodes, mouse: state.ui.mouse };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgContourSelection);

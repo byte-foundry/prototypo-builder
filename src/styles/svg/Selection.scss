@@ -1,11 +1,52 @@
+.contour {
+  fill:transparent;
+  stroke:black;
+  stroke-width:2px;
+
+  &.is-closed {
+    fill:black;
+  }
+}
 .contour-point {
-  fill: #24d390;
+  stroke: #24d390;
+  fill:white;
+}
+
+.state-indicator {
+  fill: transparent;
+  stroke: red;
+  stroke-width: 3px;
+  display:none;
+
+  &-circle {
+    fill:red;
+  }
+}
+
+.selector-container {
+
+  &:hover .contour-point {
+    fill: #24d390;
+  }
+
+  &:hover .control-point {
+    fill: #0063d3;
+  }
+
+  &:hover .state-indicator {
+    display:block;
+  }
+}
+
+.transparent-selector {
+  fill: transparent;
+  stroke: transparent;
   cursor:pointer;
 }
 
 .control-point {
-  fill: #0063d3;
-  cursor:pointer;
+  stroke: #0063d3;
+  fill:white;
 }
 
 .point-control {

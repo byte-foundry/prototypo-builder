@@ -55,7 +55,7 @@ export function mapNode(nodeId, nodes, callback, dontMap) {
     }
     else if ( i === childIds.length-1 ) {
       curr = callback(
-        nodes[childIds[i]],
+        isClosed ? nodes[childIds[0]] : nodes[childIds[i]],
         nodes[childIds[i-1]],
         isClosed ? nodes[childIds[1]] : null,
         i / 3,
@@ -84,4 +84,55 @@ export function mapNode(nodeId, nodes, callback, dontMap) {
 
 export function forEachNode() {
   return mapNode.apply(null, [...arguments, true]);
+}
+
+export function getCorrespondingHandles(nodeId, childId, nodes) {
+  const { childIds, isClosed } = nodes[nodeId];
+  const i = childIds.indexOf(childId);
+
+  const oncurveId = i%3 === 1 ? i - 1 : i + 1;
+
+  const [onC, offC1, offC2] = getNode(nodeId, childIds[oncurveId], nodes);
+  return [
+    offC1,
+    offC2,
+    onC
+  ];
+}
+
+export function getNode(nodeId, childId, nodes) {
+  const { childIds, isClosed } = nodes[nodeId];
+  const i = childIds.indexOf(childId);
+
+  if (i !== -1 && i%3 === 0) {
+    if ( childIds.length === 1 ) {
+      return [
+        nodes[childIds[i]],
+        null,
+        null
+      ];
+    }
+    else if ( i === 0 ) {
+      return [
+        nodes[childIds[i]],
+        isClosed ? nodes[childIds[childIds.length-2]] : null,
+        nodes[childIds[i+1]]
+      ];
+    }
+    else if ( i === childIds.length-1 ) {
+      return [
+        isClosed ? nodes[childIds[0]] : nodes[childIds[i]],
+        nodes[childIds[i-1]],
+        isClosed ? nodes[childIds[1]] : null
+      ];
+    }
+    else {
+      return [
+        nodes[childIds[i]],
+        nodes[childIds[i-1]],
+        nodes[childIds[i+1]]
+      ];
+    }
+  }
+  throw new Error();
 }

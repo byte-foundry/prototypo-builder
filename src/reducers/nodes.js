@@ -33,8 +33,9 @@ import {
   UPDATE_PROP,
   UPDATE_X,
   UPDATE_Y,
-  UPDATE_NODE_X,
-  UPDATE_NODE_Y
+  MOVE_NODE,
+
+  ONCURVE_SMOOTH
 } from './../actions/const';
 
 import {
@@ -42,6 +43,11 @@ import {
   validateUpdate,
   validateGraph
 } from './_nodesValidateActions';
+
+import {
+  getNode,
+  getCorrespondingHandles
+} from '../_utils/pathWalkers';
 
 /* Define your initial state here.
  *
@@ -51,12 +57,13 @@ import {
 const initialState = {};
 
 function createNode(action) {
-  const { nodeId, nodeType } = action;
+  const { nodeId, nodeType, state } = action;
 
   return {
     id: nodeId,
     type: nodeType,
-    childIds: []
+    childIds: [],
+    state,
   }
 }
 
@@ -135,6 +142,23 @@ function deleteMany(state, ids) {
   return state;
 }
 
+function deepPositionUpdate(node, nodes, x=0, y=0, result) {
+  const type = node.type;
+
+  if (type === 'oncurve' || type === 'offcurve') {
+    result[node.id] = {
+      ...node,
+      x: node.x + x,
+      y: node.y + y
+    }
+  } else {
+    node.childIds.forEach((childId) => {
+      const target = nodes[childId];
+      deepPositionUpdate(target, nodes, x, y, result);
+    });
+  }
+}
+
 export default function(state = {}, action) {
   const { type, nodeId, parentId, nodeIds } = action;
 
@@ -173,13 +197,37 @@ export default function(state = {}, action) {
       });
       return Object.assign({}, state, nodes);
 
-    case UPDATE_NODE_X:
-    case UPDATE_NODE_Y:
-      const path = state[parentId];
-      // const updatedNodes = {
-      //   [nodeId]:
-      // };
-      return;
+    case MOVE_NODE:
+      const path = state[nodeId];
+      const type = path.type;
+      if ( type === 'oncurve') {
+        const nodesToMove = getNode(parentId, nodeId, state);
+        const resultNode = {};
+        nodesToMove.forEach((node) => {
+          if (node !== null) {
+            node.x = (node.x || 0) + action.dx;
+            node.y = (node.y || 0) + action.dy;
+            resultNode[node.id] = node;
+          }
+        });
+        return {...state, ...resultNode};
+      } else if ( type === 'offcurve') {
+        const nodesToMove = getCorrespondingHandles(parentId, nodeId, state);
+        const result = {...state,
+          [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy}
+        };
+        if (nodesToMove[2].state === ONCURVE_SMOOTH) {
+          const oppositeNode = nodeId === nodesToMove[1].id ? nodesToMove[0] : nodesToMove[1];
+          if (oppositeNode) {
+            result[oppositeNode.id] = {...state[oppositeNode.id], x: oppositeNode.x - action.dx, y: oppositeNode.y - action.dy};
+          }
+        }
+        return result;
+      } else {
+        const result = {};
+        deepPositionUpdate(path, state, action.dx, action.dy, result);
+        return {...state, ...result};
+      }
 
     default:
       return Object.assign({}, state, {

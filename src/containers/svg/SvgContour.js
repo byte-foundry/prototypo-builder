@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { mapCurve } from './../../_utils/pathWalkers';
 
@@ -25,8 +26,10 @@ class SvgContour extends Component {
           sPoint += `M ${start.x || 0},${start.y || 0}`;
         }
 
-        sPoint +=
-          `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
+        if (end) {
+          sPoint +=
+            `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
+        }
 
         if ( i === length-1 && nodes[pathId].isClosed ) {
           sPoint += 'Z';
@@ -38,8 +41,14 @@ class SvgContour extends Component {
   }
 
   render() {
+    const { nodes, id } = this.props;
+    const node = nodes[id];
+    const classes = classnames({
+      contour: true,
+      'is-closed': node.isClosed
+    });
     return (
-      <path d={this.renderChildren()} />
+      <path d={this.renderChildren()} className={classes} />
     );
   }
 }

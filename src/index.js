@@ -29,12 +29,22 @@ const store = configureStore({
     'path-initial': {
       id: 'path-initial',
       type: 'path',
-      childIds: ['oncurve-initial']
+      childIds: ['oncurve-initial', 'offcurve-initial']
     },
     'oncurve-initial': {
       id: 'oncurve-initial',
       type: 'oncurve',
-      childIds: []
+      childIds: [],
+      x: 0,
+      y: 0,
+      state: 1
+    },
+    'offcurve-initial': {
+      id: 'offcurve-initial',
+      type: 'offcurve',
+      childIds: [],
+      x: 0,
+      y: 0
     }
   }
 });

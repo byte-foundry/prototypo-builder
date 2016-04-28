@@ -1,4 +1,4 @@
-import {CREATE_ONCURVE} from './../const';
+import {CREATE_ONCURVE, ONCURVE_SMOOTH} from './../const';
 import {getNodeId} from './../_utils';
 
 module.exports = function() {
@@ -6,6 +6,7 @@ module.exports = function() {
   return {
     type: CREATE_ONCURVE,
     nodeId: getNodeId(nodeType),
-    nodeType
+    nodeType,
+    state: ONCURVE_SMOOTH
   };
 };

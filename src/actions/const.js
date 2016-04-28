@@ -21,5 +21,17 @@ export const UPDATE_PROP = 'UPDATE_PROP';
 export const ADD_CURVE = 'ADD_CURVE';
 export const CREATE_CURVE = 'CREATE_CURVE';
 export const ADD_CHILDREN = 'ADD_CHILDREN';
-export const UPDATE_NODE_X = 'UPDATE_NODE_X';
-export const UPDATE_NODE_Y = 'UPDATE_NODE_Y';
+export const MOVE_NODE = 'MOVE_NODE';
+export const SET_COORDS = 'SET_COORDS';
+export const SET_MOUSE_STATE = 'SET_MOUSE_STATE';
+export const SET_NODE_SELECTED = 'SET_NODE_SELECTED';
+
+
+//Mouse state constants
+export const MOUSE_STATE_CREATE = 1;
+export const MOUSE_STATE_MOVE = 2;
+export const MOUSE_STATE_MOVE_AFTER_CREATE = 3;
+
+//Oncurve types
+export const ONCURVE_SMOOTH = 1;
+export const ONCURVE_CORNER = 2;

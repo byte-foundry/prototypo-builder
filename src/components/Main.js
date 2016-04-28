@@ -3,7 +3,7 @@ require('styles/App.css');
 
 import React from 'react';
 import TextRoot from './../containers/text/TextRoot';
-import SvgRoot from './../containers/svg/SvgRoot';
+import SvgContainer from './../containers/svg/SvgContainer';
 
 class AppComponent extends React.Component {
   render() {
@@ -13,13 +13,7 @@ class AppComponent extends React.Component {
           <TextRoot id={'root'} />
         </div>
         <div>
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-            viewBox="-800 -1400 2000 2000"
-          >
-            <g transform="matrix(1 0 0 -1 0 0)">
-              <SvgRoot id={'root'} />
-            </g>
-          </svg>
+          <SvgContainer />
         </div>
       </div>
     );

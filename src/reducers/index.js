@@ -8,9 +8,10 @@
  */
 import { combineReducers } from 'redux';
 import nodeReducer from './nodes';
+import uiReducer from './ui';
 /* Populated by react-webpack-redux:reducer */
 const reducers = {
   nodes: nodeReducer,
-  ui: require('../reducers/ui.js'),
+  ui: uiReducer
 };
 module.exports = combineReducers(reducers);
