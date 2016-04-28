@@ -31,11 +31,15 @@ import {
   ADD_OFFCURVE,
 
   UPDATE_PROP,
+  UPDATE_PROPS,
   UPDATE_X,
   UPDATE_Y,
-  MOVE_NODE,
 
+  UPDATE_COORDS,
+
+  MOVE_NODE,
   ONCURVE_SMOOTH
+
 } from './../actions/const';
 
 import {
@@ -119,11 +123,16 @@ function node(state = initialState, action) {
       return Object.assign({}, state, {
         y: action.value
       });
+    case UPDATE_COORDS:
+      return Object.assign({}, state, action.coords);
 
     case UPDATE_PROP:
       return Object.assign({}, state, {
-        [action.propName]: action.value
+        [action.propNames[0]]: action.value
       });
+
+    case UPDATE_PROPS:
+      return Object.assign({}, state, action.props);
 
     default:
       return state;

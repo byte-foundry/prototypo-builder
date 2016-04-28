@@ -21,6 +21,9 @@ export const UPDATE_PROP = 'UPDATE_PROP';
 export const ADD_CURVE = 'ADD_CURVE';
 export const CREATE_CURVE = 'CREATE_CURVE';
 export const ADD_CHILDREN = 'ADD_CHILDREN';
+export const UPDATE_COORDS = 'UPDATE_COORDS';
+export const UPDATE_PROPS = 'UPDATE_PROPS';
+
 export const MOVE_NODE = 'MOVE_NODE';
 export const SET_COORDS = 'SET_COORDS';
 export const SET_MOUSE_STATE = 'SET_MOUSE_STATE';

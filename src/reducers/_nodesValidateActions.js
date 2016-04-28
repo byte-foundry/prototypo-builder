@@ -3,14 +3,16 @@ import fontModel from './../_utils/fontModel';
 // Validate that the property we're trying to update is a known property for
 // that node type
 export function validateUpdate(state, action, model = fontModel) {
-  const { nodeId, propName } = action;
+  const { nodeId, propNames } = action;
   const nodeType = state[nodeId].type;
 
-  if ( !(propName in model[nodeType].properties) ) {
-    return new Error(
-      `Can't update '${propName}' of '${nodeId}':
-      The model doesn't allow '${propName}' for '${nodeType}'.`
-    );
+  for ( let propName of propNames ) {
+    if ( !(propName in model[nodeType].properties) ) {
+      return new Error(
+        `Can't update '${propName}' of '${nodeId}':
+        The model doesn't allow '${propName}' for '${nodeType}'.`
+      );
+    }
   }
 
   return true;

@@ -6,7 +6,9 @@ import {
   deleteNode,
   addChild,
   removeChild,
-  updateProp
+  updateProp,
+  updateCoords,
+  updateProps
 } from 'actions/all';
 
 describe('reducer: nodes', () => {
@@ -146,6 +148,86 @@ describe('reducer: nodes', () => {
         type: 'offcurve',
         childIds: [],
         x: 123
+      }
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
+  });
+
+  it('should handle UPDATE_COORDS action', () => {
+    const stateBefore = {
+      'node-0': {
+        id: 'node-0',
+        type: 'offcurve',
+        childIds: []
+      }
+    };
+    const action1 = updateCoords('node-0', 12, 34);
+    const stateAfter1 = {
+      'node-0': {
+        id: 'node-0',
+        type: 'offcurve',
+        childIds: [],
+        x: 12,
+        y: 34
+      }
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action1);
+
+    expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
+
+    const action2 = updateCoords('node-0', [56, 78]);
+    const stateAfter2 = {
+      'node-0': {
+        id: 'node-0',
+        type: 'offcurve',
+        childIds: [],
+        x: 56,
+        y: 78
+      }
+    };
+
+    deepFreeze(action2);
+
+    expect(reducer(stateBefore, action2)).to.deep.equal(stateAfter2);
+
+    const action3 = updateCoords('node-0', { x: 90, y: 13});
+    const stateAfter3 = {
+      'node-0': {
+        id: 'node-0',
+        type: 'offcurve',
+        childIds: [],
+        x: 90,
+        y: 13
+      }
+    };
+
+    deepFreeze(action3);
+
+    expect(reducer(stateBefore, action3)).to.deep.equal(stateAfter3);
+  });
+
+  it('should handle UPDATE_PROPS action', () => {
+    const stateBefore = {
+      'node-0': {
+        id: 'node-0',
+        type: 'oncurve',
+        childIds: []
+      }
+    };
+    const action = updateProps('node-0', { x: 98, expand: 76 });
+    const stateAfter = {
+      'node-0': {
+        id: 'node-0',
+        type: 'oncurve',
+        childIds: [],
+        x: 98,
+        expand: 76
       }
     };
 

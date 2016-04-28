@@ -24,3 +24,5 @@ export const updateY = require('../actions/points/updateY.js');
 export const setCoords = require('../actions/mouse/setCoords.js');
 export const setMouseState = require('../actions/mouse/setMouseState.js');
 export const setNodeSelected = require('../actions/ui/setNodeSelected.js');
+export const updateCoords = require('../actions/points/updateCoords.js');
+export const updateProps = require('../actions/nodes/updateProps.js');

@@ -66,10 +66,11 @@ export default {
   },
   path: {
     children: { oncurve: true, offcurve: true },
-    propertyOrder: [ 'isClosed' ],
+    propertyOrder: [ 'isClosed', 'isSkeleton' ],
     properties: {
       _isUnfolded: 'boolean',
-      isClosed: 'boolean'
+      isClosed: 'boolean',
+      isSkeleton: 'boolean'
     }
   },
   point: {
@@ -83,15 +84,14 @@ export default {
   },
   oncurve: {
     children: {},
-    propertyOrder: [ 'x', 'y', 'selected', 'state' ],
+    propertyOrder: [ 'x', 'y', 'expand', 'selected', 'state' ],
     properties: {
       _isUnfolded: 'boolean',
       x: 'number',
       y: 'number',
-      _adjustX: 'number',
-      _adjustY: 'number',
       selected: 'boolean',
-      state: 'number'
+      state: 'number',
+      expand: 'number'
     }
   },
   offcurve: {
@@ -101,8 +101,6 @@ export default {
       _isUnfolded: 'boolean',
       x: 'number',
       y: 'number',
-      _adjustX: 'number',
-      _adjustY: 'number',
       selected: 'boolean'
     }
   }
