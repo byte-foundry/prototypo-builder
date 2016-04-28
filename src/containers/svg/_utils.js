@@ -11,6 +11,8 @@ import { bindActionCreators } from 'redux';
 //   updateProp
 // } from './../../actions/all';
 
+import { mapCurve } from './../../_utils/pathWalkers';
+
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';
 import SvgGlyph from './SvgGlyph';
@@ -56,6 +58,29 @@ export function renderSelectionAreas(childId) {
   return [
     <SvgNode key={childId} id={childId} parentId={id} />
   ];
+}
+
+export function renderPathData(pathId) {
+  const { nodes } = this.props;
+
+  return mapCurve(pathId, nodes, (start, c1, c2, end, i, length) => {
+    let sPoint = '';
+
+    if ( i === 0 ) {
+      sPoint += `M ${start.x || 0},${start.y || 0}`;
+    }
+
+    if ( end ) {
+      sPoint +=
+        `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
+    }
+
+    if ( i === length-1 && nodes[pathId].isClosed ) {
+      sPoint += 'Z';
+    }
+
+    return sPoint;
+  }).join(' ');
 }
 
 export function mapStateToProps(state, ownProps) {

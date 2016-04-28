@@ -1,7 +1,7 @@
 import { createSelectorCreator } from 'reselect';
 import { forEachNode } from './../_utils/pathWalkers';
 import { calculatedNodes } from './../_utils/calculatedNodes';
-import { nodesReducer } from './../reducers/nodes';
+import nodesReducer from './../reducers/nodes';
 
 import {
   createPath,
@@ -61,19 +61,29 @@ export function memoizeNodeAndChildren(func, lastNodes = null, lastResultMap = {
 export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) {
   // TODO: refactor that sh*t!
   const createPath = (...args) => {
-    return nodesReducer( _calculatedNodes, actionCreators.createPath( ...args ) );
+    const action = actionCreators.createPath( ...args );
+    nodesReducer( _calculatedNodes, action );
+    return action;
   };
   const createOncurve = (...args) => {
-    return nodesReducer( _calculatedNodes, actionCreators.createOncurve( ...args ) );
+    const action = actionCreators.createOncurve( ...args );
+    nodesReducer( _calculatedNodes, action );
+    return action;
   };
   const createOffcurve = (...args) => {
-    return nodesReducer( _calculatedNodes, actionCreators.createOffcurve( ...args ) );
+    const action = actionCreators.createOffcurve( ...args );
+    nodesReducer( _calculatedNodes, action );
+    return action;
   };
   const addChild = (...args) => {
-    return nodesReducer( _calculatedNodes, actionCreators.addChild( ...args ) );
+    const action = actionCreators.addChild( ...args );
+    nodesReducer( _calculatedNodes, action );
+    return action;
   };
   const updateCoords = (...args) => {
-    return nodesReducer( _calculatedNodes, actionCreators.updateCoords( ...args ) );
+    const action = actionCreators.updateCoords( ...args );
+    nodesReducer( _calculatedNodes, action );
+    return action;
   };
 
   const expandedLeft = [];
@@ -137,14 +147,14 @@ export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) 
     expandedRight.push( id );
     updateCoords( id, rightCoords );
     // }
-
-    expandedLeft.concat(expandedRight.reverse())
-      .forEach((point) => {
-        addChild(path.id, point.id, path.type);
-      });
-console.log(path);
-    return path;
   });
+
+  expandedLeft.concat(expandedRight.reverse())
+    .forEach((point) => {
+      addChild(path.id, point.id, path.type);
+    });
+console.log(path);
+  return path;
 }
 
 // This selector makes sure the children of the node haven't ben modified either
@@ -156,5 +166,5 @@ export function makeGetExpandedSkeleton() {
   return createNodeAndChildrenSelector(
     [ getNodes, getPathId ],
     expandPath
-  )
+  );
 }
