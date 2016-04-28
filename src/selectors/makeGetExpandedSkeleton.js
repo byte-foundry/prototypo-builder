@@ -1,6 +1,6 @@
 import { createSelectorCreator } from 'reselect';
 import { forEachNode } from './../_utils/pathWalkers';
-import { calculatedNodes } from './../_utils/calculatedNodes';
+import calculatedNodes from './../_utils/calculatedNodes';
 import nodesReducer from './../reducers/nodes';
 
 import {
@@ -62,33 +62,33 @@ export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) 
   // TODO: refactor that sh*t!
   const createPath = (...args) => {
     const action = actionCreators.createPath( ...args );
-    nodesReducer( _calculatedNodes, action );
+    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
     return action;
   };
   const createOncurve = (...args) => {
     const action = actionCreators.createOncurve( ...args );
-    nodesReducer( _calculatedNodes, action );
+    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
     return action;
   };
   const createOffcurve = (...args) => {
     const action = actionCreators.createOffcurve( ...args );
-    nodesReducer( _calculatedNodes, action );
+    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
     return action;
   };
   const addChild = (...args) => {
     const action = actionCreators.addChild( ...args );
-    nodesReducer( _calculatedNodes, action );
+    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
     return action;
   };
   const updateCoords = (...args) => {
     const action = actionCreators.updateCoords( ...args );
-    nodesReducer( _calculatedNodes, action );
+    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
     return action;
   };
 
   const expandedLeft = [];
   const expandedRight = [];
-  const path = createPath();
+  const expandedPathId = createPath().nodeId;
 
   forEachNode(pathId, nodes, (node, cIn, cOut, i) => {
     let leftCoords = {
@@ -99,62 +99,53 @@ export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) 
       x: node.x + 10,
       y: node.y + 10
     };
-    let oncurve;
-    let offcurve;
-    let id;
+    let nodeId;
 
     if ( i === 0 ) {
-      oncurve = createOncurve();
-      id = oncurve.id;
-      expandedRight.push( id );
-      updateCoords( id, leftCoords );
+      nodeId = createOncurve().nodeId;
+      expandedRight.push( nodeId );
+      updateCoords( nodeId, leftCoords );
     }
 
     // if ( cIn ) {
-    offcurve = createOffcurve();
-    id = offcurve.id;
+    nodeId = createOffcurve().nodeId;
     if ( i === 0 ) {
-      expandedRight.push( id );
+      expandedRight.push( nodeId );
     } else {
-      expandedLeft.push( id );
+      expandedLeft.push( nodeId );
     }
-    updateCoords( id, leftCoords );
+    updateCoords( nodeId, leftCoords );
 
-    offcurve = createOffcurve();
-    id = offcurve.id;
-    expandedRight.push( id );
-    updateCoords( id, rightCoords );
+    nodeId = createOffcurve().nodeId;
+    expandedRight.push( nodeId );
+    updateCoords( nodeId, rightCoords );
     // }
 
-    oncurve = createOncurve();
-    id = oncurve.id;
-    expandedLeft.push( id );
-    updateCoords( id, leftCoords );
+    nodeId = createOncurve().nodeId;
+    expandedLeft.push( nodeId );
+    updateCoords( nodeId, leftCoords );
 
-    oncurve = createOncurve();
-    id = oncurve.id;
-    expandedRight.push( id );
-    updateCoords( id, rightCoords );
+    nodeId = createOncurve().nodeId;
+    expandedRight.push( nodeId );
+    updateCoords( nodeId, rightCoords );
 
     // if ( cOut ) {
-    offcurve = createOffcurve();
-    id = offcurve.id;
-    expandedLeft.push( id );
-    updateCoords( id, leftCoords );
+    nodeId = createOffcurve().nodeId;
+    expandedLeft.push( nodeId );
+    updateCoords( nodeId, leftCoords );
 
-    offcurve = createOffcurve();
-    id = offcurve.id;
-    expandedRight.push( id );
-    updateCoords( id, rightCoords );
+    nodeId = createOffcurve().nodeId;
+    expandedRight.push( nodeId );
+    updateCoords( nodeId, rightCoords );
     // }
   });
 
   expandedLeft.concat(expandedRight.reverse())
-    .forEach((point) => {
-      addChild(path.id, point.id, path.type);
+    .forEach((pointId) => {
+      addChild(expandedPathId, pointId, _calculatedNodes.nodes[pointId].type);
     });
-console.log(path);
-  return path;
+
+  return expandedPathId;
 }
 
 // This selector makes sure the children of the node haven't ben modified either

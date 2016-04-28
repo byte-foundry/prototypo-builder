@@ -61,13 +61,13 @@ import {
 const initialState = {};
 
 function createNode(action) {
-  const { nodeId, nodeType, state } = action;
+  const { nodeId, nodeType, props } = action;
 
   return {
     id: nodeId,
     type: nodeType,
     childIds: [],
-    state,
+    ...props
   }
 }
 

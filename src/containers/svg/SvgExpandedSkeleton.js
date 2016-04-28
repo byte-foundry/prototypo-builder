@@ -13,12 +13,12 @@ import {
 class SvgExpandedSkeleton extends Component {
   constructor(args) {
     super(args);
-    this.renderPathData = renderPathData.bind({ nodes: calculatedNodes });
+    this.renderPathData = renderPathData.bind({ props: calculatedNodes });
     this.renderExpandedSkeleton = this.renderExpandedSkeleton.bind(this);
   }
 
   renderExpandedSkeleton() {
-    this.renderPathData( this.props.expandedSkeleton.id );
+    return this.renderPathData( this.props.expandedSkeletonId );
   }
 
   render() {
@@ -37,7 +37,7 @@ function makeMapStateToProps() {
   const mapStateToProps = (state, props) => {
     return {
       nodes: state.nodes,
-      expandedSkeleton: getExpandedSkeleton( state, props )
+      expandedSkeletonId: getExpandedSkeleton( state, props )
     };
   }
   return mapStateToProps;

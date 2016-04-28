@@ -7,6 +7,8 @@ module.exports = function() {
     type: CREATE_ONCURVE,
     nodeId: getNodeId(nodeType),
     nodeType,
-    state: ONCURVE_SMOOTH
+    props: {
+      state: ONCURVE_SMOOTH
+    }
   };
 };
