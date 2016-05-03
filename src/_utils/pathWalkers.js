@@ -87,7 +87,7 @@ export function forEachNode() {
 }
 
 export function getCorrespondingHandles(nodeId, childId, nodes) {
-  const { childIds, isClosed } = nodes[nodeId];
+  const { childIds } = nodes[nodeId];
   const i = childIds.indexOf(childId);
 
   const oncurveId = i%3 === 1 ? i - 1 : i + 1;
@@ -98,6 +98,30 @@ export function getCorrespondingHandles(nodeId, childId, nodes) {
     offC2,
     onC
   ];
+}
+
+export function getPreviousNode(nodeId, childId, nodes) {
+  const currentPos = nodes[nodeId].childIds.indexOf(childId);
+
+  if (currentPos === 0) {
+    return [undefined, undefined, undefined];
+  }
+
+  const newPos = currentPos - 3;
+
+  return getNode(nodeId, nodes[nodeId].childIds[newPos], nodes);
+}
+
+export function getNextNode(nodeId, childId, nodes) {
+  const currentPos = nodes[nodeId].childIds.indexOf(childId);
+
+  if (currentPos === nodes[nodeId].childIds.length - 2 ) {
+    return [undefined, undefined, undefined];
+  }
+
+  const newPos = currentPos + 3;
+
+  return getNode(nodeId, nodes[nodeId].childIds[newPos], nodes);
 }
 
 export function getNode(nodeId, childId, nodes) {
@@ -113,24 +137,35 @@ export function getNode(nodeId, childId, nodes) {
       ];
     }
     else if ( i === 0 ) {
-      return [
-        nodes[childIds[i]],
-        isClosed ? nodes[childIds[childIds.length-2]] : null,
-        nodes[childIds[i+1]]
-      ];
+      //We must see if this is correct
+      if (isClosed) {
+        return [
+          nodes[childIds[i]],
+          isClosed ? nodes[childIds[childIds.length - 2]] : null,
+          nodes[childIds[i + 1]],
+          isClosed ? nodes[childIds[childIds.length - 1]] : null
+        ];
+      }
+      else {
+        return [
+          nodes[childIds[i]],
+          isClosed ? nodes[childIds[childIds.length - 2]] : null,
+          nodes[childIds[i + 1]]
+        ];
+      }
     }
-    else if ( i === childIds.length-1 ) {
+    else if ( i === childIds.length - 1 ) {
       return [
         isClosed ? nodes[childIds[0]] : nodes[childIds[i]],
-        nodes[childIds[i-1]],
+        nodes[childIds[i - 1]],
         isClosed ? nodes[childIds[1]] : null
       ];
     }
     else {
       return [
         nodes[childIds[i]],
-        nodes[childIds[i-1]],
-        nodes[childIds[i+1]]
+        nodes[childIds[i - 1]],
+        nodes[childIds[i + 1]]
       ];
     }
   }

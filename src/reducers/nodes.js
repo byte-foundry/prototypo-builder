@@ -228,7 +228,7 @@ export default function(state = {}, action) {
         if (nodesToMove[2].state === ONCURVE_SMOOTH) {
           const oppositeNode = nodeId === nodesToMove[1].id ? nodesToMove[0] : nodesToMove[1];
           if (oppositeNode) {
-            result[oppositeNode.id] = {...state[oppositeNode.id], x: oppositeNode.x - action.dx, y: oppositeNode.y - action.dy};
+            result[oppositeNode.id] = {...state[oppositeNode.id], x: oppositeNode.x - action.dx, y: oppositeNode.y - action.dy, _isGhost: false};
           }
         }
         return result;

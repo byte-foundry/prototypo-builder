@@ -3,10 +3,12 @@ require('styles/svg/Selection.scss');
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { forEachNode } from '../../_utils/pathWalkers';
-import SvgSelector from '../../components/svg/SvgSelector';
+import SvgSelector from './SvgSelector';
+import {NODE_SELECTED} from '../../actions/const';
 
 import {
-  mapDispatchToProps
+  mapDispatchToProps,
+  getPathBbox
 } from './_utils';
 
 class SvgContourSelection extends Component {
@@ -23,61 +25,68 @@ class SvgContourSelection extends Component {
 
     childIds.forEach((pathId) => {
       const path = nodes[pathId];
-      forEachNode(pathId, nodes, (point, inControl, outControl, i) => {
+      if (this.props.ui.selected.path === pathId || this.props.ui.hovered.path === pathId) {
+        forEachNode(pathId, nodes, (point, inControl, outControl, i, length) => {
+          //Draw on curve point
+          if (i === length - 1 && nodes[pathId].isClosed) {
+            return;
+          }
+
+          result.push(
+            <SvgSelector
+              point={point}
+              key={pathId + i}
+              className="contour-point"
+              hovered={this.props.ui.hovered.point}
+            />
+          );
+          //Draw in control
+          if (inControl) {
+            result.push(
+              <SvgSelector
+                point={inControl}
+                key={`${pathId}in${i}`}
+                className="control-point"
+                hovered={this.props.ui.hovered.point}
+                source={point}
+                parent={pathId}
+                type="in"
+                nodes={this.props.nodes}
+              />
+            );
+          }
+          //Draw out control
+          if (outControl) {
+            result.push(
+              <SvgSelector
+                point={outControl}
+                key={`${pathId}out${i}`}
+                className="control-point"
+                hovered={this.props.ui.hovered.point}
+                source={point}
+                parent={pathId}
+                type="out"
+                nodes={this.props.nodes}
+              />
+            );
+          }
+
+          if (i === length - 1
+            && !this.props.nodes[pathId].isClosed
+            && this.props.ui.selected.path === pathId
+            && this.props.ui.uiState !== NODE_SELECTED) {
+            result.push(<path className="path-indicator" d={`
+                        M${point.x} ${point.y}
+                        C${outControl.x},${outControl.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y}`}/>);
+          }
+        });
+
+        const bbox = getPathBbox(pathId, nodes);
+        //Draw path bounding box
         result.push(
-          <SvgSelector
-            point={point}
-            key={i}
-            className="contour-point"
-            mouse={this.props.mouse}
-            parentId={pathId}
-            nodes={ this.props.nodes }
-            setCoords={this.props.actions.setCoords}
-            moveNode={this.props.actions.moveNode}
-            updateProp={this.props.actions.updateProp}
-            setNodeSelected={this.props.actions.setNodeSelected}
-            setMouseState={this.props.actions.setMouseState}
-          />
-        );
-        if (inControl) {
-          pathResult.push(
-            <path className="point-control" key={`point-in-${i}`} d={`M${point.x} ${point.y} L${inControl.x} ${inControl.y}`}/>
-          );
-          result.push(
-            <SvgSelector
-              point={inControl}
-              key={`in${i}`}
-              className="control-point"
-              mouse={this.props.mouse}
-              parentId={pathId}
-              setCoords={this.props.actions.setCoords}
-              moveNode={this.props.actions.moveNode}
-              updateProp={this.props.actions.updateProp}
-              setNodeSelected={this.props.actions.setNodeSelected}
-              setMouseState={this.props.actions.setMouseState}
-            />
-          );
-        }
-        if (outControl) {
-          pathResult.push(
-            <path className="point-control" key={`point-out-${i}`} d={`M${point.x} ${point.y} L${outControl.x} ${outControl.y}`}/>
-          );
-          result.push(
-            <SvgSelector
-              point={outControl}
-              key={`out${i}`}
-              className="control-point"
-              parentId={pathId}
-              mouse={this.props.mouse}
-              setCoords={this.props.actions.setCoords}
-              moveNode={this.props.actions.moveNode}
-              updateProp={this.props.actions.updateProp}
-              setNodeSelected={this.props.actions.setNodeSelected}
-              setMouseState={this.props.actions.setMouseState}
-            />
-          );
-        }
-      });
+          <path className="bbox" d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
+        )
+      }
     });
     return pathResult.concat(result);
   }
@@ -96,7 +105,7 @@ SvgContourSelection.propTypes = {
 }
 
 function mapStateToProps(state) {
-  return { nodes: state.nodes, mouse: state.ui.mouse };
+  return { nodes: state.nodes, ui: state.ui };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgContourSelection);

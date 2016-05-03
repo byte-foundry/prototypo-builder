@@ -28,12 +28,16 @@ export const MOVE_NODE = 'MOVE_NODE';
 export const SET_COORDS = 'SET_COORDS';
 export const SET_MOUSE_STATE = 'SET_MOUSE_STATE';
 export const SET_NODE_SELECTED = 'SET_NODE_SELECTED';
+export const SET_PATH_SELECTED = 'SET_PATH_SELECTED';
+export const SET_NODE_HOVERED = 'SET_NODE_HOVERED';
+export const SET_PATH_HOVERED = 'SET_PATH_HOVERED';
 
 
 //Mouse state constants
-export const MOUSE_STATE_CREATE = 1;
-export const MOUSE_STATE_MOVE = 2;
-export const MOUSE_STATE_MOVE_AFTER_CREATE = 3;
+export const NO_PATH_SELECTED = 1;
+export const NODE_SELECTED = 2;
+export const PATH_SELECTED = 3;
+export const NODE_SELECTED_AND_MOVE = 4;
 
 //Oncurve types
 export const ONCURVE_SMOOTH = 1;

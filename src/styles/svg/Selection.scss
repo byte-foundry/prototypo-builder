@@ -7,16 +7,26 @@
     fill:black;
   }
 }
+
+.bbox {
+  fill:transparent;
+  stroke: #595959;
+  stroke-width: 1px;
+}
+
 .contour-point {
   stroke: #24d390;
   fill:white;
+  &.is-hovered {
+    fill: #24d390;
+  }
+
 }
 
 .state-indicator {
   fill: transparent;
   stroke: red;
   stroke-width: 3px;
-  display:none;
 
   &-circle {
     fill:red;
@@ -25,17 +35,6 @@
 
 .selector-container {
 
-  &:hover .contour-point {
-    fill: #24d390;
-  }
-
-  &:hover .control-point {
-    fill: #0063d3;
-  }
-
-  &:hover .state-indicator {
-    display:block;
-  }
 }
 
 .transparent-selector {
@@ -47,6 +46,10 @@
 .control-point {
   stroke: #0063d3;
   fill:white;
+
+  &.is-hovered {
+    fill: #0063d3;
+  }
 }
 
 .point-control {
@@ -54,3 +57,8 @@
   stroke-width: 3px;
 }
 
+.path-indicator {
+  fill:transparent;
+  stroke: green;
+  stroke-width: 1px;
+}

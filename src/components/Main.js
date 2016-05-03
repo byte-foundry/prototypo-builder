@@ -4,6 +4,7 @@ require('styles/App.css');
 import React from 'react';
 import TextRoot from './../containers/text/TextRoot';
 import SvgContainer from './../containers/svg/SvgContainer';
+import DebugInfos from '../containers/ui/DebugInfos';
 
 class AppComponent extends React.Component {
   render() {
@@ -11,6 +12,7 @@ class AppComponent extends React.Component {
       <div className="grid-2">
         <div>
           <TextRoot id={'root'} />
+          <DebugInfos />
         </div>
         <div>
           <SvgContainer />

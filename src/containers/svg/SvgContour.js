@@ -19,9 +19,10 @@ class SvgContour extends Component {
     const { nodes, id } = this.props;
     const { childIds } = nodes[id];
 
-    return childIds.map((pathId) => {
+    const result = childIds.map((pathId) => {
       return this.renderPathData(pathId);
     }).join(' ');
+    return result;
   }
 
   renderExpandedSkeletons() {
@@ -42,7 +43,7 @@ class SvgContour extends Component {
   render() {
     return (
       <g>
-        <path d={this.renderChildren()} />
+        <path className="contour" d={this.renderChildren()} />
         {this.renderExpandedSkeletons()}
       </g>
     );

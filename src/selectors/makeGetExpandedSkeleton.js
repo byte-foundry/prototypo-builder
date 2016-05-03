@@ -60,6 +60,7 @@ export function memoizeNodeAndChildren(func, lastNodes = null, lastResultMap = {
 // the last argument helps with testing
 export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) {
   // TODO: refactor that sh*t!
+  calculatedNodes.nodes = {};
   const createPath = (...args) => {
     const action = actionCreators.createPath( ...args );
     _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
@@ -91,13 +92,30 @@ export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) 
   const expandedPathId = createPath().nodeId;
 
   forEachNode(pathId, nodes, (node, cIn, cOut, i) => {
-    let leftCoords = {
-      x: node.x - 10,
-      y: node.y - 10
+    const angle = node.angle || 0;
+    const width = node.width || 10;
+    const distrib = node.distrib || 0;
+
+    const shift = {
+      x: Math.cos(angle / 360 * 2 * Math.PI) * width,
+      y: Math.sin(angle / 360 * 2 * Math.PI) * width
+    }
+
+    const leftCoords = {
+      x: node.x + shift.x * (distrib - 1),
+      y: node.y + shift.y * (distrib - 1)
     };
-    let rightCoords = {
-      x: node.x + 10,
-      y: node.y + 10
+    const rightCoords = {
+      x: node.x + shift.x * distrib,
+      y: node.y + shift.y * distrib
+    };
+    const outCurveVec = {
+      x: cOut.x - node.x,
+      y: cOut.y - node.y
+    };
+    const inCurveVec = {
+      x: cIn.x - node.x,
+      y: cIn.y - node.y
     };
     let nodeId;
 
