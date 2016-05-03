@@ -47,13 +47,13 @@ class TextNode extends Component {
     return (
       <div>id: {id}, type: {type}
         {typeof parentId !== 'undefined' ?
-          <input type="button" value="×" onClick={this.handleRemoveClick} /> :
+          <input type="button" defaultValue="×" onClick={this.handleRemoveClick} /> :
           null
         }
         <ul>
           {childIds.map(this.renderChild)}
           <li key="add">
-            <input type="button" value="+" onClick={this.handleAddChildClick} />
+            <input type="button" defaultValue="+" onClick={this.handleAddChildClick} />
           </li>
         </ul>
       </div>

@@ -1,4 +1,4 @@
-const config = require('config');
+const config = require('config').default;
 
 import logError from './../_utils/logError';
 
@@ -8,44 +8,36 @@ import {
   REMOVE_CHILD,
   CREATE_NODE,
   DELETE_NODE,
-
   CREATE_FONT,
   ADD_FONT,
-
   CREATE_GLYPH,
   ADD_GLYPH,
-
   CREATE_CONTOUR,
   ADD_CONTOUR,
-
   CREATE_PATH,
   ADD_PATH,
-
   CREATE_CURVE,
   ADD_CURVE,
-
   CREATE_ONCURVE,
   ADD_ONCURVE,
-
   CREATE_OFFCURVE,
   ADD_OFFCURVE,
-
   UPDATE_PROP,
   UPDATE_PROPS,
   UPDATE_X,
   UPDATE_Y,
-
   UPDATE_COORDS,
-
   MOVE_NODE,
-  ONCURVE_SMOOTH
-
+  ONCURVE_SMOOTH,
+  ADD_PARAM,
+  UPDATE_PARAM
 } from './../actions/const';
 
 import {
-  validateAdd,
-  validateUpdate,
-  validateGraph
+  validateAddChildren,
+  validateUpdateProps,
+  validateGraph,
+  validateAddParam
 } from './_nodesValidateActions';
 
 import {
@@ -88,6 +80,21 @@ function childIds(state, action) {
   }
 }
 
+function params(state = [], action) {
+  switch(action.type) {
+    case ADD_PARAM:
+      return [...state, { name: action.name, ...action.config }];
+    case UPDATE_PARAM:
+      return state.map((param) => {
+        return param.name === action.name ?
+          Object.assign({}, param, { value: action.value }) :
+          param;
+      });
+    default:
+      return state;
+  }
+}
+
 function node(state = initialState, action) {
   const { type } = action;
 
@@ -115,6 +122,12 @@ function node(state = initialState, action) {
         childIds: childIds(state.childIds, action)
       });
 
+    case ADD_PARAM:
+    case UPDATE_PARAM:
+      return Object.assign({}, state, {
+        params: params(state.params, action)
+      });
+
     case UPDATE_X:
       return Object.assign({}, state, {
         x: action.value
@@ -125,12 +138,10 @@ function node(state = initialState, action) {
       });
     case UPDATE_COORDS:
       return Object.assign({}, state, action.coords);
-
     case UPDATE_PROP:
       return Object.assign({}, state, {
         [action.propNames[0]]: action.value
       });
-
     case UPDATE_PROPS:
       return Object.assign({}, state, action.props);
 
@@ -180,14 +191,18 @@ export default function(state = {}, action) {
 
   // During dev, we're verifying that the UI prevents impossible actions
   // such as adding a font to a glyph or updating the coordinates of a non-point
-  if (  config.appEnv === 'dev' ) {
-    if ( /^ADD_/.test(type) && type !== ADD_GLYPH ) {
-      logError( validateAdd(state, action) );
+  if ( config.appEnv === 'dev' ) {
+    if ( /^ADD_/.test(type) && ( 'childId' in action || 'childIds' in action ) ) {
+      logError( validateAddChildren(state, action) );
       logError( validateGraph(state, action) );
     }
 
-    if ( /^UPDATE_/.test(type) ) {
-      logError( validateUpdate(state, action) );
+    if ( /^UPDATE_/.test(type) && 'propNames' in action ) {
+      logError( validateUpdateProps(state, action) );
+    }
+
+    if ( /^ADD_PARAM$/.test(type) ) {
+      logError( validateAddParam(state, action) );
     }
   }
 

@@ -2,7 +2,7 @@ import fontModel from './../_utils/fontModel';
 
 // Validate that the property we're trying to update is a known property for
 // that node type
-export function validateUpdate(state, action, model = fontModel) {
+export function validateUpdateProps(state, action, model = fontModel) {
   const { nodeId, propNames } = action;
   const nodeType = state[nodeId].type;
 
@@ -18,7 +18,7 @@ export function validateUpdate(state, action, model = fontModel) {
   return true;
 }
 
-export function validateAdd(state, action, model = fontModel) {
+export function validateAddChildren(state, action, model = fontModel) {
   const { nodeId } = action;
   const childIds = action.childIds || [action.childId];
   const parentType = state[nodeId].type;
@@ -51,6 +51,32 @@ export function validateGraph(state, action) {
         );
       }
     }
+  }
+
+  return true;
+}
+
+
+// check that the param name starts with a '$' and the it's not already a param
+// of this node
+export function validateAddParam(state, action) {
+  const { nodeId, name } = action;
+
+  if ( !/^\$/.test(name) ) {
+    return new Error(
+      `Can't add param '${name}' to node '${nodeId}':
+      That name doesn't start with a '$'.`
+    );
+  }
+
+  if (
+    state[nodeId].params &&
+    state[nodeId].params.some((param) => param.name === name)
+  ) {
+    return new Error(
+      `Can't add param '${name}' to node '${nodeId}':
+      A param with the same name already exists for that node.`
+    );
   }
 
   return true;

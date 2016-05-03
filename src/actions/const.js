@@ -17,13 +17,12 @@ export const CREATE_OFFCURVE = 'CREATE_OFFCURVE';
 export const ADD_OFFCURVE = 'ADD_OFFCURVE';
 export const UPDATE_X = 'UPDATE_X';
 export const UPDATE_Y = 'UPDATE_Y';
-export const UPDATE_PROP = 'UPDATE_PROP';
 export const ADD_CURVE = 'ADD_CURVE';
 export const CREATE_CURVE = 'CREATE_CURVE';
 export const ADD_CHILDREN = 'ADD_CHILDREN';
 export const UPDATE_COORDS = 'UPDATE_COORDS';
+export const UPDATE_PROP = 'UPDATE_PROP';
 export const UPDATE_PROPS = 'UPDATE_PROPS';
-
 export const MOVE_NODE = 'MOVE_NODE';
 export const SET_COORDS = 'SET_COORDS';
 export const SET_MOUSE_STATE = 'SET_MOUSE_STATE';
@@ -31,6 +30,8 @@ export const SET_NODE_SELECTED = 'SET_NODE_SELECTED';
 export const SET_PATH_SELECTED = 'SET_PATH_SELECTED';
 export const SET_NODE_HOVERED = 'SET_NODE_HOVERED';
 export const SET_PATH_HOVERED = 'SET_PATH_HOVERED';
+export const ADD_PARAM = 'ADD_PARAM';
+export const UPDATE_PARAM = 'UPDATE_PARAM';
 
 
 //Mouse state constants

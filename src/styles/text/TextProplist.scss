@@ -1,0 +1,8 @@
+.text-proplist {
+  display: none;
+  list-style: none;
+
+  &--unfolded {
+    display: block;
+  }
+}

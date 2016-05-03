@@ -39,31 +39,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   /* Populated by react-webpack-redux:action */
   const actions = {
-    createNode: require('../actions/nodes/createNode.js'),
-    deleteNode: require('../actions/nodes/deleteNode.js'),
-    addChild: require('../actions/nodes/addChild.js'),
-    addChildren: require('../actions/nodes/addChildren.js'),
-    removeChild: require('../actions/nodes/removeChild.js'),
-    updateProp: require('../actions/nodes/updateProp.js'),
-    createGlyph: require('../actions/glyphs/createGlyph.js'),
-    createFont: require('../actions/fonts/createFont.js'),
-    addFont: require('../actions/fonts/addFont.js'),
-    addGlyph: require('../actions/glyphs/addGlyph.js'),
-    createContour: require('../actions/contours/createContour.js'),
-    addContour: require('../actions/contours/addContour.js'),
-    createPath: require('../actions/paths/createPath.js'),
-    addPath: require('../actions/paths/addPath.js'),
-    addCurve: require('../actions/paths/addCurve.js'),
-    createCurve: require('../actions/paths/createCurve.js'),
-    createOncurve: require('../actions/oncurves/createOncurve.js'),
-    addOncurve: require('../actions/oncurves/addOncurve.js'),
-    createOffcurve: require('../actions/offcurves/createOffcurve.js'),
-    addOffcurve: require('../actions/offcurves/addOffcurve.js'),
-    updateX: require('../actions/points/updateX.js'),
-    updateY: require('../actions/points/updateY.js'),
-    moveNode: require('../actions/nodes/moveNode.js'),
-    updateCoords: require('../actions/points/updateCoords.js'),
-    updateProps: require('../actions/nodes/updateProps.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

@@ -3,17 +3,19 @@ import deepFreeze from 'deep-freeze';
 import {
   updateProp,
   addChild,
-  addChildren
+  addChildren,
+  addParam
 } from '../../src/actions/all';
 
 import {
-  validateUpdate,
-  validateAdd,
-  validateGraph
+  validateUpdateProps,
+  validateAddChildren,
+  validateGraph,
+  validateAddParam
 } from '../../src/reducers/_nodesValidateActions';
 
 describe('reducers/_nodesValidateAction', () => {
-  describe('validateUpdate', () => {
+  describe('validateUpdateProps', () => {
     it('should check if property update is allowed by the model', (done) => {
       const state = {
         'node-0': {
@@ -32,16 +34,16 @@ describe('reducers/_nodesValidateAction', () => {
       deepFreeze(actionAllowed);
       deepFreeze(actionForbidden);
 
-      expect(validateUpdate( state, actionAllowed, model ))
+      expect(validateUpdateProps( state, actionAllowed, model ))
         .to.not.be.an('error');
-      expect(validateUpdate( state, actionForbidden, model ))
+      expect(validateUpdateProps( state, actionForbidden, model ))
         .to.be.an('error');
 
       done();
     });
   });
 
-  describe('validateAdd', () => {
+  describe('validateAddChildren', () => {
     it('should check if node insertion is allowed by the model', (done) => {
       const state = {
         'node-0': {
@@ -79,13 +81,13 @@ describe('reducers/_nodesValidateAction', () => {
       deepFreeze(actionForbidden);
       deepFreeze(actionMultiForbidden)
 
-      expect(validateAdd( state, actionAllowed, model ))
+      expect(validateAddChildren( state, actionAllowed, model ))
         .to.not.be.an('error');
-      expect(validateAdd( state, actionMultiAllowed, model ))
+      expect(validateAddChildren( state, actionMultiAllowed, model ))
         .to.not.be.an('error');
-      expect(validateAdd( state, actionForbidden, model ))
+      expect(validateAddChildren( state, actionForbidden, model ))
         .to.be.an('error');
-      expect(validateAdd( state, actionMultiForbidden, model ))
+      expect(validateAddChildren( state, actionMultiForbidden, model ))
         .to.be.an('error');
 
       done();
@@ -133,6 +135,55 @@ describe('reducers/_nodesValidateAction', () => {
       expect(validateGraph( state, actionForbidden ))
         .to.be.an('error');
       expect(validateGraph( state, actionMultiForbidden ))
+        .to.be.an('error');
+
+      done();
+    });
+  });
+
+  describe('validateAddParam', () => {
+    it('should check that the param name starts with a $', (done) => {
+      const state = {
+        'node-0': {
+          id: 'node-0'
+        }
+      };
+
+      const actionAllowed = addParam('node-0', '$allowed');
+      const actionForbidden = addParam('node-0', 'forbidden');
+
+      deepFreeze(state);
+      deepFreeze(actionAllowed);
+      deepFreeze(actionForbidden);
+
+      expect(validateAddParam( state, actionAllowed ))
+        .to.not.be.an('error');
+      expect(validateAddParam( state, actionForbidden ))
+        .to.be.an('error');
+
+      done();
+    });
+
+    it('should check that the node doesn\'t have a param with the same name', (done) => {
+      const state = {
+        'node-0': {
+          id: 'node-0',
+          params: [{
+            name: '$forbidden'
+          }]
+        }
+      };
+
+      const actionAllowed = addParam('node-0', '$allowed');
+      const actionForbidden = addParam('node-0', '$forbidden');
+
+      deepFreeze(state);
+      deepFreeze(actionAllowed);
+      deepFreeze(actionForbidden);
+
+      expect(validateAddParam( state, actionAllowed ))
+        .to.not.be.an('error');
+      expect(validateAddParam( state, actionForbidden ))
         .to.be.an('error');
 
       done();

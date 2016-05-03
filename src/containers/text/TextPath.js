@@ -64,15 +64,15 @@ class TextGlyph extends Component {
   }
 
   render() {
-    const { id, type, childIds, _isUnfolded } = this.props;
+    const { id, type, childIds, _isChildrenUnfolded } = this.props;
     const nodeClass = classNames({
       'text-node': true,
       'text-node--path': true,
-      'text-node--unfolded': _isUnfolded
+      'text-node--unfolded': _isChildrenUnfolded
     });
 
     return (
-      <Foldable id={id}>
+      <Foldable id={id} switchProp="_isChildrenUnfolded">
         <ul className={nodeClass}>
           <li><NodeProperties id={id} type={type} /></li>
           <li>

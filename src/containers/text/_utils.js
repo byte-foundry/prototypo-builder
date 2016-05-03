@@ -8,7 +8,9 @@ import {
   addOncurve,
   createOffcurve,
   addOffcurve,
-  updateProp
+  updateProp,
+  addParam,
+  updateParam
 } from './../../actions/all';
 
 import fontModel from './../../_utils/fontModel';
@@ -73,7 +75,9 @@ export function mapDispatchToProps(dispatch) {
     addOncurve,
     createOffcurve,
     addOffcurve,
-    updateProp
+    updateProp,
+    addParam,
+    updateParam
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import {
   renderTextChild,
@@ -8,12 +9,95 @@ import {
   mapDispatchToProps
 } from './_utils';
 
+import Foldable from './Foldable';
+
+require('styles/text/TextProplist.scss');
+
 class TextFont extends Component {
+  constructor(props) {
+    super(props);
+    this.renderTextChild = renderTextChild.bind(this);
+    this.renderTextParams = this.renderTextParams.bind(this);
+    this.handleAddParamClick = this.handleAddParamClick.bind(this);
+    this.handleParamChange = this.handleParamChange.bind(this);
+  }
+
+  handleAddParamClick(e) {
+    e.preventDefault();
+
+    const { id } = this.props;
+    const { addParam } = this.props.actions;
+
+    addParam(id, this.refs.name.value, {
+      min: +this.refs.min.value,
+      max: +this.refs.max.value,
+      value: +this.refs.value.value
+    });
+
+    ['name', 'min', 'max', 'value'].forEach((refName) => {
+      this.refs[refName].value = '';
+    });
+  }
+
+  handleParamChange(e) {
+    e.preventDefault();
+
+    const { id } = this.props;
+    const { updateParam } = this.props.actions;
+
+    updateParam(id, e.target.name, +e.target.value);
+  }
+
+  renderTextParams() {
+    const { _isPropsUnfolded } = this.props;
+    const params = this.props.params || [];
+    const listClass = classNames({
+      'unstyled': true,
+      'text-proplist': true,
+      'text-proplist--unfolded': _isPropsUnfolded
+    });
+
+    return (
+      <ul className={listClass}>
+        {params.map((param) => {
+          const { name, value } = param;
+
+          return (
+            <li key={name}>
+              <label>
+                {name}:
+                <input type="range" value={value} name={name} onChange={this.handleParamChange} />
+                <input type="number" value={value} name={name} onChange={this.handleParamChange} />
+              </label>
+            </li>
+          );
+        })}
+        <li>
+          <input type="text"   ref="name" placeholder="name" />
+          <input type="number" ref="min" placeholder="min" />
+          <input type="number" ref="max" placeholder="max" />
+          <input type="number" ref="value" placeholder="initial value" />
+          <input type="button" defaultValue="Add param" onClick={this.handleAddParamClick} />
+        </li>
+      </ul>
+    );
+  }
+
   render() {
-    const { childIds } = this.props;
+    const { id, childIds } = this.props;
+
     return (
       <ul className="unstyled">
-        {childIds.map(renderTextChild.bind(this))}
+        <li>
+          <Foldable id={id} name="parameters" switchProp="_isPropsUnfolded">
+            {this.renderTextParams()}
+          </Foldable>
+        </li>
+        <li>
+          <ul className="unstyled">
+            {childIds.map(this.renderTextChild)}
+          </ul>
+        </li>
       </ul>
     );
   }

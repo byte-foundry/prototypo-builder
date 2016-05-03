@@ -1,6 +1,5 @@
 import { createSelectorCreator } from 'reselect';
 import { forEachNode } from './../_utils/pathWalkers';
-import calculatedNodes from './../_utils/calculatedNodes';
 import nodesReducer from './../reducers/nodes';
 
 import {
@@ -58,37 +57,16 @@ export function memoizeNodeAndChildren(func, lastNodes = null, lastResultMap = {
 }
 
 // the last argument helps with testing
-export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) {
-  // TODO: refactor that sh*t!
-  calculatedNodes.nodes = {};
-  const createPath = (...args) => {
-    const action = actionCreators.createPath( ...args );
-    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
-    return action;
-  };
-  const createOncurve = (...args) => {
-    const action = actionCreators.createOncurve( ...args );
-    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
-    return action;
-  };
-  const createOffcurve = (...args) => {
-    const action = actionCreators.createOffcurve( ...args );
-    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
-    return action;
-  };
-  const addChild = (...args) => {
-    const action = actionCreators.addChild( ...args );
-    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
-    return action;
-  };
-  const updateCoords = (...args) => {
-    const action = actionCreators.updateCoords( ...args );
-    _calculatedNodes.nodes = nodesReducer( _calculatedNodes.nodes, action );
-    return action;
-  };
-
+export function expandPath( nodes, pathId, actions, expandedNodes ) {
   const expandedLeft = [];
   const expandedRight = [];
+  const {
+    createPath,
+    createOncurve,
+    createOffcurve,
+    addChild,
+    updateCoords
+  } = actions;
   const expandedPathId = createPath().nodeId;
 
   forEachNode(pathId, nodes, (node, cIn, cOut, i) => {
@@ -160,7 +138,7 @@ export function expandPath( nodes, pathId, _calculatedNodes = calculatedNodes ) 
 
   expandedLeft.concat(expandedRight.reverse())
     .forEach((pointId) => {
-      addChild(expandedPathId, pointId, _calculatedNodes.nodes[pointId].type);
+      addChild(expandedPathId, pointId, expandedNodes[pointId].type);
     });
 
   return expandedPathId;
@@ -171,9 +149,20 @@ export const createNodeAndChildrenSelector = createSelectorCreator(
   memoizeNodeAndChildren
 );
 
-export function makeGetExpandedSkeleton() {
+export function makeGetExpandedSkeleton(expanded) {
+  const actions = {};
+  Object.keys(actionCreators).forEach((actionName) => {
+    actions[actionName] = (...args) => {
+      const action = actionCreators[actionName]( ...args );
+      expanded.nodes = nodesReducer( expanded.nodes, action );
+      return action;
+    };
+  });
+
   return createNodeAndChildrenSelector(
-    [ getNodes, getPathId ],
-    expandPath
+    [ getNodes, getPathId],
+    (nodes, pathId) => {
+      return expandPath(nodes, pathId, actions, expanded.nodes);
+    }
   );
 }

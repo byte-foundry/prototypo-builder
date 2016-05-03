@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import calculatedNodes from './../../_utils/calculatedNodes';
-
 import { makeGetExpandedSkeleton } from './../../selectors/makeGetExpandedSkeleton';
 
 import {
@@ -11,9 +9,9 @@ import {
 } from './_utils';
 
 class SvgExpandedSkeleton extends Component {
-  constructor(args) {
-    super(args);
-    this.renderPathData = renderPathData.bind({ props: calculatedNodes });
+  constructor(props) {
+    super(props);
+    this.renderPathData = renderPathData.bind({ props: props.expanded });
     this.renderExpandedSkeleton = this.renderExpandedSkeleton.bind(this);
   }
 
@@ -33,10 +31,12 @@ SvgExpandedSkeleton.propTypes = {
 }
 
 function makeMapStateToProps() {
-  const getExpandedSkeleton = makeGetExpandedSkeleton();
+  const expanded = { nodes: {} };
+  const getExpandedSkeleton = makeGetExpandedSkeleton(expanded);
   const mapStateToProps = (state, props) => {
     return {
       nodes: state.nodes,
+      expanded,
       expandedSkeletonId: getExpandedSkeleton( state, props )
     };
   }

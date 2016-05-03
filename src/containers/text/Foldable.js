@@ -15,19 +15,19 @@ class Foldable extends Component {
   handleFoldClick(e) {
     e.preventDefault();
 
-    const { id, _isUnfolded } = this.props;
+    const { id, switchProp } = this.props;
     const { updateProp } = this.props.actions;
 
-    updateProp(id, '_isUnfolded', !_isUnfolded);
+    updateProp(id, switchProp, !this.props[switchProp]);
   }
 
   render() {
-    const { id, _isUnfolded } = this.props;
+    const { id, name, switchProp } = this.props;
 
     return (
       <div className="text-node__foldable-wrapper">
         <a id={id} className="text-node__fold-button" onClick={this.handleFoldClick}>
-          { _isUnfolded ? '⏷' : '⏵' } <small><i>{id}</i></small>
+          { this.props[switchProp] ? '⏷' : '⏵' } <small><i>{name || id}</i></small>
         </a>
         {this.props.children}
       </div>
