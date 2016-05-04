@@ -18,7 +18,7 @@ class Foldable extends Component {
     const { id, switchProp } = this.props;
     const { updateProp } = this.props.actions;
 
-    updateProp(id, switchProp, !this.props[switchProp].value);
+    updateProp(id, switchProp, !this.props[switchProp]);
   }
 
   render() {

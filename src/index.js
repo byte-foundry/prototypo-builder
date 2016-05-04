@@ -14,12 +14,16 @@ const store = configureStore({
     'font-initial': {
       id: 'font-initial',
       type: 'font',
-      childIds: ['glyph-initial']
+      childIds: ['glyph-initial'],
+      params: {},
+      paramsMeta: { _order: [] }
     },
     'glyph-initial': {
       id: 'glyph-initial',
       type: 'glyph',
-      childIds: ['contour-initial']
+      childIds: ['contour-initial'],
+      params: {},
+      paramsMeta: { _order: [] }
     },
     'contour-initial': {
       id: 'contour-initial',

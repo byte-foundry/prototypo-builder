@@ -49,8 +49,7 @@ class TextFont extends Component {
   }
 
   renderTextParams() {
-    const { _isPropsUnfolded } = this.props;
-    const params = this.props.params || [];
+    const { _isPropsUnfolded, params, paramsMeta } = this.props;
     const listClass = classNames({
       'unstyled': true,
       'text-proplist': true,
@@ -59,14 +58,15 @@ class TextFont extends Component {
 
     return (
       <ul className={listClass}>
-        {params.map((param) => {
-          const { name, value } = param;
+        {paramsMeta._order.map((name) => {
+          const value = params[name];
+          const { min, max } = paramsMeta[name];
 
           return (
             <li key={name}>
               <label>
                 {name}:
-                <input type="range" value={value} name={name} onChange={this.handleParamChange} />
+                <input type="range" value={value} name={name} min={min} max={max} onChange={this.handleParamChange} />
                 <input type="number" value={value} name={name} onChange={this.handleParamChange} />
               </label>
             </li>
