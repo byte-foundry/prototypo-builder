@@ -75,9 +75,14 @@ class SvgContourSelection extends Component {
             && !this.props.nodes[pathId].isClosed
             && this.props.ui.selected.path === pathId
             && this.props.ui.uiState !== NODE_SELECTED) {
-            result.push(<path className="path-indicator" d={`
-                        M${point.x} ${point.y}
-                        C${outControl.x},${outControl.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y}`}/>);
+            result.push(
+              <path
+                className="path-indicator"
+                key={`path-indicator-${pathId}`}
+                d={`
+                  M${point.x} ${point.y}
+                  C${outControl.x},${outControl.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y}`
+                }/>);
           }
         });
 
@@ -85,7 +90,7 @@ class SvgContourSelection extends Component {
         //Draw path bounding box
         result.push(
           <path className="bbox" d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
-        )
+        );
       }
     });
     return pathResult.concat(result);

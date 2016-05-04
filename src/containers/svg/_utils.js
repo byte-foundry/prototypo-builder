@@ -9,20 +9,20 @@ import SvgGlyph from './SvgGlyph';
 import SvgContourSelection from './SvgContourSelection';
 
 import {
-  updateProp,
-  setCoords,
-  setMouseState,
-  createOffcurve,
-  createOncurve,
   addOffcurve,
   addOncurve,
-  moveNode,
-  setNodeSelected,
-  setNodeHovered,
-  setPathSelected,
-  setPathHovered,
+  addPath,
+  createOffcurve,
+  createOncurve,
   createPath,
-  addPath
+  moveNode,
+  setCoords,
+  setMouseState,
+  setNodeHovered,
+  setNodeSelected,
+  setPathHovered,
+  setPathSelected,
+  updateProp
 } from './../../actions/all';
 
 const componentMap = {
@@ -84,20 +84,20 @@ export function mapStateToProps(state, ownProps) {
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    updateProp,
-    setCoords,
-    setMouseState,
-    createOncurve,
-    createOffcurve,
     addOffcurve,
     addOncurve,
-    moveNode,
-    setNodeSelected,
-    setNodeHovered,
-    setPathSelected,
-    setPathHovered,
+    addPath,
+    createOffcurve,
+    createOncurve,
     createPath,
-    addPath
+    moveNode,
+    setCoords,
+    setMouseState,
+    setNodeHovered,
+    setNodeSelected,
+    setPathHovered,
+    setPathSelected,
+    updateProp
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
@@ -387,4 +387,3 @@ export function getDerivative(c0, c1, c2, c3, t) {
 
   return ret;
 }
-

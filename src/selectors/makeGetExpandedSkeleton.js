@@ -57,7 +57,7 @@ export function memoizeNodeAndChildren(func, lastNodes = null, lastResultMap = {
 }
 
 // the last argument helps with testing
-export function expandPath( nodes, pathId, actions, expandedNodes ) {
+export function expandPath( nodes, pathId, actions, expanded ) {
   const expandedLeft = [];
   const expandedRight = [];
   const {
@@ -138,7 +138,7 @@ export function expandPath( nodes, pathId, actions, expandedNodes ) {
 
   expandedLeft.concat(expandedRight.reverse())
     .forEach((pointId) => {
-      addChild(expandedPathId, pointId, expandedNodes[pointId].type);
+      addChild(expandedPathId, pointId, expanded.nodes[pointId].type);
     });
 
   return expandedPathId;
@@ -162,7 +162,7 @@ export function makeGetExpandedSkeleton(expanded) {
   return createNodeAndChildrenSelector(
     [ getNodes, getPathId],
     (nodes, pathId) => {
-      return expandPath(nodes, pathId, actions, expanded.nodes);
+      return expandPath(nodes, pathId, actions, expanded);
     }
   );
 }

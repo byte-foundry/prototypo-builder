@@ -12,7 +12,9 @@ describe('reducer: nodes (fonts)', () => {
       [action.nodeId]: {
         id: action.nodeId,
         type: 'font',
-        childIds: []
+        childIds: [],
+        params: {},
+        paramsMeta: { _order: [] }
       }
     };
 

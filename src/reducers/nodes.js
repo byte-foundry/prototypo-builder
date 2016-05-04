@@ -1,36 +1,50 @@
 const config = require('config').default;
 
+import R from 'ramda';
+
 import logError from './../_utils/logError';
 
 import {
   ADD_CHILD,
   ADD_CHILDREN,
-  REMOVE_CHILD,
-  CREATE_NODE,
-  DELETE_NODE,
-  CREATE_FONT,
-  ADD_FONT,
-  CREATE_GLYPH,
-  ADD_GLYPH,
-  CREATE_CONTOUR,
   ADD_CONTOUR,
-  CREATE_PATH,
-  ADD_PATH,
-  CREATE_CURVE,
   ADD_CURVE,
-  CREATE_ONCURVE,
-  ADD_ONCURVE,
-  CREATE_OFFCURVE,
+  ADD_FONT,
+  ADD_GLYPH,
   ADD_OFFCURVE,
+  ADD_ONCURVE,
+  ADD_PARAM,
+  ADD_PATH,
+  CREATE_CONTOUR,
+  CREATE_CURVE,
+  CREATE_FONT,
+  CREATE_GLYPH,
+  CREATE_NODE,
+  CREATE_OFFCURVE,
+  CREATE_ONCURVE,
+  CREATE_PATH,
+  DELETE_NODE,
+  MOVE_NODE,
+  REMOVE_CHILD,
+  // SET_COORDS,
+  // SET_MOUSE_STATE,
+  // SET_NODE_HOVERED,
+  // SET_NODE_SELECTED,
+  // SET_PATH_HOVERED,
+  // SET_PATH_SELECTED,
+  UPDATE_COORDS,
+  UPDATE_PARAM,
+  UPDATE_PARAM_META,
+  // UPDATE_PARAM_VALUE,
   UPDATE_PROP,
+  UPDATE_PROP_META,
+  // UPDATE_PROP_VALUE,
   UPDATE_PROPS,
+  // UPDATE_PROPS_VALUES,
   UPDATE_X,
   UPDATE_Y,
-  UPDATE_COORDS,
-  MOVE_NODE,
-  ONCURVE_SMOOTH,
-  ADD_PARAM,
-  UPDATE_PARAM
+
+  ONCURVE_SMOOTH
 } from './../actions/const';
 
 import {
@@ -51,6 +65,7 @@ import {
  * src/container/App.js accordingly.
  */
 const initialState = {};
+const initialNode = {};
 
 function createNode(action) {
   const { nodeId, nodeType, props } = action;
@@ -60,6 +75,14 @@ function createNode(action) {
     type: nodeType,
     childIds: [],
     ...props
+  }
+}
+
+function initParams(node) {
+  return {
+    ...node,
+    params: {},
+    paramsMeta: { _order: [] }
   }
 }
 
@@ -80,33 +103,19 @@ function childIds(state, action) {
   }
 }
 
-function params(state = [], action) {
-  switch(action.type) {
-    case ADD_PARAM:
-      return [...state, { name: action.name, ...action.config }];
-    case UPDATE_PARAM:
-      return state.map((param) => {
-        return param.name === action.name ?
-          Object.assign({}, param, { value: action.value }) :
-          param;
-      });
-    default:
-      return state;
-  }
-}
-
-function node(state = initialState, action) {
+function node(state = initialNode, action) {
   const { type } = action;
 
   switch(type) {
     case CREATE_NODE:
-    case CREATE_FONT:
-    case CREATE_GLYPH:
     case CREATE_CONTOUR:
     case CREATE_PATH:
     case CREATE_ONCURVE:
     case CREATE_OFFCURVE:
       return createNode(action);
+    case CREATE_FONT:
+    case CREATE_GLYPH:
+      return initParams(createNode(action));
 
     case ADD_CHILD:
     case ADD_CHILDREN:
@@ -118,32 +127,59 @@ function node(state = initialState, action) {
     case ADD_CURVE:
     case ADD_ONCURVE:
     case ADD_OFFCURVE:
-      return Object.assign({}, state, {
-        childIds: childIds(state.childIds, action)
-      });
+      return { ...state, childIds: childIds(state.childIds, action) };
 
     case ADD_PARAM:
+      // do nothing if a param with the same name already exists
+      return state.paramsMeta && action.name in state.paramsMeta ? state : {
+        ...state,
+        params: {
+          ...state.params,
+          [action.name]: action.param.value
+        },
+        paramsMeta: {
+          ...state.paramsMeta,
+          _order: [ ...state.paramsMeta._order, action.name ],
+          // Remove the value prop of the param before setting the meta
+          [action.name]: R.dissoc('value', action.param)
+        }
+      };
     case UPDATE_PARAM:
-      return Object.assign({}, state, {
-        params: params(state.params, action)
-      });
+      return { ...state, params: { ...state.params, [action.name]: action.value } };
+    case UPDATE_PARAM_META:
+      return {
+        ...state,
+        paramsMeta: {
+          ...state.paramsMeta,
+          [action.name]: { ...state.paramsMeta[action.name], ...action.meta }
+        }
+      };
 
     case UPDATE_X:
-      return Object.assign({}, state, {
-        x: action.value
-      });
+      return { ...state, x: action.value };
     case UPDATE_Y:
-      return Object.assign({}, state, {
-        y: action.value
-      });
+      return { ...state, y: action.value };
     case UPDATE_COORDS:
-      return Object.assign({}, state, action.coords);
+      return { ...state, x: action.coords.x, y: action.coords.y };
     case UPDATE_PROP:
-      return Object.assign({}, state, {
-        [action.propNames[0]]: action.value
-      });
+      return { ...state, [action.propNames[0]]: action.value };
     case UPDATE_PROPS:
-      return Object.assign({}, state, action.props);
+      return { ...state, ...action.props };
+    case UPDATE_PROP_META:
+      return {
+        ...state,
+        [action.propNames[0] + 'Meta']: {
+          ...state[action.propNames[0] + 'Meta'],
+          ...action.meta
+        }
+      };
+    // case UPDATE_PROP_VALUE:
+    //   return R.mergeWith(R.merge, state, { [action.propNames[0]]: { value: action.value } });
+    // case UPDATE_PROPS_VALUES:
+    //   return R.mergeWith(R.merge,
+    //     state,
+    //     R.mapObjIndexed((value) => { return {value}; }, action.values)
+    //   );
 
     default:
       return state;
@@ -179,7 +215,7 @@ function deepPositionUpdate(node, nodes, x=0, y=0, result) {
   }
 }
 
-export default function(state = {}, action) {
+export default function(state = initialState, action) {
   const { type, nodeId, parentId, nodeIds } = action;
 
   if (
@@ -219,7 +255,7 @@ export default function(state = {}, action) {
           nodeType: i === 2 ? 'oncurve' : 'offcurve'
         });
       });
-      return Object.assign({}, state, nodes);
+      return R.merge(state, nodes);
 
     case MOVE_NODE:
       const path = state[nodeId];
@@ -254,8 +290,6 @@ export default function(state = {}, action) {
       }
 
     default:
-      return Object.assign({}, state, {
-        [nodeId]: node( state[nodeId], action )
-      });
+      return R.merge(state, { [nodeId]: node( state[nodeId], action ) });
   }
 }

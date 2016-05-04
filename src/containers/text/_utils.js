@@ -2,15 +2,15 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 
 import {
-  createPath,
-  addPath,
-  createOncurve,
-  addOncurve,
-  createOffcurve,
   addOffcurve,
-  updateProp,
+  addOncurve,
   addParam,
-  updateParam
+  addPath,
+  createOffcurve,
+  createOncurve,
+  createPath,
+  updateParam,
+  updateProp
 } from './../../actions/all';
 
 import fontModel from './../../_utils/fontModel';
@@ -69,15 +69,15 @@ export function validateChildTypes(props, propName, componentName, prop, model =
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    createPath,
-    addPath,
-    createOncurve,
-    addOncurve,
-    createOffcurve,
     addOffcurve,
-    updateProp,
+    addOncurve,
     addParam,
-    updateParam
+    addPath,
+    createOffcurve,
+    createOncurve,
+    createPath,
+    updateParam,
+    updateProp
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

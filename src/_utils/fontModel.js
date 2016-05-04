@@ -96,8 +96,8 @@ export default {
     properties: {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
-      x: 'number',
-      y: 'number',
+      x: 'text',
+      y: 'text',
       selected: 'boolean',
       state: 'number',
       expand: 'number',
