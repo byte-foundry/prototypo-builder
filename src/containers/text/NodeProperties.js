@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import R from 'ramda';
 
 import fontModel from './../../_utils/fontModel';
 
-import { getCalculatedNode, parseFormula } from './../_utils';
+import { getCalculatedProps, parseFormula } from './../_utils';
 
 import {
   mapDispatchToProps
@@ -72,7 +71,7 @@ NodeProperties.propTypes = {
 };
 
 function mapStateToProps(state, props) {
-  return getCalculatedNode(state.nodes[props.id], state.nodes['font-initial'].params);
+  return getCalculatedProps(state.nodes[props.id], state.nodes['font-initial'].params);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NodeProperties);

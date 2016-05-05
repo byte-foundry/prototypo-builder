@@ -7,7 +7,10 @@ import {
   getCorrespondingHandles
 } from '../../_utils/pathWalkers';
 
-import { getCalculatedNodes } from './../_utils';
+import {
+  getCalculatedParams,
+  getCalculatedNodes
+} from './../_utils';
 
 import {
   mapDispatchToProps,
@@ -228,7 +231,10 @@ class SvgContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    nodes: getCalculatedNodes(state.nodes, state.nodes['font-initial'].params),
+    nodes: getCalculatedNodes(
+      state.nodes,
+      getCalculatedParams(state.nodes['font-initial'])
+    ),
     ui: state.ui
   };
 }

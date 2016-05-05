@@ -35,7 +35,7 @@ function makeMapStateToProps() {
   const getExpandedSkeleton = makeGetExpandedSkeleton(expanded);
   const mapStateToProps = (state, props) => {
     return {
-      nodes: getCalculatedNodes(state.nodes, state.nodes['font-initial'].params),
+      nodes: state.nodes,
       expanded,
       expandedSkeletonId: getExpandedSkeleton( state, props )
     };

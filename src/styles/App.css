@@ -4,6 +4,10 @@ body {
   background: #222;*/
 }
 
+input:invalid {
+  box-shadow: 0 0 4px red;
+}
+
 .index img {
   margin: 40px auto;
   border-radius: 4px;

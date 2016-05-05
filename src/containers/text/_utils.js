@@ -11,7 +11,8 @@ import {
   createPath,
   updateParam,
   updateProp,
-  updatePropMeta
+  updatePropMeta,
+  updateParamMeta
 } from './../../actions/all';
 
 import fontModel from './../../_utils/fontModel';
@@ -79,7 +80,8 @@ export function mapDispatchToProps(dispatch) {
     createPath,
     updateParam,
     updateProp,
-    updatePropMeta
+    updatePropMeta,
+    updateParamMeta
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

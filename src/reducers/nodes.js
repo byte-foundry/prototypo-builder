@@ -151,7 +151,10 @@ function node(state = initialNode, action) {
         ...state,
         paramsMeta: {
           ...state.paramsMeta,
-          [action.name]: { ...state.paramsMeta[action.name], ...action.meta }
+          [action.name]: {
+            ...state.paramsMeta[action.name],
+            ...action.meta
+          }
         }
       };
 
@@ -169,6 +172,7 @@ function node(state = initialNode, action) {
       return {
         ...state,
         [action.propNames[0] + 'Meta']: {
+          _for: action.propNames[0],
           ...state[action.propNames[0] + 'Meta'],
           ...action.meta
         }

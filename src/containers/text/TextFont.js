@@ -3,9 +3,13 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import {
+  parseFormula,
+  getCalculatedParams
+} from './../_utils';
+
+import {
   renderTextChild,
   validateChildTypes,
-  mapStateToProps,
   mapDispatchToProps
 } from './_utils';
 
@@ -13,13 +17,19 @@ import Foldable from './Foldable';
 
 require('styles/text/TextProplist.scss');
 
+import NodeProperty from 'components/text/NodePropertyComponent';
+
 class TextFont extends Component {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
     this.renderTextParams = this.renderTextParams.bind(this);
+    this.renderParamSlider = this.renderParamSlider.bind(this);
+    this.renderParamFormula = this.renderParamFormula.bind(this);
     this.handleAddParamClick = this.handleAddParamClick.bind(this);
+    this.handleAddFormulaClick = this.handleAddFormulaClick.bind(this);
     this.handleParamChange = this.handleParamChange.bind(this);
+    this.handleFormulaChange = this.handleFormulaChange.bind(this);
   }
 
   handleAddParamClick(e) {
@@ -28,15 +38,34 @@ class TextFont extends Component {
     const { id } = this.props;
     const { addParam } = this.props.actions;
 
-    addParam(id, this.refs.name.value, {
-      min: +this.refs.min.value,
-      max: +this.refs.max.value,
-      value: +this.refs.value.value
+    addParam(id, this.refs.paramName.value, {
+      min: +this.refs.paramMin.value,
+      max: +this.refs.paramMax.value,
+      value: +this.refs.paramValue.value
     });
 
-    ['name', 'min', 'max', 'value'].forEach((refName) => {
+    this.refs.paramName.value = '$';
+    ['paramMin', 'paramMax', 'paramValue'].forEach((refName) => {
       this.refs[refName].value = '';
     });
+  }
+
+  handleAddFormulaClick(e) {
+    e.preventDefault();
+
+    const { id } = this.props;
+    const { addParam } = this.props.actions;
+    const formula = parseFormula( this.refs.formulaValue.value );
+
+    if ( !formula.updater ) {
+      return this.refs.formulaValue.pattern = '^$';
+    }
+
+    this.refs.formulaValue.pattern = null;
+    addParam(id, this.refs.formulaName.value, formula);
+
+    this.refs.formulaName.value = '$';
+    this.refs.formulaValue.value = '';
   }
 
   handleParamChange(e) {
@@ -48,8 +77,55 @@ class TextFont extends Component {
     updateParam(id, e.target.name, +e.target.value);
   }
 
+  handleFormulaChange(e) {
+    e.preventDefault();
+
+    const { id, paramsMeta } = this.props;
+    const { updateParamMeta } = this.props.actions;
+    const { name } = e.target;
+
+    if ( !(name in paramsMeta) ) {
+      return;
+    }
+
+    updateParamMeta(id, name, parseFormula(e.target.value));
+  }
+
+  renderParamSlider(name) {
+    const { params, paramsMeta } = this.props;
+    const value = params[name];
+    const { min, max } = paramsMeta[name];
+    const step = Math.abs(max - min) / 100;
+
+    return (
+      <li key={name}>
+        <label>
+          {name}:
+          <input type="range" value={value} name={name} min={min} max={max} step={step} onChange={this.handleParamChange} />
+          <input type="number" value={value} name={name} onChange={this.handleParamChange} />
+        </label>
+      </li>
+    );
+  }
+
+  renderParamFormula(name) {
+    const { params, paramsMeta } = this.props;
+    const value = params[name];
+    const { formula, isInvalid } = paramsMeta[name];
+
+    return (
+      <NodeProperty
+        key={name}
+        name={name}
+        value={value}
+        formula={formula}
+        isInvalid={isInvalid}
+      />
+    );
+  }
+
   renderTextParams() {
-    const { _isPropsUnfolded, params, paramsMeta } = this.props;
+    const { _isPropsUnfolded, paramsMeta } = this.props;
     const listClass = classNames({
       'unstyled': true,
       'text-proplist': true,
@@ -57,27 +133,25 @@ class TextFont extends Component {
     });
 
     return (
-      <ul className={listClass}>
+      <ul className={listClass} onChange={this.handleFormulaChange}>
         {paramsMeta._order.map((name) => {
-          const value = params[name];
-          const { min, max } = paramsMeta[name];
-
-          return (
-            <li key={name}>
-              <label>
-                {name}:
-                <input type="range" value={value} name={name} min={min} max={max} onChange={this.handleParamChange} />
-                <input type="number" value={value} name={name} onChange={this.handleParamChange} />
-              </label>
-            </li>
-          );
+          return this[(
+            'updater' in paramsMeta[name] ?
+              'renderParamFormula' :
+              'renderParamSlider'
+          )](name);
         })}
         <li>
-          <input type="text"   ref="name" placeholder="name" />
-          <input type="number" ref="min" placeholder="min" />
-          <input type="number" ref="max" placeholder="max" />
-          <input type="number" ref="value" placeholder="initial value" />
+          <input type="text"   ref="paramName" placeholder="name" defaultValue="$" />
+          <input type="number" ref="paramMin" placeholder="min" />
+          <input type="number" ref="paramMax" placeholder="max" />
+          <input type="number" ref="paramValue" placeholder="initial value" />
           <input type="button" defaultValue="Add param" onClick={this.handleAddParamClick} />
+        </li>
+        <li>
+          <input type="text" ref="formulaName" placeholder="name" defaultValue="$" />
+          <input type="text" ref="formulaValue" placeholder="formula" />
+          <input type="button" defaultValue="Add formula" onClick={this.handleAddFormulaClick} />
         </li>
       </ul>
     );
@@ -106,6 +180,13 @@ class TextFont extends Component {
 TextFont.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes
+}
+
+function mapStateToProps(state, props) {
+  return {
+    ...state.nodes[props.id],
+    params: getCalculatedParams(state.nodes['font-initial'])
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextFont);

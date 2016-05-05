@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 
 import SvgExpandedSkeleton from './SvgExpandedSkeleton';
 
-import { getCalculatedNodes } from './../_utils';
+import {
+  getCalculatedParams,
+  getCalculatedNodes
+} from './../_utils';
 
 import {
   renderPathData,
@@ -57,7 +60,12 @@ SvgContour.propTypes = {
 }
 
 function mapStateToProps(state) {
-  return { nodes: getCalculatedNodes(state.nodes, state.nodes['font-initial'].params) };
+  return {
+    nodes: getCalculatedNodes(
+      state.nodes,
+      getCalculatedParams(state.nodes['font-initial'])
+    )
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgContour);

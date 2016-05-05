@@ -103,14 +103,14 @@ describe('reducer: nodes (node props)', () => {
     const stateAfter1 = {
       'node-0': {
         id: 'node-0',
-        widthMeta: { min: 12 }
+        widthMeta: { _for: 'width', min: 12 }
       }
     };
     const action2 = updatePropMeta('node-0', 'width', { max: 34 });
     const stateAfter2 = {
       'node-0': {
         id: 'node-0',
-        widthMeta: { min: 12, max: 34 }
+        widthMeta: { _for: 'width', min: 12, max: 34 }
       }
     };
 

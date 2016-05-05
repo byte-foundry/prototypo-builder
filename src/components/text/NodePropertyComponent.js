@@ -31,7 +31,11 @@ class NodePropertyComponent extends React.Component {
           value={formula}
           disabled={disabled}
           checked={checked} />
-        <span className="text-node__property-value">{value}</span>
+        <input
+          className="text-node__property-value"
+          value={value}
+          readOnly
+          disabled />
       </li>
     );
   }
