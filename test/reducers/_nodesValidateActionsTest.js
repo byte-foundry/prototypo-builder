@@ -168,9 +168,12 @@ describe('reducers/_nodesValidateAction', () => {
       const state = {
         'node-0': {
           id: 'node-0',
-          params: [{
-            name: '$forbidden'
-          }]
+          params: {
+            $forbidden: 12
+          },
+          paramsMeta: {
+            $forbidden: {}
+          }
         }
       };
 

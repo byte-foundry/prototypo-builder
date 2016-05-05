@@ -1,10 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import R from 'ramda';
 
 import fontModel from './../../_utils/fontModel';
 
+import { getCalculatedNode } from './../_utils';
+
 import {
-  mapStateToProps,
   mapDispatchToProps
 } from './_utils';
 
@@ -17,11 +19,10 @@ class NodeProperties extends Component {
   }
 
   handleUpdate(e) {
-    const { updateProp } = this.props.actions;
+    const { updateProp, updatePropMeta } = this.props.actions;
     const { id, type } = this.props;
     const { name } = e.target;
     const propType = fontModel[type].properties[name];
-    let value;
 
     // This handler is used for both 'input' and 'change event' but we
     // want to filter out 'change' events for anything but boolean properties
@@ -29,18 +30,28 @@ class NodeProperties extends Component {
       return;
     }
 
-    switch( propType ) {
-      case 'number':
-        value = +e.target.value;
-        break;
-      case 'boolean':
-        value = e.target.checked;
-        break;
-      default:
-        value = e.target.value;
+    if ( propType === 'boolean' ) {
+      return updateProp(id, name, e.target.checked);
     }
 
-    updateProp(id, name, value);
+    let { value } = e.target;
+    let updater;
+    let usedParams = e.target.value.match(/(\$[a-z]+)/ig);
+    try {
+      updater = new Function( ...usedParams, 'return ' + value );
+    } catch(e) {
+      return updatePropMeta(id, name, {
+        formula: value,
+        isInvalid: true
+      });
+    }
+
+    return updatePropMeta(id, name, {
+      formula: value,
+      params: usedParams,
+      updater: R.memoize(updater),
+      isInvalid: false
+    });
   }
 
   render() {
@@ -54,6 +65,7 @@ class NodeProperties extends Component {
       >
         { propertyOrder.map((propName) => {
           const value = this.props[propName];
+          const { formula, isInvalid } = ( this.props[propName + 'Meta'] || {} );
           const propType = properties[propName];
 
           return (
@@ -61,7 +73,9 @@ class NodeProperties extends Component {
               key={propName}
               name={propName}
               value={value}
+              formula={formula}
               type={propType}
+              isInvalid={isInvalid}
             />
           );
         }) }
@@ -73,5 +87,9 @@ class NodeProperties extends Component {
 NodeProperties.propTypes = {
   actions: PropTypes.object.isRequired
 };
+
+function mapStateToProps(state, props) {
+  return getCalculatedNode(state.nodes[props.id], state.nodes['font-initial'].params);
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(NodeProperties);

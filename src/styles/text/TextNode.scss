@@ -18,6 +18,15 @@
     content: ': ';
   }
 
+  &__property-formula--invalid {
+    box-shadow: 0 0 2px red;
+  }
+
+  &__property-formula--invalid:focus {
+    outline: 0;
+    box-shadow: 0 0 4px red;
+  }
+
   &__property-input {
     border-width: 0;
   }

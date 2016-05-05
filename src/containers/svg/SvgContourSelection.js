@@ -6,6 +6,8 @@ import { forEachNode } from '../../_utils/pathWalkers';
 import SvgSelector from './SvgSelector';
 import {NODE_SELECTED} from '../../actions/const';
 
+import { getCalculatedNodes } from './../_utils';
+
 import {
   mapDispatchToProps,
   getPathBbox
@@ -110,7 +112,10 @@ SvgContourSelection.propTypes = {
 }
 
 function mapStateToProps(state) {
-  return { nodes: state.nodes, ui: state.ui };
+  return {
+    nodes: getCalculatedNodes(state.nodes, state.nodes['font-initial'].params),
+    ui: state.ui
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgContourSelection);

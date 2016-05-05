@@ -10,7 +10,8 @@ import {
   createOncurve,
   createPath,
   updateParam,
-  updateProp
+  updateProp,
+  updatePropMeta
 } from './../../actions/all';
 
 import fontModel from './../../_utils/fontModel';
@@ -77,7 +78,8 @@ export function mapDispatchToProps(dispatch) {
     createOncurve,
     createPath,
     updateParam,
-    updateProp
+    updateProp,
+    updatePropMeta
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
