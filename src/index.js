@@ -28,27 +28,7 @@ const store = configureStore({
     'contour-initial': {
       id: 'contour-initial',
       type: 'contour',
-      childIds: ['path-initial']
-    },
-    'path-initial': {
-      id: 'path-initial',
-      type: 'path',
-      childIds: ['oncurve-initial', 'offcurve-initial']
-    },
-    'oncurve-initial': {
-      id: 'oncurve-initial',
-      type: 'oncurve',
-      childIds: [],
-      x: 0,
-      y: 0,
-      state: 1
-    },
-    'offcurve-initial': {
-      id: 'offcurve-initial',
-      type: 'offcurve',
-      childIds: [],
-      x: 0,
-      y: 0
+      childIds: []
     }
   }
 });
