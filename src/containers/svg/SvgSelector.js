@@ -127,7 +127,7 @@ SvgSelector.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
-  return {...state.nodes, ...ownProps};
+  return {};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgSelector);

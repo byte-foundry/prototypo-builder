@@ -56,6 +56,8 @@ import {
 
 import {
   getNode,
+  getNextNode,
+  getPreviousNode,
   getCorrespondingHandles
 } from '../_utils/pathWalkers';
 
@@ -272,9 +274,22 @@ export default function(state = initialState, action) {
             const newNode = { ...node };
             newNode.x = (newNode.x || 0) + action.dx;
             newNode.y = (newNode.y || 0) + action.dy;
+            if (newNode._isGhost) {
+              newNode._isGhost = false;
+            }
             resultNode[newNode.id] = newNode;
           }
         });
+
+        const [nextOn, nextIn] = getNextNode(parentId, nodeId, state);
+        if (nextIn) {
+          resultNode[nextIn.id] = { ...nextIn, _isGhost: false};
+        }
+
+        const [prevOn, prevIn , prevOut] = getPreviousNode(parentId, nodeId, state);
+        if (prevOut) {
+          resultNode[prevOut.id] = { ...prevOut, _isGhost: false};
+        }
         return {...state, ...resultNode};
       } else if ( type === 'offcurve') {
         const nodesToMove = getCorrespondingHandles(parentId, nodeId, state);

@@ -1,6 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import {
+  forEachCurve
+} from '../../_utils/pathWalkers';
+
 import SvgExpandedSkeleton from './SvgExpandedSkeleton';
 
 import {
@@ -10,7 +14,8 @@ import {
 
 import {
   renderPathData,
-  mapDispatchToProps
+  mapDispatchToProps,
+  outline
 } from './_utils';
 
 class SvgContour extends Component {
@@ -40,7 +45,24 @@ class SvgContour extends Component {
           return nodes[pathId].isSkeleton;
         })
         .map((pathId) => {
-          return <SvgExpandedSkeleton key={pathId} id={pathId} parentId={id} />
+
+          const paths = [];
+          forEachCurve(pathId, nodes, (c0, c1, c2, c3, i) => {
+            let pathString = '';
+            if (c2 && c3) {
+              const curves = outline(c0, c1, c2, c3, 30);
+              curves.forEach((curve) => {
+                if (pathString.length === 0) {
+                  pathString += `M${curve.c0.x} ${curve.c0.y}`;
+                }
+
+                pathString += ` C${curve.c1.x},${curve.c1.y} ${curve.c2.x},${curve.c2.y} ${curve.c3.x},${curve.c3.y}`;
+              });
+            }
+            paths.push(<path d={pathString} key={`curve-${i}`}/>);
+          });
+
+          return paths;
         })
     );
   }

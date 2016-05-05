@@ -43,6 +43,7 @@ class SvgContourSelection extends Component {
               key={pathId + i}
               className="contour-point"
               hovered={this.props.ui.hovered.point}
+              nodes={this.props.nodes}
             />
           );
           //Draw in control
@@ -94,8 +95,8 @@ class SvgContourSelection extends Component {
         const bbox = getPathBbox(pathId, nodes);
         //Draw path bounding box
         result.push(
-          <path className="bbox" d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
-        );
+          <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
+        )
       }
     });
     return pathResult.concat(result);

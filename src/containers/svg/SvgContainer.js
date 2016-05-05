@@ -18,7 +18,8 @@ import {
   getNearPath,
   getNearNode,
   subtractVec,
-  multiplyVecByN
+  multiplyVecByN,
+  outline
 } from './_utils';
 
 import {
