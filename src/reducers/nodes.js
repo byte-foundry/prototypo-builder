@@ -265,9 +265,10 @@ export default function(state = initialState, action) {
         const resultNode = {};
         nodesToMove.forEach((node) => {
           if (node !== null) {
-            node.x = (node.x || 0) + action.dx;
-            node.y = (node.y || 0) + action.dy;
-            resultNode[node.id] = node;
+            const newNode = { ...node };
+            newNode.x = (newNode.x || 0) + action.dx;
+            newNode.y = (newNode.y || 0) + action.dy;
+            resultNode[newNode.id] = newNode;
           }
         });
         return {...state, ...resultNode};

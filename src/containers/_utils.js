@@ -1,6 +1,7 @@
 import R from 'ramda';
 
-export const buildArgs = R.memoize((params, usedParams) => {
+// the 'node' param is only used for memoization
+export const buildArgs = R.memoize((node, params, usedParams) => {
   return usedParams.map((name) => params[name]);
 });
 
@@ -16,7 +17,7 @@ export const getCalculatedNode = R.memoize((node, params) => {
       const propMeta = node[propName];
       try {
         calculatedNode[propName.replace('Meta', '')] = (
-          propMeta.updater.apply( node, buildArgs(params, propMeta.params) )
+          propMeta.updater.apply( node, buildArgs(node, params, propMeta.params) )
         );
       } catch(e) {
         /* eslint-disable no-console */

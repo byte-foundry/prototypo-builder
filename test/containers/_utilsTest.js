@@ -13,10 +13,10 @@ describe('containers/_utils', () => {
 
       deepFreeze(params);
 
-      expect(buildArgs(params, []))
+      expect(buildArgs(null, params, []))
         .to.deep.equal([]);
 
-      expect(buildArgs(params, ['$expand', '$width']))
+      expect(buildArgs(null, params, ['$expand', '$width']))
         .to.deep.equal([ 56, 12 ]);
 
       done();
