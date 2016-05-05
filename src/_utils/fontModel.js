@@ -92,7 +92,7 @@ export default {
   },
   oncurve: {
     children: {},
-    propertyOrder: [ 'x', 'y', 'expand', 'selected', 'state', 'distrib' ],
+    propertyOrder: [ 'x', 'y', 'expand', 'distrib', 'selected', 'state' ],
     properties: {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',

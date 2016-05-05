@@ -1,8 +1,27 @@
 import R from 'ramda';
 
-// the 'node' param is only used for memoization
+export function parseFormula( strFormula ) {
+  const usedParams = strFormula.match(/(\$[a-z]+)/ig);
+  let updater;
+  try  {
+    updater = new Function( 'self', ...usedParams, 'return ' + strFormula );
+  } catch(e) {
+    return {
+      formula: strFormula,
+      isInvalid: true
+    }
+  }
+
+  return {
+    formula: strFormula,
+    params: usedParams,
+    updater: R.memoize(updater),
+    isInvalid: false
+  }
+}
+
 export const buildArgs = R.memoize((node, params, usedParams) => {
-  return usedParams.map((name) => params[name]);
+  return [node].concat( usedParams.map((name) => params[name]) );
 });
 
 export const getCalculatedNode = R.memoize((node, params) => {

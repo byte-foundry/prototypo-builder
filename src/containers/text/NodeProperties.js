@@ -4,7 +4,7 @@ import R from 'ramda';
 
 import fontModel from './../../_utils/fontModel';
 
-import { getCalculatedNode } from './../_utils';
+import { getCalculatedNode, parseFormula } from './../_utils';
 
 import {
   mapDispatchToProps
@@ -34,24 +34,7 @@ class NodeProperties extends Component {
       return updateProp(id, name, e.target.checked);
     }
 
-    let { value } = e.target;
-    let updater;
-    let usedParams = e.target.value.match(/(\$[a-z]+)/ig);
-    try {
-      updater = new Function( ...usedParams, 'return ' + value );
-    } catch(e) {
-      return updatePropMeta(id, name, {
-        formula: value,
-        isInvalid: true
-      });
-    }
-
-    return updatePropMeta(id, name, {
-      formula: value,
-      params: usedParams,
-      updater: R.memoize(updater),
-      isInvalid: false
-    });
+    return updatePropMeta(id, name, parseFormula(e.target.value));
   }
 
   render() {
