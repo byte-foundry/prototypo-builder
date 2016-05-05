@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import {
   renderTextChild,
@@ -7,6 +8,9 @@ import {
   mapStateToProps,
   mapDispatchToProps
 } from './_utils';
+
+import NodeProperties from './NodeProperties';
+import Foldable from './Foldable';
 
 class TextContour extends Component {
   constructor(props) {
@@ -43,17 +47,32 @@ class TextContour extends Component {
     addOncurve(pathId, oncurveId);
   }
 
+  handleSelect() {
+    this.props.actions.setContourSelected(this.props.id);
+  }
+
   render() {
-    const { childIds } = this.props;
+    const { id, type, childIds, _isChildrenUnfolded } = this.props;
+    const nodeClass = classNames({
+      'text-node': true,
+      'text-node--path': true,
+      'text-node--unfolded': _isChildrenUnfolded
+    });
     return (
-      <ul className="unstyled">
-        <li>Paths:
-          <ul className="unstyled">
-            {childIds.map(this.renderTextChild)}
-            <li><button onClick={this.handleAddStartingPathClick}>Add Path</button></li>
-          </ul>
-        </li>
-      </ul>
+      <Foldable id={id} switchProp="_isChildrenUnfolded">
+        <ul className={nodeClass}>
+          <li>
+            <button onClick={this.handleSelect.bind(this)}>Select Contour</button>
+          </li>
+          <li><NodeProperties id={id} type={type} /></li>
+          <li>
+            <ul className="unstyled">
+              {childIds.map(this.renderTextChild)}
+              <li><button onClick={this.handleAddStartingPathClick}>Add Path</button></li>
+            </ul>
+          </li>
+        </ul>
+      </Foldable>
     );
   }
 }

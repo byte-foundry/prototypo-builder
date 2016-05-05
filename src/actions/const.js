@@ -45,3 +45,5 @@ export const NODE_SELECTED_AND_MOVE = 4;
 //Oncurve types
 export const ONCURVE_SMOOTH = 1;
 export const ONCURVE_CORNER = 2;
+export const DELETE_PROPS_META = 'DELETE_PROPS_META';
+export const SET_CONTOUR_SELECTED = 'SET_CONTOUR_SELECTED';

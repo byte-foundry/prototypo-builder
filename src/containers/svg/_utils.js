@@ -59,6 +59,10 @@ export function renderSelectionAreas(childId) {
 export function renderPathData(pathId) {
   const { nodes } = this.props;
 
+  if (nodes[pathId].isSkeleton) {
+    return '';
+  }
+
   return mapCurve(pathId, nodes, (start, c1, c2, end, i, length) => {
     let sPoint = '';
 
@@ -126,9 +130,9 @@ export function getSvgCoordsFromClientCoords( clientCoord, elem ) {
 
 export const NULL_VEC = {x: 0, y: 0};
 
-export function getNearPath(coord, nodes, error) {
+export function getNearPath(coord, contour, nodes, error) {
   let result;
-  Object.keys(nodes).forEach((key) => {
+  nodes[contour].childIds.forEach((key) => {
     const node = nodes[key];
     if (node.type === 'path') {
       forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {

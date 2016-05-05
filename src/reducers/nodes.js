@@ -24,6 +24,7 @@ import {
   CREATE_ONCURVE,
   CREATE_PATH,
   DELETE_NODE,
+  DELETE_PROPS_META,
   MOVE_NODE,
   REMOVE_CHILD,
   // SET_COORDS,
@@ -179,6 +180,8 @@ function node(state = initialNode, action) {
           ...action.meta
         }
       };
+    case DELETE_PROPS_META:
+      return R.dissoc(action.propNames[0] + 'Meta', state);
     // case UPDATE_PROP_VALUE:
     //   return R.mergeWith(R.merge, state, { [action.propNames[0]]: { value: action.value } });
     // case UPDATE_PROPS_VALUES:

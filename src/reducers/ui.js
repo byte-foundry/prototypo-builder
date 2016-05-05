@@ -5,7 +5,8 @@ import {
   NO_PATH_SELECTED,
   SET_NODE_SELECTED,
   SET_NODE_HOVERED,
-  SET_PATH_HOVERED
+  SET_PATH_HOVERED,
+  SET_CONTOUR_SELECTED
 } from '../actions/const';
 /* Define your initial state here.
  *
@@ -40,6 +41,9 @@ module.exports = function(state = initialState, action) {
     }
     case SET_PATH_HOVERED: {
         return { ...state, hovered: { ...state.hovered, path: action.path, pathParent: action.parent } };
+    }
+    case SET_CONTOUR_SELECTED: {
+        return { ...state, selected: { ...state.selected, contour: action.contourId} };
     }
     /*
     case 'YOUR_ACTION': {

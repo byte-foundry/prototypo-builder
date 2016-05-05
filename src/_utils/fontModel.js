@@ -48,10 +48,11 @@ export default {
   },
   contour: {
     children: { path: true },
-    propertyOrder: [],
+    propertyOrder: ['isClosed'],
     properties: {
       _isChildrenUnfolded: 'boolean',
-      _isPropsUnfolded: 'boolean'
+      _isPropsUnfolded: 'boolean',
+      isClosed: 'boolean'
     }
   },
   group: {

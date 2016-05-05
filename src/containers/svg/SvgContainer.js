@@ -91,7 +91,7 @@ class SvgContainer extends Component {
     }
 
     this.props.actions.setCoords(coord.x, coord.y);
-    this.props.actions.setPathSelected(pathId, 'contour-initial');
+    this.props.actions.setPathSelected(pathId, this.props.ui.selected.contour);
     this.props.actions.setMouseState(NODE_SELECTED);
   }
 
@@ -101,13 +101,13 @@ class SvgContainer extends Component {
       y: e.clientY
     }, this.refs.svg);
     if (this.props.ui.uiState === NO_PATH_SELECTED) {
-      const path = getNearPath(point, this.props.nodes);
+      const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
       if (path) {
-        this.props.actions.setPathSelected(path, 'contour-initial');
+        this.props.actions.setPathSelected(path, this.props.ui.selected.contour);
         this.props.actions.setMouseState(PATH_SELECTED);
       } else {
         const pathId = this.props.actions.createPath().nodeId;
-        this.props.actions.addPath('contour-initial', pathId);
+        this.props.actions.addPath( this.props.ui.selected.contour, pathId);
 
         this.createNewAddToPathAndSelect(point, pathId,{
           first: true
@@ -166,8 +166,8 @@ class SvgContainer extends Component {
         }
       }
       else {
-        const path = getNearPath(point, this.props.nodes);
-        this.props.actions.setPathHovered(path, 'contour-initial');
+        const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
+        this.props.actions.setPathHovered(path, this.props.ui.selected.contour);
       }
     }
     this.props.actions.setCoords(point.x, point.y);
@@ -182,6 +182,7 @@ class SvgContainer extends Component {
           this.createNewAddToPathAndSelect(point, this.props.ui.selected.path, {
             closed: true
           });
+          this.props.actions.updateProp(this.props.ui.selected.contour, 'isClosed', true);
           this.props.actions.updateProp(this.props.ui.selected.path, 'isClosed', true);
         }
       }

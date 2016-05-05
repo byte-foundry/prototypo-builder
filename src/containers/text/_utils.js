@@ -2,10 +2,12 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 
 import {
+  addContour,
   addOffcurve,
   addOncurve,
   addParam,
   addPath,
+  createContour,
   createOffcurve,
   createOncurve,
   createPath,
@@ -13,6 +15,8 @@ import {
   updateProp,
   updatePropMeta,
   updateParamMeta
+  deletePropsMeta,
+  setContourSelected
 } from './../../actions/all';
 
 import fontModel from './../../_utils/fontModel';
@@ -71,17 +75,24 @@ export function validateChildTypes(props, propName, componentName, prop, model =
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
+    addContour,
     addOffcurve,
     addOncurve,
     addParam,
     addPath,
+    createContour,
     createOffcurve,
     createOncurve,
     createPath,
     updateParam,
     updateProp,
     updatePropMeta,
+<<<<<<< 543d1fb0bae99482ddfaff8e5aa7206db82ac6df
     updateParamMeta
+=======
+    deletePropsMeta,
+    setContourSelected
+>>>>>>> some ui change
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

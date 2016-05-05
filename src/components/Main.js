@@ -9,7 +9,7 @@ import DebugInfos from '../containers/ui/DebugInfos';
 class AppComponent extends React.Component {
   render() {
     return (
-      <div className="grid-2">
+      <div className="grid-1-2">
         <div>
           <TextRoot id={'root'} />
           <DebugInfos />

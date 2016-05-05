@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import {
   forEachCurve
@@ -15,6 +16,10 @@ import {
 import {
   renderPathData,
   mapDispatchToProps,
+  equalVec,
+  addVec,
+  subtractVec,
+  multiplyVecByN,
   outline
 } from './_utils';
 
@@ -47,10 +52,27 @@ class SvgContour extends Component {
         .map((pathId) => {
 
           const paths = [];
-          forEachCurve(pathId, nodes, (c0, c1, c2, c3, i) => {
+          forEachCurve(pathId, nodes, (c0, c1, c2, c3, i, length) => {
             let pathString = '';
             if (c2 && c3) {
-              const curves = outline(c0, c1, c2, c3, 30);
+              if (equalVec(c0, c1)) {
+                const relC1 = subtractVec(c1._ghost, c0);
+                relC1.x += 0.1;
+                relC1.y += 0.1;
+                c1 = addVec(c0, multiplyVecByN(relC1, 0.1));
+              }
+              if (equalVec(c2, c3)) {
+                const relC2 = subtractVec(c2._ghost, c3);
+                relC2.x += 0.1;
+                relC2.y += 0.1;
+                c2 = addVec(c3, multiplyVecByN(relC2, 0.1));
+              }
+              const curves = outline(c0, c1, c2, c3,
+                                     (c0.expand || 20) * (c0.distrib || 0.5),
+                                     (c0.expand || 20) * (1 - (c0.distrib || 0.5)),
+                                     (c3.expand || 20) * (c3.distrib || 0.5),
+                                     (c3.expand || 20) * (1 - (c3.distrib || 0.5))
+                                    );
               curves.forEach((curve) => {
                 if (pathString.length === 0) {
                   pathString += `M${curve.c0.x} ${curve.c0.y}`;
@@ -68,9 +90,14 @@ class SvgContour extends Component {
   }
 
   render() {
+    const { nodes, id } = this.props;
+    const classes = classnames({
+      contour: true,
+      'is-closed': nodes[this.props.id].isClosed,
+    });
     return (
       <g>
-        <path className="contour" d={this.renderChildren()} />
+        <path className={classes} d={this.renderChildren()} />
         {this.renderExpandedSkeletons()}
       </g>
     );
@@ -87,6 +114,7 @@ function mapStateToProps(state) {
       state.nodes,
       getCalculatedParams(state.nodes['font-initial'])
     )
+    ui: state.ui
   };
 }
 

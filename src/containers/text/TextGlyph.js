@@ -9,11 +9,30 @@ import {
 } from './_utils';
 
 class TextGlyph extends Component {
+  constructor(props) {
+    super(props);
+    this.handleAddContourClick = this.handleAddContourClick.bind(this);
+  }
+
+  handleAddContourClick(e) {
+    e.preventDefault();
+
+    const { id } = this.props;
+    const {
+      addContour,
+      createContour
+    } = this.props.actions;
+
+    const pathId = createContour().nodeId;
+    addContour(id, pathId);
+  }
+
   render() {
     const { childIds } = this.props;
     return (
       <ul className="unstyled">
         {childIds.map(renderTextChild.bind(this))}
+        <li><button onClick={this.handleAddContourClick}>Add Contour</button></li>
       </ul>
     );
   }

@@ -39,6 +39,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   /* Populated by react-webpack-redux:action */
   const actions = {
+    deletePropsMeta: require('../actions/props/deletePropsMeta.js'),
+    setContourSelected: require('../actions/ui/setContourSelected.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

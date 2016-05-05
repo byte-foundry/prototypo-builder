@@ -11,6 +11,7 @@ class DebugInfos extends Component {
         <li>Node hovered: {this.props.ui.hovered.point} - {this.props.ui.hovered.parent}</li>
         <li>Path selected: {this.props.ui.selected.path} - {this.props.ui.selected.parentPath}</li>
         <li>Node selected: {this.props.ui.selected.point} - {this.props.ui.selected.parent}</li>
+        <li>Contour selected: {this.props.ui.selected.contour}</li>
       </ul>
     );
   }
