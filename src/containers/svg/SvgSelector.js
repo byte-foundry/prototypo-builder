@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import {
-  ONCURVE_SMOOTH
+  ONCURVE_SMOOTH,
+  SELECTION_MODE
 } from '../../actions/const';
 
 import {
@@ -102,6 +103,14 @@ class SvgSelector extends Component {
       'is-hovered': this.props.hovered === this.props.point.id
     });
 
+    const selectionIndicator = this.props.mode === SELECTION_MODE && this.props.point.id === this.props.hovered
+      ? <circle
+          style={{fill: 'transparent', stroke: 'red'}}
+          cx={handlePoint.x}
+          cy={handlePoint.y}
+          r='20'/>
+      : false;
+
     return (
       <g className="selector-container">
         {path}
@@ -111,11 +120,7 @@ class SvgSelector extends Component {
           cx={handlePoint.x || '0'}
           cy={handlePoint.y || '0'}
           r='5'></circle>
-        <circle
-          className="transparent-selector"
-          cx={handlePoint.x || '0'}
-          cy={handlePoint.y || '0'}
-          r='20'></circle>
+        {selectionIndicator}
         {indicator}
       </g>
     );
@@ -127,7 +132,7 @@ SvgSelector.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
-  return {};
+  return { mode: state.ui.uiState, hovered: state.ui.hovered.point};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgSelector);

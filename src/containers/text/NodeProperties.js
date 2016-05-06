@@ -75,7 +75,10 @@ NodeProperties.propTypes = {
 };
 
 function mapStateToProps(state, props) {
-  return getCalculatedProps(state.nodes[props.id], state.nodes['font-initial'].params);
+  return {
+    ...state.nodes[props.id],
+    ...getCalculatedProps(state.nodes[props.id], state.nodes['font-initial'].params)
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NodeProperties);

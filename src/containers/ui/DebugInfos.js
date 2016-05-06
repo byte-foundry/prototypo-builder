@@ -18,7 +18,7 @@ class DebugInfos extends Component {
 }
 
 function mapStateToProps(state) {
-  return state;
+  return {ui: state.ui};
 }
 
 export default connect(mapStateToProps, () => {return {}})(DebugInfos);

@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SvgRoot from './SvgRoot';
+import UiToolbar from '../ui/UiToolbar';
+import NodeProperties from '../text/NodeProperties';
 
 import {
   getNode,
@@ -27,8 +29,10 @@ import {
   NODE_SELECTED,
   NODE_SELECTED_AND_MOVE,
   PATH_SELECTED,
+  PATH_SELECTED_AND_MOVE,
   ONCURVE_CORNER,
-  ONCURVE_SMOOTH
+  ONCURVE_SMOOTH,
+  SELECTION_MODE
 } from '../../actions/const';
 
 class SvgContainer extends Component {
@@ -104,7 +108,8 @@ class SvgContainer extends Component {
       const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
       if (path) {
         this.props.actions.setPathSelected(path, this.props.ui.selected.contour);
-        this.props.actions.setMouseState(PATH_SELECTED);
+        this.props.actions.setCoords(point.x, point.y);
+        this.props.actions.setMouseState(PATH_SELECTED_AND_MOVE);
       } else {
         const pathId = this.props.actions.createPath().nodeId;
         this.props.actions.addPath( this.props.ui.selected.contour, pathId);
@@ -123,6 +128,16 @@ class SvgContainer extends Component {
         this.props.actions.setMouseState(NODE_SELECTED);
       } else if (!path.isClosed){
         this.createNewAddToPathAndSelect(point, this.props.ui.selected.path);
+      }
+    }
+    else if (this.props.ui.uiState === SELECTION_MODE) {
+      this.props.actions.setNodeSelected();
+      this.props.actions.setPathSelected();
+      if (this.props.ui.hovered.point) {
+        this.props.actions.setNodeSelected(this.props.ui.hovered.point);
+      }
+      else if (this.props.ui.hovered.path) {
+        this.props.actions.setPathSelected(this.props.ui.hovered.path);
       }
     }
   }
@@ -165,6 +180,47 @@ class SvgContainer extends Component {
           this.props.actions.setNodeHovered(undefined, undefined);
         }
       }
+      else if (this.props.ui.uiState === PATH_SELECTED_AND_MOVE) {
+          const move = {
+            dx: point.x - this.props.ui.mouse.x,
+            dy: point.y - this.props.ui.mouse.y
+          }
+          this.props.actions.moveNode(this.props.ui.selected.path, this.props.ui.selected.contour, move);
+      }
+      else if (this.props.ui.uiState === SELECTION_MODE) {
+        let node = undefined;
+        let path = undefined;
+        let pathHovered = undefined;
+        let contour = undefined;
+        Object.keys(this.props.nodes).forEach((key) => {
+          const currentNode = this.props.nodes[key];
+          if (currentNode.type === 'path') {
+            const newNode = getNearNode(point, currentNode.id, this.props.nodes);
+            if (newNode) {
+              node = newNode;
+              path = currentNode.id;
+            }
+          }
+          if (currentNode.type === 'contour') {
+            const newPath = getNearPath(point, currentNode.id, this.props.nodes);
+            if (newPath) {
+              pathHovered = newPath;
+              contour = currentNode;
+            }
+          }
+        });
+        if (node) {
+          this.props.actions.setNodeHovered(node, path);
+        } else {
+          this.props.actions.setNodeHovered(undefined, undefined);
+        }
+
+        if (pathHovered) {
+          this.props.actions.setPathHovered(pathHovered, contour);
+        } else {
+          this.props.actions.setPathHovered(undefined, undefined);
+        }
+      }
       else {
         const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
         this.props.actions.setPathHovered(path, this.props.ui.selected.contour);
@@ -190,9 +246,13 @@ class SvgContainer extends Component {
       this.props.actions.setMouseState(PATH_SELECTED);
       this.props.actions.setNodeSelected();
     }
+    else if (this.props.ui.uiState === PATH_SELECTED_AND_MOVE) {
+      this.props.actions.setMouseState(PATH_SELECTED);
+    }
   }
 
   handleDoubleClick(e) {
+    e.preventDefault();
     const point = getSvgCoordsFromClientCoords({
       x: e.clientX,
       y: e.clientY
@@ -216,17 +276,34 @@ class SvgContainer extends Component {
   }
 
   render() {
+    let nodeSelected = false;
+    if (this.props.ui.uiState === SELECTION_MODE) {
+      if (this.props.ui.selected.point) {
+        const {id, type} = this.props.nodes[this.props.ui.selected.point];
+        nodeSelected = (
+          <div className="floating-prop">
+            <NodeProperties id={id} type={type} />
+          </div>
+        );
+      }
+      else if (this.props.ui.selected.path) {
+      }
+    }
     return (
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-        onMouseMove={this.handleMove.bind(this)}
-        onMouseUp={this.handleUp.bind(this)}
-        onDoubleClick={this.handleDoubleClick.bind(this)}
-        viewBox="-800 -1400 2000 2000" onMouseDown={this.handleDown}
-      >
-        <g ref="svg" transform="matrix(1 0 0 -1 0 0)">
-          <SvgRoot id={'root'} />
-        </g>
-      </svg>
+      <div style={{position: 'relative'}}>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+          onMouseMove={this.handleMove.bind(this)}
+          onMouseUp={this.handleUp.bind(this)}
+          onDoubleClick={this.handleDoubleClick.bind(this)}
+          viewBox="-800 -1400 2000 2000" onMouseDown={this.handleDown}
+        >
+          <g ref="svg" transform="matrix(1 0 0 -1 0 0)">
+            <SvgRoot id={'root'} />
+          </g>
+        </svg>
+        <UiToolbar />
+        {nodeSelected}
+      </div>
     );
   }
 }

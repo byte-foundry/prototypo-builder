@@ -1,6 +1,9 @@
 .text-node {
   display: none;
   list-style: none;
+  padding: 5px;
+  padding-left: 20px;
+  background: #494949;
 
   &--unfolded {
     display: block;
@@ -8,12 +11,19 @@
 
   &__fold-button {
     cursor: default;
+    color: #fefefe;
   }
 
   &__property {
 
   }
 
+  &__property-name {
+    width: 70px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 5px;
+  }
   &__property-name:after {
     content: ': ';
   }
@@ -29,5 +39,9 @@
 
   &__property-input {
     border-width: 0;
+  }
+
+  &__property-value {
+    width:70px;
   }
 }

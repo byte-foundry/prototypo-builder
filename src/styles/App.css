@@ -23,3 +23,33 @@ input:invalid {
   border-width: 1px 0;
   background: #666;
 }
+
+button, input, optgroup, select, textarea {
+  color: #29d390;
+  background: white;
+  outline: none;
+  border: solid 1px #29d390;
+  border-radius: 3px;
+  margin: 3px;
+}
+
+button:hover {
+  background: #29d390;
+  color: #fefefe;
+}
+
+.left-panel {
+  background: #3a3a3a;
+  color: #fefefe;
+  border-right: solid 1px black;
+}
+
+* {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+

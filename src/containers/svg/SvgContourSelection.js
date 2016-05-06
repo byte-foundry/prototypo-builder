@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { forEachNode } from '../../_utils/pathWalkers';
 import SvgSelector from './SvgSelector';
-import {NODE_SELECTED} from '../../actions/const';
+import {PATH_SELECTED, SELECTION_MODE} from '../../actions/const';
 
 import {
   getCalculatedParams,
@@ -30,7 +30,7 @@ class SvgContourSelection extends Component {
 
     childIds.forEach((pathId) => {
       const path = nodes[pathId];
-      if (this.props.ui.selected.path === pathId || this.props.ui.hovered.path === pathId) {
+      if (this.props.ui.selected.path === pathId || this.props.ui.hovered.path === pathId || this.props.ui.uiState === SELECTION_MODE) {
         forEachNode(pathId, nodes, (point, inControl, outControl, i, length) => {
           //Draw on curve point
           if (i === length - 1 && nodes[pathId].isClosed) {
@@ -80,7 +80,7 @@ class SvgContourSelection extends Component {
           if (i === length - 1
             && !this.props.nodes[pathId].isClosed
             && this.props.ui.selected.path === pathId
-            && this.props.ui.uiState !== NODE_SELECTED) {
+            && this.props.ui.uiState === PATH_SELECTED) {
             result.push(
               <path
                 className="path-indicator"
@@ -92,11 +92,13 @@ class SvgContourSelection extends Component {
           }
         });
 
-        const bbox = getPathBbox(pathId, nodes);
-        //Draw path bounding box
-        result.push(
-          <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
-        )
+        if (this.props.ui.uiState !== SELECTION_MODE) {
+          const bbox = getPathBbox(pathId, nodes);
+          //Draw path bounding box
+          result.push(
+            <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
+          )
+        }
       }
     });
     return pathResult.concat(result);

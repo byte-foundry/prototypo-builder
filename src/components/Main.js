@@ -10,7 +10,7 @@ class AppComponent extends React.Component {
   render() {
     return (
       <div className="grid-1-2">
-        <div>
+        <div className="left-panel">
           <TextRoot id={'root'} />
           <DebugInfos />
         </div>

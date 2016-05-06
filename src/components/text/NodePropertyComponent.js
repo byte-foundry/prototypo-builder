@@ -21,6 +21,8 @@ class NodePropertyComponent extends React.Component {
       'text-node__property-formula--invalid': isInvalid === true
     });
 
+    const displayValue = isNaN(parseInt(value)) ? value : value.toFixed(2);
+
     return (
       <li className="text-node__item">
         <span className="text-node__property-name">{name}</span>
@@ -33,7 +35,7 @@ class NodePropertyComponent extends React.Component {
           checked={checked} />
         <input
           className="text-node__property-value"
-          value={value}
+          value={displayValue}
           readOnly
           disabled />
       </li>
