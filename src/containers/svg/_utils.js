@@ -131,6 +131,10 @@ export function getSvgCoordsFromClientCoords( clientCoord, elem ) {
 export const NULL_VEC = {x: 0, y: 0};
 
 export function getNearPath(coord, contour, nodes, error) {
+  if ( !(contour in nodes) ) {
+    return;
+  }
+
   let result;
   nodes[contour].childIds.forEach((key) => {
     const node = nodes[key];

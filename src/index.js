@@ -28,7 +28,8 @@ const store = configureStore({
     'contour-initial': {
       id: 'contour-initial',
       type: 'contour',
-      childIds: []
+      childIds: [],
+      selected: true
     }
   }
 });
