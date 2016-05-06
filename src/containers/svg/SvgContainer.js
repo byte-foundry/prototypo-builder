@@ -7,7 +7,7 @@ import NodeProperties from '../text/NodeProperties';
 import {
   getNode,
   getCorrespondingHandles
-} from '../../_utils/pathWalkers';
+} from '../../_utils/path';
 
 import {
   getCalculatedParams,

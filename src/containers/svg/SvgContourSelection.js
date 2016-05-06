@@ -2,7 +2,7 @@ require('styles/svg/Selection.scss');
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { forEachNode } from '../../_utils/pathWalkers';
+import { forEachNode } from '../../_utils/path';
 import SvgSelector from './SvgSelector';
 import {PATH_SELECTED, SELECTION_MODE} from '../../actions/const';
 

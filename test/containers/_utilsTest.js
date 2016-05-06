@@ -1,12 +1,40 @@
 import deepFreeze from 'deep-freeze';
 
 import {
+  parseFormula,
   buildArgs,
   getCalculatedProps,
   getCalculatedParams
 } from '../../src/containers/_utils';
 
 describe('containers/_utils', () => {
+  describe('parseFormula', () => {
+    it('should return a formula with isInvalid === true when the formula can\'t be parsed', (done) => {
+      const strFormula = '$width * ';
+      const expected = {
+        formula: strFormula,
+        isInvalid: true
+      };
+
+      expect(parseFormula(strFormula)).to.deep.equal(expected);
+
+      done();
+    });
+
+    it('should parse a vail formula and extract params and refs', (done) => {
+      const strFormula = '( $width * $height ) + ( glyph.oncurve_0.x - glyph.oncurve_1.x ) * 2';
+
+      const result = parseFormula(strFormula);
+
+      expect(result.isInvalid).to.equal(false);
+      expect(result.updater).to.be.a('function');
+      // TODO: finish these tests
+      expect(false).to.equal(true);
+
+      done();
+    });
+  });
+
   describe('buildArgs', () => {
     it('should build an array of arguments to be passed to updater.apply', (done) => {
       const params = {

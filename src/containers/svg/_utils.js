@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
-import { mapCurve, forEachCurve } from './../../_utils/pathWalkers';
+import { mapCurve, forEachCurve } from './../../_utils/path';
 
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';

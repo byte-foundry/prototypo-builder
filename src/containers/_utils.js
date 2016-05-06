@@ -1,10 +1,15 @@
 import R from 'ramda';
 
 export function parseFormula( strFormula ) {
-  const usedParams = strFormula.match(/(\$[a-z]+)/ig);
+  const usedParams = strFormula.match(/(\$[a-z0-9_]+)/ig) || [];
+  const usedRefs = (strFormula.match(/glyph\.[a-z0-9_\.]+/ig) || []).map((id) => {
+    return id.replace('glyph.', '');
+  });
+
   let updater;
   try  {
-    updater = new Function( 'self', ...usedParams, 'return ' + strFormula );
+    // the 'self' arg shouldn't be used (use 'this' instead)
+    updater = new Function( 'glyph', ...usedParams, 'return ' + strFormula );
   } catch(e) {
     return {
       formula: strFormula,
@@ -15,17 +20,18 @@ export function parseFormula( strFormula ) {
   return {
     formula: strFormula,
     params: usedParams,
+    refs: usedRefs,
     updater: R.memoize(updater),
     isInvalid: false
-  }
+  };
 }
 
-export const buildArgs = (node, params, usedParams) => {
-  return [node].concat( usedParams.map((name) => params[name]) );
+export const buildArgs = (nodes, params, usedParams) => {
+  return [nodes].concat( usedParams.map((name) => params[name]) );
 };
 const memoizedBuildArgs = R.memoize(buildArgs);
 
-export const getCalculatedProps = R.memoize((node, params) => {
+export const getCalculatedProps = R.memoize((nodes, params, node) => {
   const calculatedProps = {};
 
   Object.keys(node).forEach((propName) => {
@@ -37,7 +43,7 @@ export const getCalculatedProps = R.memoize((node, params) => {
       const propMeta = node[propName];
       try {
         calculatedProps[propMeta._for] = (
-          propMeta.updater.apply( node, memoizedBuildArgs(node, params, propMeta.params) )
+          propMeta.updater.apply( node, memoizedBuildArgs(nodes, params, propMeta.params) )
         );
       } catch(e) {
         /* eslint-disable no-console */
@@ -54,13 +60,13 @@ export const getCalculatedProps = R.memoize((node, params) => {
   return calculatedProps;
 });
 
-export const getCalculatedNodes = R.memoize((nodes, params) => {
+export const getCalculatedNodes = R.memoize((nodes, params, glyphId) => {
   return R.map((node) => {
-    return getCalculatedProps( node, params );
+    return getCalculatedProps( nodes, params, node );
   }, nodes);
 });
 
-export const getCalculatedParams = R.memoize((node, parentParams) => {
+export const getCalculatedParams = R.memoize((nodes, parentParams) => {
   const calculatedParams = parentParams ? { ...parentParams } : {};
   const { params, paramsMeta } = node;
 

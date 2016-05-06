@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 import {
   forEachCurve
-} from '../../_utils/pathWalkers';
+} from '../../_utils/path';
 
 import SvgExpandedSkeleton from './SvgExpandedSkeleton';
 

@@ -31,6 +31,12 @@ const store = configureStore({
       childIds: [],
       selected: true
     }
+  },
+  ui: {
+    hovered: {},
+    selected: {
+      contour: 'contour-initial'
+    }
   }
 });
 

@@ -60,7 +60,11 @@ import {
   getNextNode,
   getPreviousNode,
   getCorrespondingHandles
-} from '../_utils/pathWalkers';
+} from '../_utils/path';
+
+import {
+  getAllDescendants
+} from '../_utils/graph';
 
 /* Define your initial state here.
  *
@@ -195,12 +199,6 @@ function node(state = initialNode, action) {
   }
 }
 
-function getAllDescendantIds(state, nodeId) {
-  return state[nodeId].childIds.reduce((acc, childId) => (
-    [ ...acc, childId, ...getAllDescendantIds(state, childId) ]
-  ), []);
-}
-
 function deleteMany(state, ids) {
   state = Object.assign({}, state);
   ids.forEach(id => delete state[id]);
@@ -253,7 +251,7 @@ export default function(state = initialState, action) {
 
   switch (type) {
     case DELETE_NODE:
-      const descendantIds = getAllDescendantIds(state, nodeId);
+      const descendantIds = Object.keys(getAllDescendants(state, nodeId));
       return deleteMany(state, [ nodeId, ...descendantIds ]);
 
     case CREATE_CURVE:

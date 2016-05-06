@@ -11,7 +11,7 @@ import {
   getNode,
   getPreviousNode,
   getNextNode
-} from '../../_utils/pathWalkers';
+} from '../../_utils/path';
 
 import {
   mapDispatchToProps,

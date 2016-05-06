@@ -93,12 +93,13 @@ export default {
   },
   oncurve: {
     children: {},
-    propertyOrder: [ 'x', 'y', 'expand', 'distrib', 'selected', 'state' ],
+    propertyOrder: [ 'x', 'y', 'on', 'expand', 'distrib', 'selected', 'state' ],
     properties: {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
       x: 'text',
       y: 'text',
+      on: 'text',
       selected: 'boolean',
       state: 'number',
       expand: 'number',
