@@ -14,7 +14,7 @@ import {
   updateParam,
   updateProp,
   updatePropMeta,
-  updateParamMeta
+  updateParamMeta,
   deletePropsMeta,
   setContourSelected
 } from './../../actions/all';
@@ -87,12 +87,9 @@ export function mapDispatchToProps(dispatch) {
     updateParam,
     updateProp,
     updatePropMeta,
-<<<<<<< 543d1fb0bae99482ddfaff8e5aa7206db82ac6df
-    updateParamMeta
-=======
+    updateParamMeta,
     deletePropsMeta,
     setContourSelected
->>>>>>> some ui change
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
