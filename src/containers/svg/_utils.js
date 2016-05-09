@@ -38,7 +38,7 @@ const selectionComponentMap = {
 
 export function renderSvgChild(childId) {
   const { id } = this.props;
-  const childType = childId.split('-')[0];
+  const childType = childId.split('_')[0];
   const SvgNode = componentMap[childType];
 
   return [
@@ -48,7 +48,7 @@ export function renderSvgChild(childId) {
 
 export function renderSelectionAreas(childId) {
   const { id } = this.props;
-  const childType = childId.split('-')[0];
+  const childType = childId.split('_')[0];
   const SvgNode = selectionComponentMap[childType];
 
   return [

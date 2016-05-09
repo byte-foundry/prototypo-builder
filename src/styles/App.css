@@ -8,6 +8,10 @@ input:invalid {
   box-shadow: 0 0 4px red;
 }
 
+input[type="number"] {
+  width: 7rem;
+}
+
 .index img {
   margin: 40px auto;
   border-radius: 4px;
@@ -52,4 +56,3 @@ button:hover {
   -ms-user-select: none;       /* Internet Explorer/Edge */
   user-select: none;
 }
-

@@ -312,7 +312,8 @@ function mapStateToProps(state) {
   return {
     nodes: getCalculatedNodes(
       state.nodes,
-      getCalculatedParams(state.nodes['font-initial'])
+      getCalculatedParams(state.nodes, {}, 'font_initial'),
+      'font_initial'
     ),
     ui: state.ui
   };

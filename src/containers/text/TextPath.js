@@ -41,7 +41,7 @@ class TextGlyph extends Component {
 
   renderTextCurve(childId, i) {
     const { id, childIds } = this.props;
-    const isOncurve = /^oncurve-/.test(childId);
+    const isOncurve = /^oncurve[-_]/.test(childId);
 
     // We only render oncurve points, and wrap following offcurves in a Foldable
     if ( !isOncurve ) {
@@ -49,10 +49,10 @@ class TextGlyph extends Component {
     }
 
     const offcurveIds = [];
-    if ( /^offcurve-/.test(childIds[i-1]) ) {
+    if ( /^offcurve[-_]/.test(childIds[i-1]) ) {
         offcurveIds.push(childIds[i-1]);
     }
-    if ( /^offcurve-/.test(childIds[i+1]) ) {
+    if ( /^offcurve[-_]/.test(childIds[i+1]) ) {
         offcurveIds.push(childIds[i+1]);
     }
 

@@ -9,24 +9,24 @@ const store = configureStore({
     'root': {
       id: 'root',
       type: 'root',
-      childIds: ['font-initial']
+      childIds: ['font_initial']
     },
-    'font-initial': {
-      id: 'font-initial',
+    'font_initial': {
+      id: 'font_initial',
       type: 'font',
-      childIds: ['glyph-initial'],
+      childIds: ['glyph_initial'],
       params: {},
       paramsMeta: { _order: [] }
     },
-    'glyph-initial': {
-      id: 'glyph-initial',
+    'glyph_initial': {
+      id: 'glyph_initial',
       type: 'glyph',
-      childIds: ['contour-initial'],
+      childIds: ['contour_initial'],
       params: {},
       paramsMeta: { _order: [] }
     },
-    'contour-initial': {
-      id: 'contour-initial',
+    'contour_initial': {
+      id: 'contour_initial',
       type: 'contour',
       childIds: [],
       selected: true
@@ -35,7 +35,7 @@ const store = configureStore({
   ui: {
     hovered: {},
     selected: {
-      contour: 'contour-initial'
+      contour: 'contour_initial'
     }
   }
 });

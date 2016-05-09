@@ -84,7 +84,7 @@ class TextFont extends Component {
     const { updateParamMeta } = this.props.actions;
     const { name } = e.target;
 
-    if ( !(name in paramsMeta) ) {
+    if ( !(name in paramsMeta) || !('updater' in paramsMeta[name]) ) {
       return;
     }
 
@@ -185,7 +185,7 @@ TextFont.propTypes = {
 function mapStateToProps(state, props) {
   return {
     ...state.nodes[props.id],
-    params: getCalculatedParams(state.nodes['font-initial'])
+    params: getCalculatedParams(state.nodes, {}, 'font_initial')
   }
 }
 

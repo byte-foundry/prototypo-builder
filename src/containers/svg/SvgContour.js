@@ -93,7 +93,7 @@ class SvgContour extends Component {
     const { nodes, id } = this.props;
     const classes = classnames({
       contour: true,
-      'is-closed': nodes[this.props.id].isClosed,
+      'is-closed': nodes[id].isClosed
     });
     return (
       <g>
@@ -112,7 +112,8 @@ function mapStateToProps(state) {
   return {
     nodes: getCalculatedNodes(
       state.nodes,
-      getCalculatedParams(state.nodes['font-initial'])
+      getCalculatedParams(state.nodes, {}, 'font_initial'),
+      'font_initial'
     ),
     ui: state.ui
   };

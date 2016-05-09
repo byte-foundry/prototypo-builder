@@ -28,8 +28,8 @@ describe('containers/_utils', () => {
 
       expect(result.isInvalid).to.equal(false);
       expect(result.updater).to.be.a('function');
-      // TODO: finish these tests
-      expect(false).to.equal(true);
+      expect(result.params).to.deep.equal(['$width', '$height']);
+      expect(result.refs).to.deep.equal(['oncurve_0.x', 'oncurve_1.x']);
 
       done();
     });
@@ -57,21 +57,23 @@ describe('containers/_utils', () => {
 
   describe('getCalculatedProps', () => {
     it('should replace props with calculatedProps', (done) => {
-      const nodeBefore = {
-        id: 'node-0',
-        xMeta: {
-          _for: 'x',
-          updater: () => 78,
-          params: []
-        },
-        expandMeta: {
-          _for: 'expand',
-          updater: () => 90,
-          params: []
-        },
-        x: 12,
-        y: 34,
-        expand: 56
+      const nodesBefore = {
+        'node-0': {
+          id: 'node-0',
+          xMeta: {
+            _for: 'x',
+            updater: () => 78,
+            params: []
+          },
+          expandMeta: {
+            _for: 'expand',
+            updater: () => 90,
+            params: []
+          },
+          x: 12,
+          y: 34,
+          expand: 56
+        }
       };
       const propsAfter = {
         id: 'node-0',
@@ -83,7 +85,8 @@ describe('containers/_utils', () => {
       // I can't deepFreeze an object that contains functions apparently
       // deepFreeze(nodeBefore);
 
-      expect(getCalculatedProps(nodeBefore, {})).to.deep.equal(propsAfter);
+      expect(getCalculatedProps(nodesBefore, {}, 'node-0'))
+        .to.deep.equal(propsAfter);
 
       done();
     });
@@ -91,21 +94,23 @@ describe('containers/_utils', () => {
 
   describe('getCalculatedParams', () => {
     it('should replace params with calculatedParams', (done) => {
-      const nodeBefore = {
-        id: 'node-0',
-        params: {
-          width: 12
-        },
-        paramsMeta: {
-          _order: ['width', 'expand', 'distrib'],
-          width: {},
-          expand: {
-            updater: () => 34,
-            params: []
+      const nodesBefore = {
+        'node-0': {
+          id: 'node-0',
+          params: {
+            width: 12
           },
-          distrib: {
-            updater: () => 56,
-            params: []
+          paramsMeta: {
+            _order: ['width', 'expand', 'distrib'],
+            width: {},
+            expand: {
+              updater: () => 34,
+              params: []
+            },
+            distrib: {
+              updater: () => 56,
+              params: []
+            }
           }
         }
       };
@@ -120,7 +125,7 @@ describe('containers/_utils', () => {
       // I can't deepFreeze an object that contains functions apparently
       // deepFreeze(nodeBefore);
 
-      expect(getCalculatedParams(nodeBefore, parentParams))
+      expect(getCalculatedParams(nodesBefore, parentParams, 'node-0'))
         .to.deep.equal(paramsAfter);
 
       done();

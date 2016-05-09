@@ -8,7 +8,6 @@ export function parseFormula( strFormula ) {
 
   let updater;
   try  {
-    // the 'self' arg shouldn't be used (use 'this' instead)
     updater = new Function( 'glyph', ...usedParams, 'return ' + strFormula );
   } catch(e) {
     return {
@@ -31,8 +30,9 @@ export const buildArgs = (nodes, params, usedParams) => {
 };
 const memoizedBuildArgs = R.memoize(buildArgs);
 
-export const getCalculatedProps = R.memoize((nodes, params, node) => {
+export const getCalculatedProps = R.memoize((nodes, params, nodeId) => {
   const calculatedProps = {};
+  const node = nodes[nodeId];
 
   Object.keys(node).forEach((propName) => {
     if ( typeof node[propName] === 'object' && '_for' in node[propName] ) {
@@ -62,13 +62,13 @@ export const getCalculatedProps = R.memoize((nodes, params, node) => {
 
 export const getCalculatedNodes = R.memoize((nodes, params, glyphId) => {
   return R.map((node) => {
-    return getCalculatedProps( nodes, params, node );
+    return getCalculatedProps( nodes, params, node.id );
   }, nodes);
 });
 
-export const getCalculatedParams = R.memoize((nodes, parentParams) => {
+export const getCalculatedParams = R.memoize((nodes, parentParams, nodeId) => {
   const calculatedParams = parentParams ? { ...parentParams } : {};
-  const { params, paramsMeta } = node;
+  const { params, paramsMeta } = nodes[nodeId];
 
   paramsMeta._order.forEach((paramName) => {
     if ( 'updater' in paramsMeta[paramName] ) {
@@ -84,7 +84,7 @@ export const getCalculatedParams = R.memoize((nodes, parentParams) => {
         );
       } catch(e) {
         /* eslint-disable no-console */
-        console.error(`Calculating prop '${paramName}' of node '${node.id}' errored`, e);
+        console.error(`Calculating prop '${paramName}' of node '${nodeId}' errored`, e);
         /* eslint-enable no-console */
       }
     }
