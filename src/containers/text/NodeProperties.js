@@ -39,7 +39,7 @@ class NodeProperties extends Component {
     }
 
     if ( /^[\d\.]+$/.test(e.target.value) ) {
-      updatePropMeta(id, name, { formula: '' });
+      updatePropMeta(id, name, { formula: e.target.value, isInvalid: true });
       return updateProp(id, name, +e.target.value);
     }
     return updatePropMeta(id, name, parseFormula(e.target.value));
