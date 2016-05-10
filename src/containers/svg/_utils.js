@@ -506,7 +506,7 @@ function simple(c0, c1, c2, c3) {
   var s = n1.x*n2.x + n1.y*n2.y;
 
   let result = Math.abs(Math.acos(s));
-  return result < Math.PI/12;
+  return result < Math.PI/24;
 }
 
 

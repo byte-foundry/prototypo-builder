@@ -1,6 +1,7 @@
 import R from 'ramda';
 import DepTree from 'deptree';
 
+import memoize from '~/_utils/memoize';
 import { getAllDescendants } from './../_utils/graph';
 
 export function parseFormula( _strFormula ) {
@@ -24,7 +25,7 @@ export function parseFormula( _strFormula ) {
     formula: strFormula,
     params: usedParams,
     refs: usedRefs,
-    updater: R.memoize(updater),
+    updater: updater,
     isInvalid: false
   };
 }
@@ -32,7 +33,7 @@ export function parseFormula( _strFormula ) {
 export const buildArgs = (nodes, params, usedParams) => {
   return [nodes].concat( usedParams.map((name) => params[name]) );
 };
-const buildArgsMemoized = R.memoize(buildArgs);
+const buildArgsMemoized = memoize(buildArgs);
 buildArgsMemoized.displayName = 'buildArgsMemoized';
 
 // export const getCalculatedProps = R.memoize((nodes, params, nodeId) => {
@@ -74,7 +75,7 @@ buildArgsMemoized.displayName = 'buildArgsMemoized';
 // TODO: the first argument should be updaters, and we should move all necessary
 // info to calculate the params into that part of the state (e.g. _order),
 // so that memoization is only dependant of the updaters and the parentParams
-export const getCalculatedParams = R.memoize((state, parentParams, nodeId) => {
+export const getCalculatedParams = memoize((state, parentParams, nodeId) => {
   const calculatedParams = parentParams ? { ...parentParams } : {};
   const { params, paramsMeta } = state.nodes[nodeId];
   const updaters = state.updaters[nodeId] || {};
@@ -109,7 +110,11 @@ getCalculatedParams.displayName = 'getCalculatedParamsMemoized';
 
 // This function is quite expensive but it's memoized based on the .updaters part
 // of the state so it's cool.
-export const getSolvingOrder = R.memoize((glyphUpdaters = {}) => {
+export const getSolvingOrder = memoize((glyphUpdaters) => {
+  if ( !glyphUpdaters ) {
+    glyphUpdaters = {};
+  }
+
   const depTree = new DepTree();
 
   Object.keys(glyphUpdaters).forEach((strPath) => {
@@ -125,7 +130,7 @@ export const getSolvingOrder = R.memoize((glyphUpdaters = {}) => {
 });
 getSolvingOrder.displayName = 'getSolvingOrderMemoized';
 
-export const getCalculatedGlyph = R.memoize((state, parentParams, glyphId) => {
+export const getCalculatedGlyph = memoize((state, parentParams, glyphId) => {
   // TODO: glyphs should be able to have local parameters
   // const params = getCalculatedParams(state, parentParams, glyphId);
   const glyphUpdaters = state.updaters[glyphId];

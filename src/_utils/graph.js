@@ -1,6 +1,10 @@
-import R from 'ramda';
+import memoize from './memoize';
 
-export const getAllDescendants = R.memoize((nodes, parentId, descendants = {}) => {
+export const getAllDescendants = memoize((nodes, parentId, descendants) => {
+  if ( !descendants ) {
+    descendants = {};
+  }
+
   return nodes[parentId].childIds.reduce((acc, childId) => {
     acc[childId] = nodes[childId];
     return getAllDescendants(nodes, childId, descendants);
