@@ -25,6 +25,7 @@ import {
   CREATE_PATH,
   DELETE_NODE,
   DELETE_PROPS_META,
+  LOAD_NODES,
   MOVE_NODE,
   REMOVE_CHILD,
   // SET_COORDS,
@@ -189,7 +190,6 @@ function node(state = initialNode, action) {
     //     state,
     //     R.mapObjIndexed((value) => { return {value}; }, action.values)
     //   );
-
     default:
       return state;
   }
@@ -229,7 +229,8 @@ export default function(state = initialState, action) {
 
   if (
     typeof type === 'undefined' ||
-    ( typeof nodeId === 'undefined' && typeof nodeIds === 'undefined' )
+    (type !== 'LOAD_NODES' &&
+    ( typeof nodeId === 'undefined' && typeof nodeIds === 'undefined' ))
   ) {
     return state;
   }
@@ -311,6 +312,9 @@ export default function(state = initialState, action) {
         deepPositionUpdate(path, state, action.dx, action.dy, result);
         return {...state, ...result};
       }
+
+    case LOAD_NODES:
+        return action.nodes;
 
     default:
       return R.merge(state, { [nodeId]: node( state[nodeId], action ) });

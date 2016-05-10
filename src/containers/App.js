@@ -41,7 +41,9 @@ function mapDispatchToProps(dispatch) {
   const actions = {
     deletePropsMeta: require('../actions/props/deletePropsMeta.js'),
     setContourSelected: require('../actions/ui/setContourSelected.js'),
-    setNodeOptionsSelected: require('../actions/ui/setNodeOptionsSelected.js')
+    setNodeOptionsSelected: require('../actions/ui/setNodeOptionsSelected.js'),
+    loadImageData: require('../actions/ui/loadImageData.js'),
+    loadNodes: require('../actions/nodes/loadNodes.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

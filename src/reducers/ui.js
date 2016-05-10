@@ -1,4 +1,5 @@
 import {
+  LOAD_IMAGE_DATA,
   SET_COORDS,
   SET_MOUSE_STATE,
   SET_PATH_SELECTED,
@@ -48,6 +49,9 @@ module.exports = function(state = initialState, action) {
     }
     case SET_CONTOUR_SELECTED: {
         return { ...state, selected: { ...state.selected, contour: action.contourId} };
+    }
+    case LOAD_IMAGE_DATA: {
+        return { ...state, image: action.image};
     }
     /*
     case 'YOUR_ACTION': {

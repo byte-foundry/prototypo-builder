@@ -278,6 +278,30 @@ class SvgContainer extends Component {
     }
   }
 
+  handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const reader = new FileReader();
+    const extension = e.dataTransfer.files[0].name.split('.')[1];
+    reader.onloadend = (data) => {
+      if (extension !== 'json') {
+        const dataUrl = data.target.result;
+
+        this.props.actions.loadImageData(dataUrl);
+      }
+      else {
+        this.props.actions.loadNodes(JSON.parse(data.target.result));
+      }
+    }
+
+    if (extension !== 'json') {
+      reader.readAsDataURL(e.dataTransfer.files[0]);
+    }
+    else {
+      reader.readAsText(e.dataTransfer.files[0]);
+    }
+  }
+
   render() {
     let nodeSelected = false;
     if (this.props.ui.selected.nodeOptions) {
@@ -289,12 +313,20 @@ class SvgContainer extends Component {
         </div>
       );
     }
+
+    const image = this.props.ui.image
+      ? <img className="background-image" src={this.props.ui.image} onDragStart={(e) => {e.preventDefault()}}/>
+      : false;
+
     return (
       <div style={{position: 'relative'}}>
+        {image}
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
           onMouseMove={this.handleMove.bind(this)}
           onMouseUp={this.handleUp.bind(this)}
           onDoubleClick={this.handleDoubleClick.bind(this)}
+          onDrop={this.handleDrop.bind(this)}
+          onDragOver={(e) => {e.preventDefault()}}
           viewBox="-800 -1400 2000 2000" onMouseDown={this.handleDown}
         >
           <g ref="svg" transform="matrix(1 0 0 -1 0 0)">

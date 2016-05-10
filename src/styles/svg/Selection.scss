@@ -62,3 +62,14 @@
   stroke: green;
   stroke-width: 1px;
 }
+
+.background-image {
+  position:absolute;
+  z-index:0;
+  opacity: .5;
+}
+
+svg {
+  position:relative;
+  z-index:1;
+}
