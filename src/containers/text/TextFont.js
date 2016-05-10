@@ -38,10 +38,9 @@ class TextFont extends Component {
     const { id } = this.props;
     const { addParam } = this.props.actions;
 
-    addParam(id, this.refs.paramName.value, {
+    addParam(id, this.refs.paramName.value, +this.refs.paramValue.value, {
       min: +this.refs.paramMin.value,
-      max: +this.refs.paramMax.value,
-      value: +this.refs.paramValue.value
+      max: +this.refs.paramMax.value
     });
 
     this.refs.paramName.value = '$';
@@ -62,7 +61,10 @@ class TextFont extends Component {
     }
 
     this.refs.formulaValue.pattern = null;
-    addParam(id, this.refs.formulaName.value, formula);
+    // TODO: this 0 value by default is wrong. Ideally we should try to run the
+    // updater once. That would allow detecting problematic formulas at the same
+    // time
+    addParam(id, this.refs.formulaName.value, 0, formula);
 
     this.refs.formulaName.value = '$';
     this.refs.formulaValue.value = '';
@@ -84,7 +86,7 @@ class TextFont extends Component {
     const { updateParamMeta } = this.props.actions;
     const { name } = e.target;
 
-    if ( !(name in paramsMeta) ) {
+    if ( !(name in paramsMeta) || !('updater' in paramsMeta[name]) ) {
       return;
     }
 
@@ -136,7 +138,7 @@ class TextFont extends Component {
       <ul className={listClass} onChange={this.handleFormulaChange}>
         {paramsMeta._order.map((name) => {
           return this[(
-            'updater' in paramsMeta[name] ?
+            'formula' in paramsMeta[name] ?
               'renderParamFormula' :
               'renderParamSlider'
           )](name);
@@ -185,7 +187,7 @@ TextFont.propTypes = {
 function mapStateToProps(state, props) {
   return {
     ...state.nodes[props.id],
-    params: getCalculatedParams(state.nodes['font-initial'])
+    params: getCalculatedParams(state, null, 'font_initial')
   }
 }
 

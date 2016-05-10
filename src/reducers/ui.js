@@ -53,12 +53,6 @@ module.exports = function(state = initialState, action) {
     case LOAD_IMAGE_DATA: {
         return { ...state, image: action.image};
     }
-    /*
-    case 'YOUR_ACTION': {
-      // Modify next state depending on the action and return it
-      return nextState;
-    } break;
-    */
     default: {
       /* Return original state if no actions were consumed. */
       return state;

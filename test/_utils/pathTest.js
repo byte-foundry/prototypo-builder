@@ -4,9 +4,9 @@ import {
   mapCurve,
   mapNode,
   getNode
-} from '../../src/_utils/pathWalkers';
+} from '../../src/_utils/path';
 
-describe('pathWalkers', () => {
+describe('path', () => {
   describe('forEachCurve', () => {
     let curves;
     const callback = function() {

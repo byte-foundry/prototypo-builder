@@ -7,11 +7,11 @@ import NodeProperties from '../text/NodeProperties';
 import {
   getNode,
   getCorrespondingHandles
-} from '../../_utils/pathWalkers';
+} from '~/_utils/path';
 
 import {
   getCalculatedParams,
-  getCalculatedNodes
+  getCalculatedGlyph
 } from './../_utils';
 
 import {
@@ -342,9 +342,10 @@ class SvgContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    nodes: getCalculatedNodes(
-      state.nodes,
-      getCalculatedParams(state.nodes['font-initial'])
+    nodes: getCalculatedGlyph(
+      state,
+      getCalculatedParams(state, null, 'font_initial'),
+      state.ui.selected.glyph
     ),
     ui: state.ui
   };

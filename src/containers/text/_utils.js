@@ -39,7 +39,7 @@ const componentMap = {
 
 export function renderTextChild(childId) {
   const { id } = this.props;
-  const childType = childId.split('-')[0];
+  const childType = childId.split('_')[0];
   const TextNode = componentMap[childType];
 
   return (

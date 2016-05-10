@@ -4,11 +4,17 @@ import classnames from 'classnames';
 
 import {
   forEachCurve
-} from '../../_utils/pathWalkers';
+} from '~/_utils/path';
+
+import {
+  getParentGlyphId
+} from '~/_utils/graph';
+
+// import SvgExpandedSkeleton from './SvgExpandedSkeleton';
 
 import {
   getCalculatedParams,
-  getCalculatedNodes
+  getCalculatedGlyph
 } from './../_utils';
 
 import {
@@ -118,10 +124,10 @@ class SvgContour extends Component {
   }
 
   render() {
-    const { nodes } = this.props;
+    const { nodes, id } = this.props;
     const classes = classnames({
       contour: true,
-      'is-closed': nodes[this.props.id].isClosed
+      'is-closed': nodes[id].isClosed
     });
     return (
       <g>
@@ -136,11 +142,12 @@ SvgContour.propTypes = {
   actions: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
-    nodes: getCalculatedNodes(
-      state.nodes,
-      getCalculatedParams(state.nodes['font-initial'])
+    nodes: getCalculatedGlyph(
+      state,
+      getCalculatedParams(state, null, 'font_initial'),
+      getParentGlyphId(state.nodes, props.id)
     ),
     ui: state.ui
   };

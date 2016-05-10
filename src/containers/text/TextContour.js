@@ -58,6 +58,7 @@ class TextContour extends Component {
       'text-node--path': true,
       'text-node--unfolded': _isChildrenUnfolded
     });
+
     return (
       <Foldable id={id} switchProp="_isChildrenUnfolded">
         <ul className={nodeClass}>

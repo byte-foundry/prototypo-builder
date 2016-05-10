@@ -15,15 +15,15 @@ describe('action: createNode', () => {
     secondAction = createNode();
 
     expect(firstAction.type).to.equal('CREATE_NODE');
-    expect(firstAction.nodeId).to.equal('node-0');
-    expect(secondAction.nodeId).to.equal('node-1');
+    expect(firstAction.nodeId).to.equal('node_0');
+    expect(secondAction.nodeId).to.equal('node_1');
   });
 
   it('should return an action and use the provided nodeType arg as a prefix for the id', () => {
     firstAction = createNode('root');
     secondAction = createNode('glyph');
 
-    expect(firstAction.nodeId).to.equal('root-0');
-    expect(secondAction.nodeId).to.equal('glyph-1');
+    expect(firstAction.nodeId).to.equal('root_0');
+    expect(secondAction.nodeId).to.equal('glyph_1');
   });
 });

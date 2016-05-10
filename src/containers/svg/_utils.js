@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
-import { mapCurve, forEachCurve } from './../../_utils/pathWalkers';
+import { mapCurve, forEachCurve } from '~/_utils/path';
 
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';
@@ -27,7 +27,7 @@ import {
   setPathHovered,
   setPathSelected,
   updateProp
-} from './../../actions/all';
+} from '~/actions/all';
 
 const componentMap = {
   contour: SvgContour,
@@ -41,7 +41,7 @@ const selectionComponentMap = {
 
 export function renderSvgChild(childId) {
   const { id } = this.props;
-  const childType = childId.split('-')[0];
+  const childType = childId.split('_')[0];
   const SvgNode = componentMap[childType];
 
   return [
@@ -51,7 +51,7 @@ export function renderSvgChild(childId) {
 
 export function renderSelectionAreas(childId) {
   const { id } = this.props;
-  const childType = childId.split('-')[0];
+  const childType = childId.split('_')[0];
   const SvgNode = selectionComponentMap[childType];
 
   return [

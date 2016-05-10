@@ -33,11 +33,13 @@ class NodePropertyComponent extends React.Component {
           value={formula}
           disabled={disabled}
           checked={checked} />
-        <input
-          className="text-node__property-value"
-          value={displayValue}
-          readOnly
-          disabled />
+        {type !== 'boolean' && (
+          <input
+            className="text-node__property-value"
+            value={displayValue}
+            readOnly
+            disabled />
+        )}
       </li>
     );
   }

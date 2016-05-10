@@ -6,32 +6,41 @@ import App from './containers/App';
 
 const store = configureStore({
   nodes: {
+    // root must always be named root
     'root': {
       id: 'root',
       type: 'root',
-      childIds: ['font-initial']
+      childIds: ['font_initial']
     },
-    'font-initial': {
-      id: 'font-initial',
+    'font_initial': {
+      id: 'font_initial',
       type: 'font',
-      childIds: ['glyph-initial'],
+      childIds: ['glyph_initial'],
       params: {},
       paramsMeta: { _order: [] }
     },
-    'glyph-initial': {
-      id: 'glyph-initial',
+    'glyph_initial': {
+      id: 'glyph_initial',
       type: 'glyph',
-      childIds: ['contour-initial'],
+      childIds: ['contour_initial'],
       params: {},
       paramsMeta: { _order: [] }
     },
-    'contour-initial': {
-      id: 'contour-initial',
+    'contour_initial': {
+      id: 'contour_initial',
       type: 'contour',
       childIds: [],
       selected: true
     }
-  }
+  },
+  ui: {
+    hovered: {},
+    selected: {
+      glyph: 'glyph_initial',
+      contour: 'contour_initial'
+    }
+  },
+  updaters: {}
 });
 
 render(

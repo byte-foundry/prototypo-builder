@@ -1,5 +1,5 @@
 import { createSelectorCreator } from 'reselect';
-import { forEachNode } from './../_utils/pathWalkers';
+import { forEachNode } from './../_utils/path';
 import nodesReducer from './../reducers/nodes';
 
 import {

@@ -61,7 +61,11 @@ import {
   getNextNode,
   getPreviousNode,
   getCorrespondingHandles
-} from '../_utils/pathWalkers';
+} from '../_utils/path';
+
+import {
+  getAllDescendants
+} from '../_utils/graph';
 
 /* Define your initial state here.
  *
@@ -139,13 +143,14 @@ function node(state = initialNode, action) {
         ...state,
         params: {
           ...state.params,
-          [action.name]: action.param.value
+          [action.name]: action.value
         },
         paramsMeta: {
           ...state.paramsMeta,
           _order: [ ...state.paramsMeta._order, action.name ],
-          // Remove the value prop of the param before setting the meta
-          [action.name]: R.dissoc('value', action.param)
+          // We remove the updater function from state.nodes, but note that
+          // .params and .refs are duplicated in state.updaters
+          [action.name]: R.dissoc('updater', action.meta)
         }
       };
     case UPDATE_PARAM:
@@ -157,7 +162,9 @@ function node(state = initialNode, action) {
           ...state.paramsMeta,
           [action.name]: {
             ...state.paramsMeta[action.name],
-            ...action.meta
+            // We remove the updater function from state.nodes, but note that
+            // .params and .refs are duplicated in state.updaters
+            ...R.dissoc('updater', action.meta)
           }
         }
       };
@@ -178,9 +185,13 @@ function node(state = initialNode, action) {
         [action.propNames[0] + 'Meta']: {
           _for: action.propNames[0],
           ...state[action.propNames[0] + 'Meta'],
-          ...action.meta
+          // We remove the updater function from state.nodes, but note that
+          // .params and .refs are duplicated in state.updaters
+          ...R.dissoc('updater', action.meta)
         }
       };
+    // TODO: is this reducer really used? Is it tested? It's badly named anyway
+    // it should be DELETE_PROP_META
     case DELETE_PROPS_META:
       return R.dissoc(action.propNames[0] + 'Meta', state);
     // case UPDATE_PROP_VALUE:
@@ -193,12 +204,6 @@ function node(state = initialNode, action) {
     default:
       return state;
   }
-}
-
-function getAllDescendantIds(state, nodeId) {
-  return state[nodeId].childIds.reduce((acc, childId) => (
-    [ ...acc, childId, ...getAllDescendantIds(state, childId) ]
-  ), []);
 }
 
 function deleteMany(state, ids) {
@@ -254,7 +259,7 @@ export default function(state = initialState, action) {
 
   switch (type) {
     case DELETE_NODE:
-      const descendantIds = getAllDescendantIds(state, nodeId);
+      const descendantIds = Object.keys(getAllDescendants(state, nodeId));
       return deleteMany(state, [ nodeId, ...descendantIds ]);
 
     case CREATE_CURVE:

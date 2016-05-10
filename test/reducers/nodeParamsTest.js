@@ -9,7 +9,7 @@ import {
 } from 'actions/all';
 
 describe('reducer: nodes (node params)', () => {
-  it('should handle ADD_PARAM action', () => {
+  it('should handle ADD_PARAM action and ignore any updater', (done) => {
     const stateBefore = {
       'node-0': {
         id: 'node-0',
@@ -17,7 +17,7 @@ describe('reducer: nodes (node params)', () => {
         paramsMeta: { _order: [] }
       }
     };
-    const action1 = addParam('node-0', 'height', { a: 12 });
+    const action1 = addParam('node-0', 'height', undefined, { a: 12 });
     const stateAfter1 = {
       'node-0': {
         id: 'node-0',
@@ -30,7 +30,7 @@ describe('reducer: nodes (node params)', () => {
         }
       }
     };
-    const action2 = addParam('node-0', 'width', { b: 34, value: 56 });
+    const action2 = addParam('node-0', 'width', 56, { b: 34, updater: Math.cos });
     const stateAfter2 = {
       'node-0': {
         id: 'node-0',
@@ -55,6 +55,8 @@ describe('reducer: nodes (node params)', () => {
     deepFreeze(action2);
 
     expect(reducer(stateAfter1, action2)).to.deep.equal(stateAfter2);
+
+    done();
   });
 
   it('should handle UPDATE_PARAM action', (done) => {
@@ -100,7 +102,7 @@ describe('reducer: nodes (node params)', () => {
     done();
   });
 
-  it('should handle UPDATE_PARAM_META action', (done) => {
+  it('should handle UPDATE_PARAM_META action and ignore any updater', (done) => {
     const stateBefore = {
       'node-0': {
         id: 'node-0',
@@ -115,7 +117,7 @@ describe('reducer: nodes (node params)', () => {
         }
       }
     };
-    const action = updateParamMeta('node-0', 'height', { min: 90 });
+    const action = updateParamMeta('node-0', 'height', { min: 90, updater: Math.min });
     const stateAfter = {
       'node-0': {
         id: 'node-0',

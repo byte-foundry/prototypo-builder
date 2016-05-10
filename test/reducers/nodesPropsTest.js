@@ -93,7 +93,7 @@ describe('reducer: nodes (node props)', () => {
     done();
   });
 
-  it('should handle UPDATE_PROP_META action', (done) => {
+  it('should handle UPDATE_PROP_META action and ignore any updater', (done) => {
     const stateBefore = {
       'node-0': {
         id: 'node-0'
@@ -106,7 +106,7 @@ describe('reducer: nodes (node props)', () => {
         widthMeta: { _for: 'width', min: 12 }
       }
     };
-    const action2 = updatePropMeta('node-0', 'width', { max: 34 });
+    const action2 = updatePropMeta('node-0', 'width', { max: 34, updater: Math.abs });
     const stateAfter2 = {
       'node-0': {
         id: 'node-0',

@@ -2,13 +2,17 @@ require('styles/svg/Selection.scss');
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { forEachNode } from '../../_utils/pathWalkers';
+import { forEachNode } from '../../_utils/path';
 import SvgSelector from './SvgSelector';
 import {PATH_SELECTED, SELECTION_MODE} from '../../actions/const';
 
 import {
+  getParentGlyphId
+} from '~/_utils/graph';
+
+import {
   getCalculatedParams,
-  getCalculatedNodes
+  getCalculatedGlyph
 } from './../_utils';
 
 import {
@@ -117,11 +121,12 @@ SvgContourSelection.propTypes = {
   actions: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
-    nodes: getCalculatedNodes(
-      state.nodes,
-      getCalculatedParams(state.nodes['font-initial'])
+    nodes: getCalculatedGlyph(
+      state,
+      getCalculatedParams(state, null, 'font_initial'),
+      getParentGlyphId(state.nodes, props.id)
     ),
     ui: state.ui
   };
