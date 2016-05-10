@@ -28,7 +28,7 @@ class UiToolbar extends Component {
   }
 
   saveNodes() {
-    const json = JSON.stringify(this.props.nodes);
+    const json = JSON.stringify({nodes: this.props.nodes, updaters: this.props.updaters});
     const blob = new Blob([json], {type: 'octet/stream'});
     const url = window.URL.createObjectURL(blob);
 

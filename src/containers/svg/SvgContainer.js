@@ -290,7 +290,8 @@ class SvgContainer extends Component {
         this.props.actions.loadImageData(dataUrl);
       }
       else {
-        this.props.actions.loadNodes(JSON.parse(data.target.result));
+        const state = JSON.parse(data.target.result);
+        this.props.actions.loadNodes(state.nodes, state.updaters);
       }
     }
 
