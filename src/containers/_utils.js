@@ -25,6 +25,10 @@ export function parseFormula( _strFormula ) {
     formula: strFormula,
     params: usedParams,
     refs: usedRefs,
+    // TODO: the updater used to be memoized here, but since our memoize
+    // only works for functions with 3 or less arguments, we can't use it.
+    // Figure out if moizing things here is useful, and if yes, how we should
+    // do it
     updater: updater,
     isInvalid: false
   };

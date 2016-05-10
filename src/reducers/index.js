@@ -7,6 +7,11 @@
  *          you edit them, they are not updated again.
  */
 import { combineReducers } from 'redux';
+import R from 'ramda';
+
+import { LOAD_NODES } from '~/actions/const';
+import { parseFormula } from '~/containers/_utils';
+
 import nodeReducer from './nodes';
 import uiReducer from './ui';
 import updatersReducer from './updaters';
@@ -21,6 +26,31 @@ const combinedReducers = combineReducers(reducers);
 
 module.exports = function(state = {}, action) {
   let hasChanged = false;
+
+  // (temporary) special action that hydrates the complete state from a file
+  if ( action.type === LOAD_NODES ) {
+    return {
+      ...state,
+      nodes: action.nodes,
+      updaters: R.mapObjIndexed((nodeUpdaters, nodeId) => {
+        return R.mapObjIndexed((updater, strPath) => {
+          let formula;
+          if ( /^$/.test(strPath) ) {
+            formula = parseFormula( state.nodes[nodeId].paramsMeta[strPath].formula );
+          } else {
+            const path = strPath.split('.');
+            formula = parseFormula( state.nodes[path[0]][path[1] + 'Meta'].formula );
+          }
+
+          return {
+            updater: formula.updater,
+            refs: formula.refs,
+            params: formula.params
+          };
+        }, nodeUpdaters);
+      }, action.updaters)
+    };
+  }
 
   const newState = combinedReducers(state, action);
   if ( newState !== state ) {
@@ -40,5 +70,3 @@ module.exports = function(state = {}, action) {
     { ...newState, updaters: newUpdaters } :
     state;
 };
-
-// module.exports = combineReducers(reducers);

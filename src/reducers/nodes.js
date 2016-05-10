@@ -234,8 +234,7 @@ export default function(state = initialState, action) {
 
   if (
     typeof type === 'undefined' ||
-    (type !== 'LOAD_NODES' &&
-    ( typeof nodeId === 'undefined' && typeof nodeIds === 'undefined' ))
+    ( typeof nodeId === 'undefined' && typeof nodeIds === 'undefined' )
   ) {
     return state;
   }
@@ -317,9 +316,6 @@ export default function(state = initialState, action) {
         deepPositionUpdate(path, state, action.dx, action.dy, result);
         return {...state, ...result};
       }
-
-    case LOAD_NODES:
-        return action.nodes;
 
     default:
       return R.merge(state, { [nodeId]: node( state[nodeId], action ) });
