@@ -5,6 +5,7 @@ import {
   NO_PATH_SELECTED,
   SET_NODE_SELECTED,
   SET_NODE_HOVERED,
+  SET_NODE_OPTIONS_SELECTED,
   SET_PATH_HOVERED,
   SET_CONTOUR_SELECTED
 } from '../actions/const';
@@ -32,6 +33,9 @@ module.exports = function(state = initialState, action) {
     }
     case SET_NODE_SELECTED: {
         return { ...state, selected: { ...state.selected, point: action.point, parent: action.parent } };
+    }
+    case SET_NODE_OPTIONS_SELECTED: {
+        return { ...state, selected: { ...state.selected, nodeOptions: action.node } };
     }
     case SET_NODE_HOVERED: {
         return { ...state, hovered: { ...state.hovered, point: action.point, parent: action.parent } };

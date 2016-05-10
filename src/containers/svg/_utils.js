@@ -21,6 +21,7 @@ import {
   setMouseState,
   setNodeHovered,
   setNodeSelected,
+  setNodeOptionsSelected,
   setPathHovered,
   setPathSelected,
   updateProp
@@ -100,6 +101,7 @@ export function mapDispatchToProps(dispatch) {
     setMouseState,
     setNodeHovered,
     setNodeSelected,
+    setNodeOptionsSelected,
     setPathHovered,
     setPathSelected,
     updateProp
@@ -350,37 +352,6 @@ export function dist(a, b) {
   return Math.sqrt(Math.pow(abVec.x, 2) + Math.pow(abVec.y, 2));
 }
 
-export function addVec(a, b) {
-  return {
-    x: a.x + b.x,
-    y: a.y + b.y
-  };
-}
-
-export function subtractVec(a, b) {
-  return {
-    x: a.x - b.x,
-    y: a.y - b.y
-  };
-}
-
-export function multiplyVecByN(a, n) {
-  return {
-    x: a.x * n,
-    y: a.y * n
-  }
-}
-
-export function equalVec(a, b) {
-  return a.x === b.x && a.y === b.y;
-}
-
-export function normalizeVec(a) {
-  const norm = dist(a, NULL_VEC);
-
-  return multiplyVecByN(a, 1 / norm);
-}
-
 export function getDerivative(c0, c1, c2, c3, t) {
   const mt = 1 - t;
   const p = getDerivativeControlPoints(c0, c1, c2, c3)[0];
@@ -531,7 +502,7 @@ function simple(c0, c1, c2, c3) {
   var s = n1.x*n2.x + n1.y*n2.y;
 
   let result = Math.abs(Math.acos(s));
-  return result < Math.PI/3;
+  return result < Math.PI/12;
 }
 
 
@@ -727,4 +698,40 @@ export function outline(c0, c1, c2, c3, d1, d2, d3, d4) {
   const segments = [ls].concat(fcurves).concat([le]).concat(bcurves);
 
   return segments;
+}
+
+//Vector operation
+export function addVec(a, b) {
+  return {
+    x: a.x + b.x,
+    y: a.y + b.y
+  };
+}
+
+export function subtractVec(a, b) {
+  return {
+    x: a.x - b.x,
+    y: a.y - b.y
+  };
+}
+
+export function multiplyVecByN(a, n) {
+  return {
+    x: a.x * n,
+    y: a.y * n
+  }
+}
+
+export function equalVec(a, b) {
+  return a.x === b.x && a.y === b.y;
+}
+
+export function normalizeVec(a) {
+  const norm = dist(a, NULL_VEC);
+
+  return multiplyVecByN(a, 1 / norm);
+}
+
+export function dotProduct(a, b) {
+  return a.x * b.x + a.y * b.y;
 }

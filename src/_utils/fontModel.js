@@ -93,7 +93,7 @@ export default {
   },
   oncurve: {
     children: {},
-    propertyOrder: [ 'x', 'y', 'expand', 'distrib', 'selected', 'state' ],
+    propertyOrder: [ 'x', 'y', 'expand', 'distrib', 'selected', 'state', 'isSmoothSkeleton' ],
     properties: {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
@@ -102,7 +102,8 @@ export default {
       selected: 'boolean',
       state: 'number',
       expand: 'number',
-      distrib: 'number'
+      distrib: 'number',
+      isSmoothSkeleton: 'boolean'
     }
   },
   offcurve: {

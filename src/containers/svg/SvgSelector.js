@@ -131,7 +131,7 @@ SvgSelector.propTypes = {
   actions: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return { mode: state.ui.uiState, hovered: state.ui.hovered.point};
 }
 

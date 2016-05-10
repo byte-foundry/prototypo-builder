@@ -1,18 +1,31 @@
 export function mapCurve(nodeId, nodes, callback, dontMap) {
-  const { childIds } = nodes[nodeId];
+  const { childIds, isClosed } = nodes[nodeId];
   const length = ( childIds.length -1 ) / 3;
   const result = [];
   let curr;
 
   for ( let i = 0 ; i < childIds.length-1 ; i+=3 ) {
-    curr = callback(
-      nodes[childIds[i]],
-      nodes[childIds[i+1]],
-      nodes[childIds[i+2]],
-      nodes[childIds[i+3]],
-      i / 3,
-      length
-    );
+    if (isClosed && i + 3 === childIds.length - 1) {
+      //we want to return the first node instead of the last here
+      curr = callback(
+        nodes[childIds[i]],
+        nodes[childIds[i+1]],
+        nodes[childIds[i+2]],
+        nodes[childIds[0]],
+        i / 3,
+        length
+      );
+    }
+    else {
+      curr = callback(
+        nodes[childIds[i]],
+        nodes[childIds[i+1]],
+        nodes[childIds[i+2]],
+        nodes[childIds[i+3]],
+        i / 3,
+        length
+      );
+    }
 
     if ( !dontMap ) {
       result.push(curr);

@@ -20,8 +20,7 @@ class TextGlyph extends Component {
     const { id } = this.props;
     const {
       addContour,
-      createContour,
-      setContourSelected
+      createContour
     } = this.props.actions;
 
     const pathId = createContour().nodeId;

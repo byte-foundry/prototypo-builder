@@ -6,8 +6,6 @@ import {
   forEachCurve
 } from '../../_utils/pathWalkers';
 
-import SvgExpandedSkeleton from './SvgExpandedSkeleton';
-
 import {
   getCalculatedParams,
   getCalculatedNodes
@@ -20,6 +18,8 @@ import {
   addVec,
   subtractVec,
   multiplyVecByN,
+  normalizeVec,
+  dotProduct,
   outline
 } from './_utils';
 
@@ -52,7 +52,7 @@ class SvgContour extends Component {
         .map((pathId) => {
 
           const paths = [];
-          forEachCurve(pathId, nodes, (c0, c1, c2, c3, i, length) => {
+          forEachCurve(pathId, nodes, (c0, c1, c2, c3, i) => {
             let pathString = '';
             if (c2 && c3) {
               if (equalVec(c0, c1)) {
@@ -73,9 +73,37 @@ class SvgContour extends Component {
                                      (c3.expand || 20) * (c3.distrib || 0.5),
                                      (c3.expand || 20) * (1 - (c3.distrib || 0.5))
                                     );
-              curves.forEach((curve) => {
+              curves.forEach((curve, i) => {
                 if (pathString.length === 0) {
                   pathString += `M${curve.c0.x} ${curve.c0.y}`;
+                }
+
+                if (c0.isSmoothSkeleton && i === 1) {
+                  const unitC1Vec = normalizeVec(subtractVec(c1, c0));
+                  const newCurveC1 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c1, curve.c0), unitC1Vec));
+
+                  curve.c1 = addVec(curve.c0, newCurveC1);
+                }
+
+                if (c0.isSmoothSkeleton && i === curves.length - 1) {
+                  const unitC1Vec = normalizeVec(subtractVec(c1, c0));
+                  const newCurveC2 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c2, curve.c3), unitC1Vec));
+
+                  curve.c2 = addVec(curve.c3, newCurveC2);
+                }
+
+                if (c3.isSmoothSkeleton && i === curves.length / 2 + 1) {
+                  const unitC1Vec = normalizeVec(subtractVec(c2, c3));
+                  const newCurveC1 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c1, curve.c0), unitC1Vec));
+
+                  curve.c1 = addVec(curve.c0, newCurveC1);
+                }
+
+                if (c3.isSmoothSkeleton && i === curves.length / 2 - 1) {
+                  const unitC1Vec = normalizeVec(subtractVec(c2, c3));
+                  const newCurveC2 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c2, curve.c3), unitC1Vec));
+
+                  curve.c2 = addVec(curve.c3, newCurveC2);
                 }
 
                 pathString += ` C${curve.c1.x},${curve.c1.y} ${curve.c2.x},${curve.c2.y} ${curve.c3.x},${curve.c3.y}`;
@@ -90,10 +118,10 @@ class SvgContour extends Component {
   }
 
   render() {
-    const { nodes, id } = this.props;
+    const { nodes } = this.props;
     const classes = classnames({
       contour: true,
-      'is-closed': nodes[this.props.id].isClosed,
+      'is-closed': nodes[this.props.id].isClosed
     });
     return (
       <g>

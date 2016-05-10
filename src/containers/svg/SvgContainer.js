@@ -20,8 +20,7 @@ import {
   getNearPath,
   getNearNode,
   subtractVec,
-  multiplyVecByN,
-  outline
+  multiplyVecByN
 } from './_utils';
 
 import {
@@ -92,6 +91,7 @@ class SvgContainer extends Component {
       this.props.actions.updateProp(offcurve2Id, 'y', coord.y);
       this.props.actions.addOffcurve(pathId, offcurve2Id);
       this.props.actions.setNodeSelected(offcurve2Id, pathId);
+      this.props.actions.setNodeOptionsSelected(offcurve2Id);
     }
 
     this.props.actions.setCoords(coord.x, coord.y);
@@ -108,8 +108,10 @@ class SvgContainer extends Component {
       const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
       if (path) {
         this.props.actions.setPathSelected(path, this.props.ui.selected.contour);
+        this.props.actions.setNodeOptionsSelected(path);
         this.props.actions.setCoords(point.x, point.y);
         this.props.actions.setMouseState(PATH_SELECTED_AND_MOVE);
+        this.props.actions.setNodeOptionsSelected(path);
       } else {
         const pathId = this.props.actions.createPath().nodeId;
         this.props.actions.addPath( this.props.ui.selected.contour, pathId);
@@ -125,6 +127,7 @@ class SvgContainer extends Component {
       if (node) {
         this.props.actions.setCoords(point.x, point.y);
         this.props.actions.setNodeSelected(node, this.props.ui.selected.path);
+        this.props.actions.setNodeOptionsSelected(node);
         this.props.actions.setMouseState(NODE_SELECTED);
       } else if (!path.isClosed){
         this.createNewAddToPathAndSelect(point, this.props.ui.selected.path);
@@ -134,10 +137,10 @@ class SvgContainer extends Component {
       this.props.actions.setNodeSelected();
       this.props.actions.setPathSelected();
       if (this.props.ui.hovered.point) {
-        this.props.actions.setNodeSelected(this.props.ui.hovered.point);
+        this.props.actions.setNodeOptionsSelected(this.props.ui.hovered.point);
       }
       else if (this.props.ui.hovered.path) {
-        this.props.actions.setPathSelected(this.props.ui.hovered.path);
+        this.props.actions.setNodeOptionsSelected(this.props.ui.hovered.path);
       }
     }
   }
@@ -277,17 +280,14 @@ class SvgContainer extends Component {
 
   render() {
     let nodeSelected = false;
-    if (this.props.ui.uiState === SELECTION_MODE) {
-      if (this.props.ui.selected.point) {
-        const {id, type} = this.props.nodes[this.props.ui.selected.point];
-        nodeSelected = (
-          <div className="floating-prop">
-            <NodeProperties id={id} type={type} />
-          </div>
-        );
-      }
-      else if (this.props.ui.selected.path) {
-      }
+    if (this.props.ui.selected.nodeOptions) {
+      const {id, type} = this.props.nodes[this.props.ui.selected.nodeOptions];
+      nodeSelected = (
+        <div className="floating-prop">
+          <p>{id}</p>
+          <NodeProperties id={id} type={type} />
+        </div>
+      );
     }
     return (
       <div style={{position: 'relative'}}>

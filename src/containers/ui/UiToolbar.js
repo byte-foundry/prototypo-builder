@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import {
   setMouseState,
   setPathSelected,
-  setNodeSelected,
+  setNodeSelected
 } from './../../actions/all';
 
 import {

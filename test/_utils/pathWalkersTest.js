@@ -595,6 +595,9 @@ describe('pathWalkers', () => {
         },
         {
           id: 'node-2'
+        },
+        {
+          id: 'node-7'
         }
       ];
 
