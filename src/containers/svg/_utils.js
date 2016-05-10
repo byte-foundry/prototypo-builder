@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
-import { mapCurve, forEachCurve } from './../../_utils/path';
+import { mapCurve, forEachCurve } from '~/_utils/path';
 
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';
@@ -24,7 +24,7 @@ import {
   setPathHovered,
   setPathSelected,
   updateProp
-} from './../../actions/all';
+} from '~/actions/all';
 
 const componentMap = {
   contour: SvgContour,

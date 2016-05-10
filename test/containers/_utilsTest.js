@@ -3,8 +3,10 @@ import deepFreeze from 'deep-freeze';
 import {
   parseFormula,
   buildArgs,
-  getCalculatedProps,
-  getCalculatedParams
+  // getCalculatedProps,
+  getCalculatedParams,
+  getSolvingOrder,
+  getCalculatedGlyph
 } from '../../src/containers/_utils';
 
 describe('containers/_utils', () => {
@@ -12,7 +14,7 @@ describe('containers/_utils', () => {
     it('should return a formula with isInvalid === true when the formula can\'t be parsed', (done) => {
       const strFormula = '$width * ';
       const expected = {
-        formula: strFormula,
+        formula: strFormula.trim(),
         isInvalid: true
       };
 
@@ -55,54 +57,64 @@ describe('containers/_utils', () => {
     });
   });
 
-  describe('getCalculatedProps', () => {
-    it('should replace props with calculatedProps', (done) => {
-      const nodesBefore = {
-        'node-0': {
-          id: 'node-0',
-          xMeta: {
-            _for: 'x',
-            updater: () => 78,
-            params: []
-          },
-          expandMeta: {
-            _for: 'expand',
-            updater: () => 90,
-            params: []
-          },
-          x: 12,
-          y: 34,
-          expand: 56
-        }
-      };
-      const propsAfter = {
-        id: 'node-0',
-        x: 78,
-        y: 34,
-        expand: 90
-      }
-
-      // I can't deepFreeze an object that contains functions apparently
-      // deepFreeze(nodeBefore);
-
-      expect(getCalculatedProps(nodesBefore, {}, 'node-0'))
-        .to.deep.equal(propsAfter);
-
-      done();
-    });
-  });
+  // describe('getCalculatedProps', () => {
+  //   it('should replace props with calculatedProps', (done) => {
+  //     const nodesBefore = {
+  //       'node-0': {
+  //         id: 'node-0',
+  //         xMeta: {
+  //           _for: 'x',
+  //           updater: () => 78,
+  //           params: []
+  //         },
+  //         expandMeta: {
+  //           _for: 'expand',
+  //           updater: () => 90,
+  //           params: []
+  //         },
+  //         x: 12,
+  //         y: 34,
+  //         expand: 56
+  //       }
+  //     };
+  //     const propsAfter = {
+  //       id: 'node-0',
+  //       x: 78,
+  //       y: 34,
+  //       expand: 90
+  //     }
+  //
+  //     // I can't deepFreeze an object that contains functions apparently
+  //     // deepFreeze(nodeBefore);
+  //
+  //     expect(getCalculatedProps(nodesBefore, {}, 'node-0'))
+  //       .to.deep.equal(propsAfter);
+  //
+  //     done();
+  //   });
+  // });
 
   describe('getCalculatedParams', () => {
     it('should replace params with calculatedParams', (done) => {
-      const nodesBefore = {
-        'node-0': {
-          id: 'node-0',
-          params: {
-            width: 12
-          },
-          paramsMeta: {
-            _order: ['width', 'expand', 'distrib'],
-            width: {},
+      const stateBefore = {
+        nodes: {
+          'node-0': {
+            id: 'node-0',
+            params: {
+              width: 12
+            },
+            paramsMeta: {
+              _order: ['width', 'expand', 'distrib'],
+              width: {},
+              expand: {
+              },
+              distrib: {
+              }
+            }
+          }
+        },
+        updaters: {
+          'node-0': {
             expand: {
               updater: () => 34,
               params: []
@@ -125,8 +137,135 @@ describe('containers/_utils', () => {
       // I can't deepFreeze an object that contains functions apparently
       // deepFreeze(nodeBefore);
 
-      expect(getCalculatedParams(nodesBefore, parentParams, 'node-0'))
+      expect(getCalculatedParams(stateBefore, parentParams, 'node-0'))
         .to.deep.equal(paramsAfter);
+
+      done();
+    });
+  });
+
+  describe('getSolvingOrder', () => {
+    it('should return the solving order for this glyph', (done) => {
+      const glyphUpdaters = {
+        'node_0.x': { refs: ['node_1.x'] },
+        'node_0.y': { refs: [] },
+        'node_1.x': { refs: [] },
+        'node_1.y': { refs: ['node_0.y'] }
+      };
+      const expected = [
+        'node_1.x',
+        'node_0.x',
+        'node_0.y',
+        'node_1.y'
+      ];
+
+      expect(getSolvingOrder(glyphUpdaters)).to.deep.equal(expected);
+
+      done();
+    });
+  });
+
+  describe('getCalculatedGlyph', () => {
+    it('should return a subset of the graph that includes all children of the glyph', (done) => {
+      // ... and all properties of these nodes should be 'calculated'
+
+      const stateBefore = {
+        nodes: {
+          'root': {
+            id: 'root',
+            type: 'root',
+            childIds: ['font_initial']
+          },
+          'font_initial': {
+            id: 'font_initial',
+            type: 'font',
+            childIds: ['glyph_initial'],
+            params: {},
+            paramsMeta: { _order: [] }
+          },
+          'glyph_initial': {
+            id: 'glyph_initial',
+            type: 'glyph',
+            childIds: ['contour_initial'],
+            params: {},
+            paramsMeta: { _order: [] }
+          },
+          'contour_initial': {
+            id: 'contour_initial',
+            type: 'contour',
+            childIds: ['node_0', 'node_1']
+          },
+          'node_0': {
+            id: 'node_0',
+            type: 'path',
+            x: 12,
+            y: 34,
+            isClosed: true,
+            childIds: []
+          },
+          'node_1': {
+            id: 'node_1',
+            type: 'path',
+            expand: 56,
+            childIds: ['node_2', 'node_3']
+          },
+          'node_2': {
+            id: 'node_2',
+            type: 'path',
+            childIds: []
+          },
+          'node_3': {
+            id: 'node_3',
+            type: 'path',
+            childIds: []
+          }
+        },
+        updaters: {
+          'glyph_initial': {
+            'node_0.x': { updater: () => 21, refs: ['node_1.x'], params: [] },
+            'node_0.y': { updater: () => 43, refs: ['node_1.x'], params: [] },
+            'node_1.x': { updater: () => 78, refs: [], params: ['$width'] }
+          }
+        }
+      };
+
+      const expected = {
+        'contour_initial': {
+          id: 'contour_initial',
+          type: 'contour',
+          childIds: ['node_0', 'node_1']
+        },
+        'node_0': {
+          id: 'node_0',
+          type: 'path',
+          x: 21,
+          y: 43,
+          isClosed: true,
+          childIds: []
+        },
+        'node_1': {
+          id: 'node_1',
+          type: 'path',
+          x: 78,
+          expand: 56,
+          childIds: ['node_2', 'node_3']
+        },
+        'node_2': {
+          id: 'node_2',
+          type: 'path',
+          childIds: []
+        },
+        'node_3': {
+          id: 'node_3',
+          type: 'path',
+          childIds: []
+        }
+      };
+
+      deepFreeze(stateBefore.nodes);
+
+      expect(getCalculatedGlyph(stateBefore, { '$width': 90 }, 'glyph_initial'))
+        .to.deep.equal(expected);
 
       done();
     });

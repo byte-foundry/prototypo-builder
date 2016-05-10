@@ -14,8 +14,14 @@ import Main from '../components/Main';
 /* Populated by react-webpack-redux:reducer */
 class App extends Component {
   render() {
-    const {actions, nodes, ui} = this.props;
-    return <Main actions={actions} nodes={nodes} ui={ui}/>;
+    const {actions, nodes, ui, updaters} = this.props;
+    return (
+      <Main
+        actions={actions}
+        nodes={nodes}
+        ui={ui}
+        updaters={updaters}/>
+    );
   }
 }
 /* Populated by react-webpack-redux:reducer
@@ -26,13 +32,15 @@ class App extends Component {
 App.propTypes = {
   actions: PropTypes.object.isRequired,
   nodes: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired
+  ui: PropTypes.object.isRequired,
+  updaters: PropTypes.object.isRequired
 };
 function mapStateToProps(state) {
   /* Populated by react-webpack-redux:reducer */
   const props = {
     nodes: state.nodes,
-    ui: state.ui
+    ui: state.ui,
+    updaters: state.updaters
   };
   return props;
 }

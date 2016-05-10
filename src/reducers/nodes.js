@@ -142,13 +142,14 @@ function node(state = initialNode, action) {
         ...state,
         params: {
           ...state.params,
-          [action.name]: action.param.value
+          [action.name]: action.value
         },
         paramsMeta: {
           ...state.paramsMeta,
           _order: [ ...state.paramsMeta._order, action.name ],
-          // Remove the value prop of the param before setting the meta
-          [action.name]: R.dissoc('value', action.param)
+          // We remove the updater function from state.nodes, but note that
+          // .params and .refs are duplicated in state.updaters
+          [action.name]: R.dissoc('updater', action.meta)
         }
       };
     case UPDATE_PARAM:
@@ -160,7 +161,9 @@ function node(state = initialNode, action) {
           ...state.paramsMeta,
           [action.name]: {
             ...state.paramsMeta[action.name],
-            ...action.meta
+            // We remove the updater function from state.nodes, but note that
+            // .params and .refs are duplicated in state.updaters
+            ...R.dissoc('updater', action.meta)
           }
         }
       };
@@ -181,9 +184,13 @@ function node(state = initialNode, action) {
         [action.propNames[0] + 'Meta']: {
           _for: action.propNames[0],
           ...state[action.propNames[0] + 'Meta'],
-          ...action.meta
+          // We remove the updater function from state.nodes, but note that
+          // .params and .refs are duplicated in state.updaters
+          ...R.dissoc('updater', action.meta)
         }
       };
+    // TODO: is this reducer really used? Is it tested? It's badly named anyway
+    // it should be DELETE_PROP_META
     case DELETE_PROPS_META:
       return R.dissoc(action.propNames[0] + 'Meta', state);
     // case UPDATE_PROP_VALUE:

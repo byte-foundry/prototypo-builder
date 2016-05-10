@@ -6,6 +6,7 @@ import App from './containers/App';
 
 const store = configureStore({
   nodes: {
+    // root must always be named root
     'root': {
       id: 'root',
       type: 'root',
@@ -35,9 +36,11 @@ const store = configureStore({
   ui: {
     hovered: {},
     selected: {
+      glyph: 'glyph_initial',
       contour: 'contour_initial'
     }
-  }
+  },
+  updaters: {}
 });
 
 render(

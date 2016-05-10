@@ -1,9 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import fontModel from './../../_utils/fontModel';
+import fontModel from '~/_utils/fontModel';
+import { getParentGlyphId } from '~/_utils/graph';
 
-import { getCalculatedProps, parseFormula } from './../_utils';
+import {
+  getCalculatedParams,
+  getCalculatedGlyph,
+  parseFormula
+} from './../_utils';
 
 import {
   mapDispatchToProps
@@ -77,7 +82,11 @@ NodeProperties.propTypes = {
 function mapStateToProps(state, props) {
   return {
     ...state.nodes[props.id],
-    ...getCalculatedProps(state.nodes, state.nodes['font_initial'].params, props.id)
+    ...getCalculatedGlyph(
+      state,
+      getCalculatedParams(state, null, 'font_initial'),
+      getParentGlyphId(state.nodes, props.id)
+    )[props.id]
   };
 }
 
