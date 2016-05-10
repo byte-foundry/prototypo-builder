@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+- '4.4.4'
+after_install:
+- npm dedupe
+- npm shrinkwrap --dev
+- cat npm-shrinkwrap.json
+script:
+- npm run dist
+after_success:
+- '[ $TRAVIS_BRANCH == master ] && surge --project ./dist --domain builder.prototypo.io'
+- '[ $TRAVIS_BRANCH == develop ] && surge --project ./dist --domain builder-dev.prototypo.io'
+branches:
+  only:
+    - master
+    - develop
