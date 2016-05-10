@@ -29,6 +29,7 @@ class TextFont extends Component {
     this.handleAddParamClick = this.handleAddParamClick.bind(this);
     this.handleAddFormulaClick = this.handleAddFormulaClick.bind(this);
     this.handleParamChange = this.handleParamChange.bind(this);
+    this.handleDeleteParamClick = this.handleDeleteParamClick.bind(this);
     this.handleFormulaChange = this.handleFormulaChange.bind(this);
   }
 
@@ -79,6 +80,15 @@ class TextFont extends Component {
     updateParam(id, e.target.name, +e.target.value);
   }
 
+  handleDeleteParamClick(e) {
+    e.preventDefault();
+
+    const { id } = this.props;
+    const { deleteParam } = this.props.actions;
+
+    deleteParam(id, e.target.name);
+  }
+
   handleFormulaChange(e) {
     e.preventDefault();
 
@@ -86,7 +96,7 @@ class TextFont extends Component {
     const { updateParamMeta } = this.props.actions;
     const { name } = e.target;
 
-    if ( !(name in paramsMeta) || !('updater' in paramsMeta[name]) ) {
+    if ( !(name in paramsMeta) || !('formula' in paramsMeta[name]) ) {
       return;
     }
 
@@ -100,13 +110,11 @@ class TextFont extends Component {
     const step = Math.abs(max - min) / 100;
 
     return (
-      <li key={name}>
-        <label>
-          {name}:
-          <input type="range" value={value} name={name} min={min} max={max} step={step} onChange={this.handleParamChange} />
-          <input type="number" value={value} name={name} onChange={this.handleParamChange} />
-        </label>
-      </li>
+      <label>
+        {name}:
+        <input type="range" value={value} name={name} min={min} max={max} step={step} onChange={this.handleParamChange} />
+        <input type="number" value={value} name={name} onChange={this.handleParamChange} />
+      </label>
     );
   }
 
@@ -117,7 +125,6 @@ class TextFont extends Component {
 
     return (
       <NodeProperty
-        key={name}
         name={name}
         value={value}
         formula={formula}
@@ -137,11 +144,16 @@ class TextFont extends Component {
     return (
       <ul className={listClass} onChange={this.handleFormulaChange}>
         {paramsMeta._order.map((name) => {
-          return this[(
-            'formula' in paramsMeta[name] ?
-              'renderParamFormula' :
-              'renderParamSlider'
-          )](name);
+          return (
+            <li key={name}>
+              {this[(
+                'formula' in paramsMeta[name] ?
+                  'renderParamFormula' :
+                  'renderParamSlider'
+              )](name)}
+              <input type="button" defaultValue="✕" name={name} onClick={this.handleDeleteParamClick} />
+            </li>
+          );
         })}
         <li>
           <input type="text"   ref="paramName" placeholder="name" defaultValue="$" />

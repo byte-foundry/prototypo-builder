@@ -24,7 +24,7 @@ class NodePropertyComponent extends React.Component {
     const displayValue = typeof value === 'number' ? value.toFixed(2) : value;
 
     return (
-      <li className="text-node__item">
+      <div className="text-node__item">
         <span className="text-node__property-name">{name}</span>
         <input
           className={formulaClass}
@@ -40,7 +40,7 @@ class NodePropertyComponent extends React.Component {
             readOnly
             disabled />
         )}
-      </li>
+      </div>
     );
   }
 }

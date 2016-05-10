@@ -24,8 +24,7 @@ import {
   CREATE_ONCURVE,
   CREATE_PATH,
   DELETE_NODE,
-  DELETE_PROPS_META,
-  LOAD_NODES,
+  DELETE_PARAM,
   MOVE_NODE,
   REMOVE_CHILD,
   // SET_COORDS,
@@ -153,6 +152,15 @@ function node(state = initialNode, action) {
           [action.name]: R.dissoc('updater', action.meta)
         }
       };
+    case DELETE_PARAM:
+      return {
+        ...state,
+        params: R.dissoc(action.name, state.params),
+        paramsMeta: {
+          ...R.dissoc(action.name, state.paramsMeta),
+          _order: state.paramsMeta._order.filter((paramName) => paramName !== action.name)
+        }
+      }
     case UPDATE_PARAM:
       return { ...state, params: { ...state.params, [action.name]: action.value } };
     case UPDATE_PARAM_META:
@@ -190,10 +198,6 @@ function node(state = initialNode, action) {
           ...R.dissoc('updater', action.meta)
         }
       };
-    // TODO: is this reducer really used? Is it tested? It's badly named anyway
-    // it should be DELETE_PROP_META
-    case DELETE_PROPS_META:
-      return R.dissoc(action.propNames[0] + 'Meta', state);
     // case UPDATE_PROP_VALUE:
     //   return R.mergeWith(R.merge, state, { [action.propNames[0]]: { value: action.value } });
     // case UPDATE_PROPS_VALUES:

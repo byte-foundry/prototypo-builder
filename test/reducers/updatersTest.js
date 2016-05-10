@@ -3,6 +3,7 @@ import deepFreeze from 'deep-freeze';
 import reducer from '../../src/reducers/updaters';
 import {
   addParam,
+  deleteParam,
   updateParamMeta,
   updatePropMeta
 } from 'actions/all';
@@ -26,6 +27,57 @@ describe('updaters', () => {
 
     const state = Object.freeze({});
     reducer(state, {type: 'INVALID'});
+
+    done();
+  });
+
+  it('should handle ADD_PARAM action', (done) => {
+    const stateBefore = {};
+    const action1 = addParam('font_0', '$width', undefined, { updater: 12, formula: '12' });
+    const stateAfter1 = {
+      'font_0': {
+        '$width': { updater: 12, params: undefined, refs: undefined }
+      }
+    };
+    const action2 = addParam('font_0', '$height', undefined, { updater: 34, formula: '34' });
+    const stateAfter2 = {
+      'font_0': {
+        '$width': { updater: 12, params: undefined, refs: undefined },
+        '$height': { updater: 34, params: undefined, refs: undefined }
+      }
+    };
+
+    deepFreeze(graph);
+    deepFreeze(stateBefore);
+    deepFreeze(action1);
+    deepFreeze(stateAfter1);
+    deepFreeze(action2);
+    deepFreeze(stateAfter2);
+
+    expect(reducer(stateBefore, action1, graph)).to.deep.equal(stateAfter1);
+    expect(reducer(stateAfter1, action2, graph)).to.deep.equal(stateAfter2);
+
+    done();
+  });
+
+  it('should handle DELETE_PARAM action', (done) => {
+    const stateBefore = {
+      'node_0': {
+        '$width': { updater: 56, params: undefined, refs: undefined },
+        '$height': { updater: 34, params: undefined, refs: undefined }
+      }
+    };
+    const action = deleteParam('node_0', '$height');
+    const stateAfter = {
+      'node_0': {
+        '$width': { updater: 56, params: undefined, refs: undefined }
+      }
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer(stateBefore, action, graph)).to.deep.equal(stateAfter);
 
     done();
   });
@@ -82,35 +134,6 @@ describe('updaters', () => {
     expect(reducer(stateAfter1, action2, graph)).to.deep.equal(stateAfter2);
     expect(reducer(stateAfter2, action3, graph)).to.deep.equal(stateAfter3);
     expect(reducer(stateAfter3, action4, graph)).to.deep.equal(stateAfter4);
-
-    done();
-  });
-
-  it('should handle ADD_PARAM action', (done) => {
-    const stateBefore = {};
-    const action1 = addParam('font_0', '$width', undefined, { updater: 12, formula: '12' });
-    const stateAfter1 = {
-      'font_0': {
-        '$width': { updater: 12, params: undefined, refs: undefined }
-      }
-    };
-    const action2 = addParam('font_0', '$height', undefined, { updater: 34, formula: '34' });
-    const stateAfter2 = {
-      'font_0': {
-        '$width': { updater: 12, params: undefined, refs: undefined },
-        '$height': { updater: 34, params: undefined, refs: undefined }
-      }
-    };
-
-    deepFreeze(graph);
-    deepFreeze(stateBefore);
-    deepFreeze(action1);
-    deepFreeze(stateAfter1);
-    deepFreeze(action2);
-    deepFreeze(stateAfter2);
-
-    expect(reducer(stateBefore, action1, graph)).to.deep.equal(stateAfter1);
-    expect(reducer(stateAfter1, action2, graph)).to.deep.equal(stateAfter2);
 
     done();
   });

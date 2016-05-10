@@ -3,6 +3,7 @@ import deepFreeze from 'deep-freeze';
 import reducer from '../../src/reducers/nodes';
 import {
   addParam,
+  deleteParam,
   updateParam,
   updateParamMeta
   // updateParamValue
@@ -55,6 +56,43 @@ describe('reducer: nodes (node params)', () => {
     deepFreeze(action2);
 
     expect(reducer(stateAfter1, action2)).to.deep.equal(stateAfter2);
+
+    done();
+  });
+
+  it('should handle DELETE_PARAM action', (done) => {
+    const stateBefore = {
+      'node-0': {
+        id: 'node-0',
+        params: {
+          height: undefined,
+          width: 56
+        },
+        paramsMeta: {
+          _order: ['height', 'width'],
+          height: { a: 12 },
+          width: { b: 34 }
+        }
+      }
+    };
+    const action = deleteParam('node-0', 'height');
+    const stateAfter = {
+      'node-0': {
+        id: 'node-0',
+        params: {
+          width: 56
+        },
+        paramsMeta: {
+          _order: ['width'],
+          width: { b: 34 }
+        }
+      }
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
 
     done();
   });

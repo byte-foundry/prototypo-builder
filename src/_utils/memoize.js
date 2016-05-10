@@ -1,3 +1,5 @@
+// TODO: this memoize function is a gigantic memory-leak. At some point we'll
+// need to find a way to mitigate it.
 export default function memoize(fn) {
   const cache = new Map();
   const length = fn.length;

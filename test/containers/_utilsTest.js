@@ -14,7 +14,7 @@ describe('containers/_utils', () => {
     it('should return a formula with isInvalid === true when the formula can\'t be parsed', (done) => {
       const strFormula = '$width * ';
       const expected = {
-        formula: strFormula.trim(),
+        formula: strFormula,
         isInvalid: true
       };
 

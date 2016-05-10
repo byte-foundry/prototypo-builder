@@ -11,11 +11,11 @@ import {
   createOffcurve,
   createOncurve,
   createPath,
+  deleteParam,
   updateParam,
   updateProp,
   updatePropMeta,
   updateParamMeta,
-  deletePropsMeta,
   setContourSelected
 } from './../../actions/all';
 
@@ -80,6 +80,7 @@ export function mapDispatchToProps(dispatch) {
     addOncurve,
     addParam,
     addPath,
+    deleteParam,
     createContour,
     createOffcurve,
     createOncurve,
@@ -88,7 +89,6 @@ export function mapDispatchToProps(dispatch) {
     updateProp,
     updatePropMeta,
     updateParamMeta,
-    deletePropsMeta,
     setContourSelected
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };

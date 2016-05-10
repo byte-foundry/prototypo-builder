@@ -23,7 +23,7 @@ class NodeProperties extends Component {
   }
 
   handleUpdate(e) {
-    const { updateProp, updatePropMeta, deletePropsMeta } = this.props.actions;
+    const { updateProp, updatePropMeta } = this.props.actions;
     const { id, type } = this.props;
     const { name } = e.target;
     const propType = fontModel[type].properties[name];
@@ -39,7 +39,7 @@ class NodeProperties extends Component {
     }
 
     if ( /^[\d\.]+$/.test(e.target.value) ) {
-      deletePropsMeta(id, name, undefined);
+      updatePropMeta(id, name, { formula: '' });
       return updateProp(id, name, +e.target.value);
     }
     return updatePropMeta(id, name, parseFormula(e.target.value));
@@ -60,14 +60,15 @@ class NodeProperties extends Component {
           const propType = properties[propName];
 
           return (
-            <NodeProperty
-              key={propName}
-              name={propName}
-              value={value}
-              formula={formula}
-              type={propType}
-              isInvalid={isInvalid}
-            />
+            <li key={propName}>
+              <NodeProperty
+                name={propName}
+                value={value}
+                formula={formula}
+                type={propType}
+                isInvalid={isInvalid}
+              />
+            </li>
           );
         }) }
       </ul>

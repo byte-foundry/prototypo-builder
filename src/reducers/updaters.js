@@ -13,6 +13,7 @@ import {
 
 import {
   ADD_PARAM,
+  DELETE_PARAM,
   UPDATE_PARAM_META,
   UPDATE_PROP_META
 } from './../actions/const';
@@ -20,7 +21,10 @@ import {
 // TODO: each glyph/font in this part of the state should be like:
 // 'glyph_id': { params: ..., props: ... }
 module.exports = function(state = initialState, action, nodes = {}) {
-  if ( !('meta' in action) || !('updater' in action.meta) ) {
+  if (
+    action.type !== DELETE_PARAM &&
+    ( !('meta' in action) || !('updater' in action.meta) )
+  ) {
     return state;
   }
 
@@ -36,6 +40,12 @@ module.exports = function(state = initialState, action, nodes = {}) {
             refs: action.meta.refs
           }
         }
+      };
+
+    case DELETE_PARAM:
+      return {
+        ...state,
+        [action.nodeId]: R.dissoc(action.name, state[action.nodeId])
       };
 
     case UPDATE_PARAM_META:
