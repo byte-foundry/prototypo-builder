@@ -36,6 +36,7 @@ class SvgSelector extends Component {
         const [target, unused, targetOut] = getPreviousNode(this.props.parent, this.props.source.id, this.props.nodes);
 
         if (target) {
+          // TODO: ghost handles are calculated and should be removed from the state
           const derivative = getDerivative(target, targetOut, pointIn, point, 2 / 3);
           const normalizedD = normalizeVec(derivative);
           const ghostVec = multiplyVecByN(normalizedD, -dist(target, point) / 3);

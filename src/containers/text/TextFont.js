@@ -138,7 +138,7 @@ class TextFont extends Component {
       <ul className={listClass} onChange={this.handleFormulaChange}>
         {paramsMeta._order.map((name) => {
           return this[(
-            'updater' in paramsMeta[name] ?
+            'formula' in paramsMeta[name] ?
               'renderParamFormula' :
               'renderParamSlider'
           )](name);

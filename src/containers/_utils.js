@@ -77,7 +77,7 @@ buildArgsMemoized.displayName = 'buildArgsMemoized';
 export const getCalculatedParams = R.memoize((state, parentParams, nodeId) => {
   const calculatedParams = parentParams ? { ...parentParams } : {};
   const { params, paramsMeta } = state.nodes[nodeId];
-  const updaters = state.updaters[nodeId];
+  const updaters = state.updaters[nodeId] || {};
 
   paramsMeta._order.forEach((paramName) => {
     if ( paramName in updaters ) {
@@ -136,6 +136,8 @@ export const getCalculatedGlyph = R.memoize((state, parentParams, glyphId) => {
     Object.keys(node).forEach((propName) => {
       const propType = typeof node[propName];
       if (
+        // TODO: remove _ghost from here once it's removed from the state
+        propName === '_ghost' ||
         propName === 'childIds' ||
         ( propType !== 'object' && propType !== 'function' )
       ) {
