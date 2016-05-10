@@ -16,13 +16,13 @@ export function parseFormula( _strFormula ) {
     updater = new Function( 'glyph', ...usedParams, 'return ' + strFormula );
   } catch(e) {
     return {
-      formula: strFormula,
+      formula: _strFormula,
       isInvalid: true
     }
   }
 
   return {
-    formula: strFormula,
+    formula: _strFormula,
     params: usedParams,
     refs: usedRefs,
     // TODO: the updater used to be memoized here, but since our memoize

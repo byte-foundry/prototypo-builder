@@ -21,7 +21,7 @@ class NodePropertyComponent extends React.Component {
       'text-node__property-formula--invalid': isInvalid === true
     });
 
-    const displayValue = isNaN(parseInt(value)) ? value : value.toFixed(2);
+    const displayValue = typeof value === 'number' ? value.toFixed(2) : value;
 
     return (
       <li className="text-node__item">

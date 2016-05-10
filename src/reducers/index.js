@@ -35,11 +35,11 @@ module.exports = function(state = {}, action) {
       updaters: R.mapObjIndexed((nodeUpdaters, nodeId) => {
         return R.mapObjIndexed((updater, strPath) => {
           let formula;
-          if ( /^$/.test(strPath) ) {
-            formula = parseFormula( state.nodes[nodeId].paramsMeta[strPath].formula );
+          if ( /^\$/.test(strPath) ) {
+            formula = parseFormula( action.nodes[nodeId].paramsMeta[strPath].formula );
           } else {
             const path = strPath.split('.');
-            formula = parseFormula( state.nodes[path[0]][path[1] + 'Meta'].formula );
+            formula = parseFormula( action.nodes[path[0]][path[1] + 'Meta'].formula );
           }
 
           return {

@@ -2,7 +2,6 @@ export default function memoize(fn) {
   const cache = new Map();
   const length = fn.length;
 
-debugger;
   switch(length) {
     case 1:
       return function() {
