@@ -37,7 +37,7 @@ button, input, optgroup, select, textarea {
   margin: 3px;
 }
 
-button:hover {
+input[type=button]:hover, button:hover {
   background: #29d390;
   color: #fefefe;
 }
