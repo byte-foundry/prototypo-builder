@@ -78,6 +78,7 @@
     "core-js": "^2.0.0",
     "deptree": "^0.1.0",
     "lodash": "^4.11.1",
+    "memoize-immutable": "^1.1.1",
     "normalize.css": "^4.0.0",
     "ramda": "^0.21.0",
     "react": "^15.0.1",
