@@ -3,8 +3,8 @@ import deepFreeze from 'deep-freeze';
 import reducer from '../../src/reducers/nodes';
 import {
   updateProp,
-  updateProps,
-  updatePropMeta,
+  // updateProps,
+  // updatePropMeta,
   // updatePropValue,
   // updatePropsValues,
   updateCoords
@@ -51,81 +51,81 @@ describe('reducer: nodes (node props)', () => {
     done();
   });
 
-  it('should handle UPDATE_PROPS action', (done) => {
-    const stateBefore = {
-      'node-0': {
-        id: 'node-0',
-        type: 'oncurve',
-        childIds: []
-      }
-    };
-    const action1 = updateProps('node-0', { x: 98, expand: 76 });
-    const stateAfter1 = {
-      'node-0': {
-        id: 'node-0',
-        type: 'oncurve',
-        childIds: [],
-        x: 98,
-        expand: 76
-      }
-    };
-    const action2 = updateProps('node-0', { x: 12, expand: 34 });
-    const stateAfter2 = {
-      'node-0': {
-        id: 'node-0',
-        type: 'oncurve',
-        childIds: [],
-        x: 12,
-        expand: 34
-      }
-    };
+  // it('should handle UPDATE_PROPS action', (done) => {
+  //   const stateBefore = {
+  //     'node-0': {
+  //       id: 'node-0',
+  //       type: 'oncurve',
+  //       childIds: []
+  //     }
+  //   };
+  //   const action1 = updateProps('node-0', { x: 98, expand: 76 });
+  //   const stateAfter1 = {
+  //     'node-0': {
+  //       id: 'node-0',
+  //       type: 'oncurve',
+  //       childIds: [],
+  //       x: 98,
+  //       expand: 76
+  //     }
+  //   };
+  //   const action2 = updateProps('node-0', { x: 12, expand: 34 });
+  //   const stateAfter2 = {
+  //     'node-0': {
+  //       id: 'node-0',
+  //       type: 'oncurve',
+  //       childIds: [],
+  //       x: 12,
+  //       expand: 34
+  //     }
+  //   };
+  //
+  //   deepFreeze(stateBefore);
+  //   deepFreeze(action1);
+  //
+  //   expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
+  //
+  //   deepFreeze(stateAfter1);
+  //   deepFreeze(action2);
+  //
+  //   expect(reducer(stateAfter1, action2)).to.deep.equal(stateAfter2);
+  //
+  //   done();
+  // });
 
-    deepFreeze(stateBefore);
-    deepFreeze(action1);
-
-    expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
-
-    deepFreeze(stateAfter1);
-    deepFreeze(action2);
-
-    expect(reducer(stateAfter1, action2)).to.deep.equal(stateAfter2);
-
-    done();
-  });
-
-  it('should handle UPDATE_PROP_META action and ignore any updater', (done) => {
-    const stateBefore = {
-      'node-0': {
-        id: 'node-0'
-      }
-    };
-    const action1 = updatePropMeta('node-0', 'width', { min: 12 });
-    const stateAfter1 = {
-      'node-0': {
-        id: 'node-0',
-        widthMeta: { _for: 'width', min: 12 }
-      }
-    };
-    const action2 = updatePropMeta('node-0', 'width', { max: 34, updater: Math.abs });
-    const stateAfter2 = {
-      'node-0': {
-        id: 'node-0',
-        widthMeta: { _for: 'width', min: 12, max: 34 }
-      }
-    };
-
-    deepFreeze(stateBefore);
-    deepFreeze(action1);
-
-    expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
-
-    deepFreeze(stateAfter1);
-    deepFreeze(action2);
-
-    expect(reducer(stateAfter1, action2)).to.deep.equal(stateAfter2);
-
-    done();
-  });
+  // it('should handle UPDATE_PROP_META action and ignore any updater', (done) => {
+  //   const stateBefore = {
+  //     'node-0': {
+  //       id: 'node-0'
+  //     }
+  //   };
+  //   const action1 = updatePropMeta('node-0', 'width', { min: 12 });
+  //   const stateAfter1 = {
+  //     'node-0': {
+  //       id: 'node-0',
+  //       widthMeta: { _for: 'width', min: 12 }
+  //     }
+  //   };
+  //   const action2 = updatePropMeta('node-0', 'width', { max: 34, updater: Math.abs });
+  //   const stateAfter2 = {
+  //     'node-0': {
+  //       id: 'node-0',
+  //       widthMeta: { _for: 'width', min: 12, max: 34 }
+  //     }
+  //   };
+  //
+  //   deepFreeze(stateBefore);
+  //   deepFreeze(action1);
+  //
+  //   expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
+  //
+  //   deepFreeze(stateAfter1);
+  //   deepFreeze(action2);
+  //
+  //   expect(reducer(stateAfter1, action2)).to.deep.equal(stateAfter2);
+  //
+  //   done();
+  // });
 
   // it('should handle UPDATE_PROP_VALUE action', (done) => {
   //   const stateBefore = {

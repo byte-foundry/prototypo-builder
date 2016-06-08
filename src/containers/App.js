@@ -47,6 +47,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   /* Populated by react-webpack-redux:action */
   const actions = {
+    update_formula: require('../actions/formulas/update_formula.js'),
+    delete_formula: require('../actions/formulas/delete_formula.js')
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

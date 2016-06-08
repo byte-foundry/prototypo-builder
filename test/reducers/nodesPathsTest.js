@@ -1,36 +1,36 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '../../src/reducers/nodes';
-import createCurve from '../../src/actions/paths/createCurve';
+// import createCurve from '../../src/actions/paths/createCurve';
 import addCurve from '../../src/actions/paths/addCurve';
 
 describe('reducer: nodes (curves)', () => {
-  it('should handle CREATE_CURVE action', () => {
-    const stateBefore = {};
-    const action = createCurve();
-    const stateAfter = {
-      [action.nodeIds[0]]: {
-        id: action.nodeIds[0],
-        type: 'offcurve',
-        childIds: []
-      },
-      [action.nodeIds[1]]: {
-        id: action.nodeIds[1],
-        type: 'offcurve',
-        childIds: []
-      },
-      [action.nodeIds[2]]: {
-        id: action.nodeIds[2],
-        type: 'oncurve',
-        childIds: []
-      }
-    };
-
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-
-    expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
-  });
+  // it('should handle CREATE_CURVE action', () => {
+  //   const stateBefore = {};
+  //   const action = createCurve();
+  //   const stateAfter = {
+  //     [action.nodeIds[0]]: {
+  //       id: action.nodeIds[0],
+  //       type: 'offcurve',
+  //       childIds: []
+  //     },
+  //     [action.nodeIds[1]]: {
+  //       id: action.nodeIds[1],
+  //       type: 'offcurve',
+  //       childIds: []
+  //     },
+  //     [action.nodeIds[2]]: {
+  //       id: action.nodeIds[2],
+  //       type: 'oncurve',
+  //       childIds: []
+  //     }
+  //   };
+  //
+  //   deepFreeze(stateBefore);
+  //   deepFreeze(action);
+  //
+  //   expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
+  // });
 
   it('should handle ADD_CURVE action', () => {
     const stateBefore = {

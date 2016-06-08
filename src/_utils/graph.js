@@ -10,7 +10,6 @@ export const getAllDescendants = memoize((nodes, parentId, descendants) => {
     return getAllDescendants(nodes, childId, descendants);
   }, descendants);
 });
-getAllDescendants.displayName = 'getAllDescendantsMemoized';
 
 export function getNodePath(nodes, nodeId, path = ['root'], length = 1) {
   for ( let childId of nodes[path[length - 1]].childIds ) {

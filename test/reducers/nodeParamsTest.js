@@ -4,45 +4,36 @@ import reducer from '../../src/reducers/nodes';
 import {
   addParam,
   deleteParam,
-  updateParam,
-  updateParamMeta
+  updateParam
+  // updateParamMeta
   // updateParamValue
 } from 'actions/all';
 
 describe('reducer: nodes (node params)', () => {
-  it('should handle ADD_PARAM action and ignore any updater', (done) => {
+  it('should handle ADD_PARAM action', (done) => {
     const stateBefore = {
       'node-0': {
-        id: 'node-0',
-        params: {},
-        paramsMeta: { _order: [] }
+        id: 'node-0'
       }
     };
-    const action1 = addParam('node-0', 'height', undefined, { a: 12 });
+    const action1 = addParam('node-0', 'height', { a: 12 });
     const stateAfter1 = {
       'node-0': {
         id: 'node-0',
         params: {
-          height: undefined
-        },
-        paramsMeta: {
-          _order: ['height'],
-          height: { a: 12 }
+          height: { a: 12 }
         }
       }
     };
-    const action2 = addParam('node-0', 'width', 56, { b: 34, updater: Math.cos });
+    const action2 = addParam('node-0', 'width', {
+      value: 56, b: 34, formula: '2 * 3'
+    });
     const stateAfter2 = {
       'node-0': {
         id: 'node-0',
         params: {
-          height: undefined,
-          width: 56
-        },
-        paramsMeta: {
-          _order: ['height', 'width'],
           height: { a: 12 },
-          width: { b: 34 }
+          width: { value: 56, b: 34, formula: '2 * 3' }
         }
       }
     };
@@ -65,13 +56,8 @@ describe('reducer: nodes (node params)', () => {
       'node-0': {
         id: 'node-0',
         params: {
-          height: undefined,
-          width: 56
-        },
-        paramsMeta: {
-          _order: ['height', 'width'],
           height: { a: 12 },
-          width: { b: 34 }
+          width: { value: 56, b: 34, formula: '2 * 3' }
         }
       }
     };
@@ -80,11 +66,7 @@ describe('reducer: nodes (node params)', () => {
       'node-0': {
         id: 'node-0',
         params: {
-          width: 56
-        },
-        paramsMeta: {
-          _order: ['width'],
-          width: { b: 34 }
+          width: { value: 56, b: 34, formula: '2 * 3' }
         }
       }
     };
@@ -102,27 +84,28 @@ describe('reducer: nodes (node params)', () => {
       'node-0': {
         id: 'node-0',
         params: {
-          width: 90
+          height: { a: 12 },
+          width: { value: 56, b: 34, formula: '2 * 3' }
         }
       }
     };
-    const action1 = updateParam('node-0', 'height', 12);
+    const action1 = updateParam('node-0', 'height', { value: 78 });
     const stateAfter1 = {
       'node-0': {
         id: 'node-0',
         params: {
-          width: 90,
-          height: 12
+          height: { a: 12, value: 78 },
+          width: { value: 56, b: 34, formula: '2 * 3' }
         }
       }
     };
-    const action2 = updateParam('node-0', 'width', 34);
+    const action2 = updateParam('node-0', 'width', { value: 90 });
     const stateAfter2 = {
       'node-0': {
         id: 'node-0',
         params: {
-          width: 34,
-          height: 12
+          height: { a: 12, value: 78 },
+          width: { value: 90, b: 34, formula: '2 * 3' }
         }
       }
     };
@@ -140,44 +123,44 @@ describe('reducer: nodes (node params)', () => {
     done();
   });
 
-  it('should handle UPDATE_PARAM_META action and ignore any updater', (done) => {
-    const stateBefore = {
-      'node-0': {
-        id: 'node-0',
-        params: {
-          height: 78,
-          width: 56
-        },
-        paramsMeta: {
-          _order: ['height', 'width'],
-          height: { a: 12 },
-          width: { b: 34 }
-        }
-      }
-    };
-    const action = updateParamMeta('node-0', 'height', { min: 90, updater: Math.min });
-    const stateAfter = {
-      'node-0': {
-        id: 'node-0',
-        params: {
-          height: 78,
-          width: 56
-        },
-        paramsMeta: {
-          _order: ['height', 'width'],
-          height: { a: 12, min: 90 },
-          width: { b: 34 }
-        }
-      }
-    };
-
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-
-    expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
-
-    done();
-  });
+  // it('should handle UPDATE_PARAM_META action and ignore any updater', (done) => {
+  //   const stateBefore = {
+  //     'node-0': {
+  //       id: 'node-0',
+  //       params: {
+  //         height: 78,
+  //         width: 56
+  //       },
+  //       paramsMeta: {
+  //         _order: ['height', 'width'],
+  //         height: { a: 12 },
+  //         width: { b: 34 }
+  //       }
+  //     }
+  //   };
+  //   const action = updateParamMeta('node-0', 'height', { min: 90, updater: Math.min });
+  //   const stateAfter = {
+  //     'node-0': {
+  //       id: 'node-0',
+  //       params: {
+  //         height: 78,
+  //         width: 56
+  //       },
+  //       paramsMeta: {
+  //         _order: ['height', 'width'],
+  //         height: { a: 12, min: 90 },
+  //         width: { b: 34 }
+  //       }
+  //     }
+  //   };
+  //
+  //   deepFreeze(stateBefore);
+  //   deepFreeze(action);
+  //
+  //   expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
+  //
+  //   done();
+  // });
 
   // it('should handle UPDATE_PARAM_VALUE action', (done) => {
   //   const stateBefore = {
