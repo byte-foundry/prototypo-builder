@@ -1,19 +1,16 @@
-require('../../styles/ui/toolbar.scss');
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import {
-  setMouseState,
-  setPathSelected,
-  setNodeSelected
-} from './../../actions/all';
+import actions from './../../actions';
 
 import {
   SELECTION_MODE,
   NO_PATH_SELECTED
 } from '../../actions/const';
+
+require('../../styles/ui/toolbar.scss');
 
 class UiToolbar extends Component {
   setSelectMode() {
@@ -28,7 +25,11 @@ class UiToolbar extends Component {
   }
 
   saveNodes() {
-    const json = JSON.stringify({nodes: this.props.nodes, updaters: this.props.updaters});
+    const json = JSON.stringify({
+      nodes: this.props.nodes,
+      formulas: this.props.formulas
+    });
+
     const blob = new Blob([json], {type: 'octet/stream'});
     const url = window.URL.createObjectURL(blob);
 
@@ -72,11 +73,6 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const actions = {
-    setMouseState,
-    setPathSelected,
-    setNodeSelected
-  };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
 }
