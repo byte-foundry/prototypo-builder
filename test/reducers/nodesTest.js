@@ -1,12 +1,13 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/nodes';
-import {
+import reducer from '~/reducers/nodes';
+import actions from '~/actions';
+const {
   createNode,
   deleteNode,
   addChild,
   removeChild
-} from 'actions/all';
+} = actions;
 
 describe('reducer: nodes', () => {
 

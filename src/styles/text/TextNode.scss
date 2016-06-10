@@ -29,19 +29,23 @@
   }
 
   &__property-formula--invalid {
-    box-shadow: 0 0 2px red;
+    box-shadow: 0 0 4px red;
   }
 
   &__property-formula--invalid:focus {
     outline: 0;
-    box-shadow: 0 0 4px red;
+    box-shadow: 0 0 6px red;
   }
 
   &__property-input {
     border-width: 0;
   }
 
-  &__property-value {
-    width:70px;
+  &__property-value--text {
+    width: 5rem;
+  }
+
+  &__property-result--text {
+    width: 5rem;
   }
 }

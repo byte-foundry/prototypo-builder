@@ -1,13 +1,14 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/nodes';
-import {
+import reducer from '~/reducers/nodes';
+import actions from '~/actions';
+const {
   addParam,
   deleteParam,
   updateParam
   // updateParamMeta
   // updateParamValue
-} from 'actions/all';
+} = actions;
 
 describe('reducer: nodes (node params)', () => {
   it('should handle ADD_PARAM action', (done) => {

@@ -1,14 +1,15 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/nodes';
-import {
+import reducer from '~/reducers/nodes';
+import actions from '~/actions';
+const {
   updateProp,
   // updateProps,
   // updatePropMeta,
   // updatePropValue,
   // updatePropsValues,
   updateCoords
-} from 'actions/all';
+} = actions;
 
 describe('reducer: nodes (node props)', () => {
   it('should handle UPDATE_PROP action', (done) => {

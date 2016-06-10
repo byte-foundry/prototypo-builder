@@ -1,18 +1,19 @@
 import deepFreeze from 'deep-freeze';
 
-import {
+import actions from '~/actions';
+const {
   updateProp,
   addChild,
   addChildren,
   addParam
-} from '../../src/actions/all';
+} = actions;
 
 import {
   validateUpdateProps,
   validateAddChildren,
   validateGraph,
   validateAddParam
-} from '../../src/reducers/_nodesValidateActions';
+} from '~/reducers/_nodesValidateActions';
 
 describe('reducers/_nodesValidateAction', () => {
   describe('validateUpdateProps', () => {

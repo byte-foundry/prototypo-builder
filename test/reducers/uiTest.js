@@ -1,4 +1,4 @@
-var reducer = require('../../src/reducers/ui');
+import reducer from '~/reducers/ui';
 
 describe('ui', () => {
 

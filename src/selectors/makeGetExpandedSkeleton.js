@@ -11,7 +11,7 @@ import {
   addCurve,
   addOncurve,
   updateCoords
-} from './../actions/all';
+} from '~/actions';
 const actionCreators = {
   createPath,
   createCurve,

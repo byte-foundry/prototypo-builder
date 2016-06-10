@@ -12,8 +12,28 @@ const typeMap = {
 }
 
 class NodePropertyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleFormulaChange = this.handleFormulaChange.bind(this);
+    this.handleFormulaKeydown = this.handleFormulaKeydown.bind(this);
+    this.handleClearClick = this.handleClearClick.bind(this);
+  }
+
+  handleFormulaChange(e) {
+
+  }
+
+  handleFormulaKeydown(e) {
+
+  }
+
+  handleClearClick(e) {
+    
+  }
+
   render() {
-    const { name, value, type, disabled, formula, isInvalid } = this.props;
+    const { name, type, value, formula, result } = this.props;
     const inputType = typeMap[type];
     const checked = type === 'boolean' && value === true;
     const formulaClass = classNames({
@@ -46,9 +66,5 @@ class NodePropertyComponent extends React.Component {
 }
 
 NodePropertyComponent.displayName = 'NodePropertyComponent';
-
-// Uncomment properties you need
-// NodePropertyComponent.propTypes = {};
-// NodePropertyComponent.defaultProps = {};
 
 export default NodePropertyComponent;

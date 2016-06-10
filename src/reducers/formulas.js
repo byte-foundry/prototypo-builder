@@ -10,7 +10,10 @@ import {
 module.exports = function(state = initialState, action) {
   switch(action.type) {
     case UPDATE_FORMULA:
-      return {
+      return action.formula.trim() === '' ? {
+        ...state,
+        [action.glyphId]: R.dissoc(action.propPath, state[action.glyphId])
+      }: {
         ...state,
         [action.glyphId]: {
           ...state[action.glyphId],

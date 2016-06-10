@@ -1,10 +1,11 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/formulas';
-import {
+import reducer from '~/reducers/formulas';
+import actions from '~/actions';
+const {
   updateFormula,
   deleteFormula
-} from 'actions/all';
+} = actions;
 
 describe('reducer: formulas', () => {
   it('should handle UPDATE_FORMULA action', (done) => {
@@ -34,6 +35,15 @@ describe('reducer: formulas', () => {
         'node_2.expand': '$thickness'
       }
     };
+    const action4 = updateFormula('glyph_0', 'node_1.x', '');
+    const stateAfter4 = {
+      'glyph_0': {
+        'node_1.y': '56'
+      },
+      'glyph_1': {
+        'node_2.expand': '$thickness'
+      }
+    };
 
     deepFreeze(stateBefore);
     deepFreeze(action1);
@@ -49,6 +59,11 @@ describe('reducer: formulas', () => {
     deepFreeze(action3);
 
     expect(reducer(stateAfter2, action3)).to.deep.equal(stateAfter3);
+
+    deepFreeze(stateAfter3);
+    deepFreeze(action4);
+
+    expect(reducer(stateAfter3, action4)).to.deep.equal(stateAfter4);
 
     done();
   });

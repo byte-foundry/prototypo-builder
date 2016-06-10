@@ -1,8 +1,11 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/nodes';
+import reducer from '~/reducers/nodes';
 // import createCurve from '../../src/actions/paths/createCurve';
-import addCurve from '../../src/actions/paths/addCurve';
+import actions from '~/actions';
+const {
+  addCurve
+} = actions;
 
 describe('reducer: nodes (curves)', () => {
   // it('should handle CREATE_CURVE action', () => {

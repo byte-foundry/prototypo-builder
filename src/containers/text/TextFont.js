@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import {
-  parseFormula,
+  getUpdater,
   getCalculatedParams
-} from './../_utils';
+} from '~/containers/_utils';
 
 import {
   renderTextChild,
@@ -17,7 +17,7 @@ import Foldable from './Foldable';
 
 require('styles/text/TextProplist.scss');
 
-import NodeProperty from 'components/text/NodePropertyComponent';
+import NodeProperty from './NodeProperty';
 
 class TextFont extends Component {
   constructor(props) {
@@ -55,7 +55,7 @@ class TextFont extends Component {
 
     const { id } = this.props;
     const { addParam } = this.props.actions;
-    const formula = parseFormula( this.refs.formulaValue.value );
+    const formula = getUpdater( this.refs.formulaValue.value );
 
     if ( !formula.updater ) {
       return this.refs.formulaValue.pattern = '^$';
@@ -100,7 +100,7 @@ class TextFont extends Component {
       return;
     }
 
-    updateParamMeta(id, name, parseFormula(e.target.value));
+    updateParamMeta(id, name, getUpdater(e.target.value));
   }
 
   renderParamSlider(name) {
@@ -112,8 +112,17 @@ class TextFont extends Component {
     return (
       <label>
         {name}:
-        <input type="range" value={value} name={name} min={min} max={max} step={step} onChange={this.handleParamChange} />
-        <input type="number" value={value} name={name} onChange={this.handleParamChange} />
+        <input
+          type="range"
+          value={value}
+          name={name}
+          min={min} max={max} step={step}
+          onChange={this.handleParamChange} />
+        <input
+          type="number"
+          value={value}
+          name={name}
+          onChange={this.handleParamChange} />
       </label>
     );
   }
