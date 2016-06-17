@@ -93,7 +93,7 @@ export function getSvgCoordsFromClientCoords( clientCoord, elem ) {
 }
 
 
-//A lot of the from here is from pomax bezier.js library except it is not using
+//A lot of the code here is from pomax bezier.js library except it is not using
 //retention. And so doesn't need the creation of bezier object.
 //The license of bezier.js is MIT and so is this
 

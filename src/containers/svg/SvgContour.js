@@ -10,12 +10,10 @@ import {
   getParentGlyphId
 } from '~/_utils/graph';
 
-// import SvgExpandedSkeleton from './SvgExpandedSkeleton';
-
 import {
   getCalculatedParams,
   getCalculatedGlyph
-} from './../_utils';
+} from '~/containers/_utils';
 
 import {
   renderPathData,

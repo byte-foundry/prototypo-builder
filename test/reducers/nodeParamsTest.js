@@ -6,8 +6,6 @@ const {
   addParam,
   deleteParam,
   updateParam
-  // updateParamMeta
-  // updateParamValue
 } = actions;
 
 describe('reducer: nodes (node params)', () => {
@@ -123,78 +121,4 @@ describe('reducer: nodes (node params)', () => {
 
     done();
   });
-
-  // it('should handle UPDATE_PARAM_META action and ignore any updater', (done) => {
-  //   const stateBefore = {
-  //     'node-0': {
-  //       id: 'node-0',
-  //       params: {
-  //         height: 78,
-  //         width: 56
-  //       },
-  //       paramsMeta: {
-  //         _order: ['height', 'width'],
-  //         height: { a: 12 },
-  //         width: { b: 34 }
-  //       }
-  //     }
-  //   };
-  //   const action = updateParamMeta('node-0', 'height', { min: 90, updater: Math.min });
-  //   const stateAfter = {
-  //     'node-0': {
-  //       id: 'node-0',
-  //       params: {
-  //         height: 78,
-  //         width: 56
-  //       },
-  //       paramsMeta: {
-  //         _order: ['height', 'width'],
-  //         height: { a: 12, min: 90 },
-  //         width: { b: 34 }
-  //       }
-  //     }
-  //   };
-  //
-  //   deepFreeze(stateBefore);
-  //   deepFreeze(action);
-  //
-  //   expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
-  //
-  //   done();
-  // });
-
-  // it('should handle UPDATE_PARAM_VALUE action', (done) => {
-  //   const stateBefore = {
-  //     'node-0': {
-  //       id: 'node-0',
-  //       params: [{
-  //         name: 'height',
-  //         value: 12
-  //       }, {
-  //         name: 'width',
-  //         value: 34
-  //       }]
-  //     }
-  //   };
-  //   const action = updateParamValue('node-0', 'height', 56);
-  //   const stateAfter = {
-  //     'node-0': {
-  //       id: 'node-0',
-  //       params: [{
-  //         name: 'height',
-  //         value: 56
-  //       }, {
-  //         name: 'width',
-  //         value: 34
-  //       }]
-  //     }
-  //   };
-  //
-  //   deepFreeze(stateBefore);
-  //   deepFreeze(action);
-  //
-  //   expect(reducer(stateBefore, action)).to.deep.equal(stateAfter);
-  //
-  //   done();
-  // });
 });

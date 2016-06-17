@@ -133,9 +133,8 @@ export const getCalculatedGlyph = memoize((state, parentParams, glyphId) => {
         )
       );
     } catch(e) {
-      /* eslint-disable no-console */
-      console.error(`Calculating prop '${path[1]}' of node '${path[0]}' errored`, e);
-      /* eslint-enable no-console */
+      calculatedGlyph[path[0]][path[1]] =
+        new Error(`Calculating prop '${path[1]}' of node '${path[0]}' errored`);
     }
 
   });

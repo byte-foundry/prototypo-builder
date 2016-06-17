@@ -5,13 +5,13 @@ import classnames from 'classnames';
 import {
   ONCURVE_SMOOTH,
   SELECTION_MODE
-} from '../../actions/const';
+} from '~/_utils/const';
 
 import {
   getNode,
   getPreviousNode,
   getNextNode
-} from '../../_utils/path';
+} from '~/_utils/path';
 
 import {
   mapDispatchToProps,

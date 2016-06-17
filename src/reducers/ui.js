@@ -14,11 +14,7 @@ import {
   UPDATE_TMP_FORMULA,
   DELETE_TMP_FORMULA
 } from '../actions/const';
-/* Define your initial state here.
- *
- * If you change the type from object to something else, do not forget to update
- * src/container/App.js accordingly.
- */
+
 const initialState = {
   uiState: NO_PATH_SELECTED,
   selected: {},

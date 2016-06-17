@@ -12,7 +12,7 @@ import {
 import {
   getCalculatedParams,
   getCalculatedGlyph
-} from './../_utils';
+} from '~/containers/_utils';
 
 import {
   mapDispatchToProps,
@@ -32,7 +32,7 @@ import {
   ONCURVE_CORNER,
   ONCURVE_SMOOTH,
   SELECTION_MODE
-} from '../../actions/const';
+} from '~/_utils/const';
 
 class SvgContainer extends Component {
   constructor(props) {

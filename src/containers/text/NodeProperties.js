@@ -16,34 +16,6 @@ import {
 import NodeProperty from '~/components/text/NodePropertyComponent';
 
 class NodeProperties extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.handleUpdate = this.handleUpdate.bind(this);
-  // }
-  //
-  // handleUpdate(e) {
-  //   const { updateProp, updatePropMeta } = this.props.actions;
-  //   const { id, type } = this.props;
-  //   const { name } = e.target;
-  //   const propType = fontModel[type].properties[name];
-  //
-  //   // This handler is used for both 'input' and 'change event' but we
-  //   // want to filter out 'change' events for anything but boolean properties
-  //   if ( e.type === 'change' && propType !== 'boolean' ) {
-  //     return;
-  //   }
-  //
-  //   if ( propType === 'boolean' ) {
-  //     return updateProp(id, name, e.target.checked);
-  //   }
-  //
-  //   if ( /^[\d\.]+$/.test(e.target.value) ) {
-  //     updatePropMeta(id, name, { formula: e.target.value, isInvalid: true });
-  //     return updateProp(id, name, +e.target.value);
-  //   }
-  //   return updatePropMeta(id, name, parseFormula(e.target.value));
-  // }
-
   render() {
     const { glyphId, node, calculatedNode, formulas, tmpFormula, actions } = this.props;
     const { updateProp, updateFormula, updateTmpFormula, deleteTmpFormula } = actions;

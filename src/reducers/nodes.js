@@ -2,7 +2,7 @@ const config = require('config').default;
 
 import R from 'ramda';
 
-import logError from './../_utils/logError';
+import logError from '~/_utils/logError';
 
 import {
   ADD_CHILD,
@@ -16,7 +16,6 @@ import {
   ADD_PARAM,
   ADD_PATH,
   CREATE_CONTOUR,
-  // CREATE_CURVE,
   CREATE_FONT,
   CREATE_GLYPH,
   CREATE_NODE,
@@ -27,28 +26,16 @@ import {
   DELETE_PARAM,
   MOVE_NODE,
   REMOVE_CHILD,
-  // SET_COORDS,
-  // SET_MOUSE_STATE,
-  // SET_NODE_HOVERED,
-  // SET_NODE_SELECTED,
-  // SET_PATH_HOVERED,
-  // SET_PATH_SELECTED,
   UPDATE_COORDS,
-  // UPDATE_FORMULA,
   UPDATE_PARAM,
-  // UPDATE_PARAM_META,
-  // UPDATE_PARAM_META,
-  // UPDATE_PARAM_VALUE,
   UPDATE_PROP,
-  // UPDATE_PROP_META,
-  // UPDATE_PROP_VALUE,
-  // UPDATE_PROPS,
-  // UPDATE_PROPS_VALUES,
   UPDATE_X,
-  UPDATE_Y,
+  UPDATE_Y
+} from '~/actions/const';
 
+import {
   ONCURVE_SMOOTH
-} from './../actions/const';
+} from '~/_utils/const';
 
 import {
   validateAddChildren,
@@ -145,14 +132,7 @@ function node(state = initialNode, action) {
         params: {
           ...state.params,
           [action.name]: action.props
-        }//,
-        // paramsMeta: {
-        //   ...state.paramsMeta,
-        //   _order: [ ...state.paramsMeta._order, action.name ],
-        //   // We remove the updater function from state.nodes, but note that
-        //   // .params and .refs are duplicated in state.updaters
-        //   [action.name]: R.dissoc('updater', action.meta)
-        // }
+        }
       };
     case DELETE_PARAM:
       return {
@@ -170,19 +150,6 @@ function node(state = initialNode, action) {
           }
         }
       };
-    // case UPDATE_PARAM_META:
-    //   return {
-    //     ...state,
-    //     paramsMeta: {
-    //       ...state.paramsMeta,
-    //       [action.name]: {
-    //         ...state.paramsMeta[action.name],
-    //         // We remove the updater function from state.nodes, but note that
-    //         // .params and .refs are duplicated in state.updaters
-    //         ...R.dissoc('updater', action.meta)
-    //       }
-    //     }
-    //   };
 
     case UPDATE_X:
       return { ...state, x: action.value };
@@ -192,26 +159,6 @@ function node(state = initialNode, action) {
       return { ...state, x: action.coords.x, y: action.coords.y };
     case UPDATE_PROP:
       return { ...state, [action.propNames[0]]: action.value };
-    // case UPDATE_PROPS:
-    //   return { ...state, ...action.props };
-    // case UPDATE_PROP_META:
-    //   return {
-    //     ...state,
-    //     [action.propNames[0] + 'Meta']: {
-    //       _for: action.propNames[0],
-    //       ...state[action.propNames[0] + 'Meta'],
-    //       // We remove the updater function from state.nodes, but note that
-    //       // .params and .refs are duplicated in state.updaters
-    //       ...R.dissoc('updater', action.meta)
-    //     }
-    //   };
-    // case UPDATE_PROP_VALUE:
-    //   return R.mergeWith(R.merge, state, { [action.propNames[0]]: { value: action.value } });
-    // case UPDATE_PROPS_VALUES:
-    //   return R.mergeWith(R.merge,
-    //     state,
-    //     R.mapObjIndexed((value) => { return {value}; }, action.values)
-    //   );
     default:
       return state;
   }
@@ -276,16 +223,7 @@ export default function(state = initialState, action) {
       const descendantIds = Object.keys(getAllDescendants(state, nodeId));
       return deleteMany(state, [ nodeId, ...descendantIds ]);
 
-    // case CREATE_CURVE:
-    //   const nodes = {};
-    //   nodeIds.forEach((nodeId, i) => {
-    //     nodes[nodeId] = createNode({
-    //       nodeId,
-    //       nodeType: i === 2 ? 'oncurve' : 'offcurve'
-    //     });
-    //   });
-    //   return R.merge(state, nodes);
-
+    // TODO: rename, cleanup and test this reducer (and move it elsewhere probably)
     case MOVE_NODE:
       const path = state[nodeId];
       const type = path.type;

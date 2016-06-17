@@ -48,25 +48,6 @@ export const getNodePath = memoize((nodes, nodeId) => {
   return path;
 });
 
-// // a special kind of memoization that checks that the result of the function
-// // still holds true
-// const _pathCache = {};
-// export const getNodePathMemoized = (nodes, nodeId, pathCache = _pathCache) => {
-//   let cachedPath = pathCache[nodeId];
-//   // check if the cached path is still valid
-//   if ( cachedPath && !cachedPath.every((nodeId, i) => {
-//     return nodes[nodeId].childIds.includes(pathCache[i+1] || nodeId)
-//   }) ) {
-//     cachedPath = false;
-//   }
-//
-//   if ( !cachedPath ) {
-//     cachedPath = pathCache[nodeId] = getNodePath(nodes, nodeId);
-//   }
-//
-//   return cachedPath;
-// };
-
 export const getParentGlyphId = memoize((nodes, nodeId) => {
   let currId = nodeId;
 

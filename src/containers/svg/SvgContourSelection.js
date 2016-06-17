@@ -4,7 +4,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { forEachNode } from '../../_utils/path';
 import SvgSelector from './SvgSelector';
-import {PATH_SELECTED, SELECTION_MODE} from '../../actions/const';
+
+import {
+  PATH_SELECTED,
+  SELECTION_MODE
+} from '~/_utils/const';
 
 import {
   getParentGlyphId
@@ -13,7 +17,7 @@ import {
 import {
   getCalculatedParams,
   getCalculatedGlyph
-} from './../_utils';
+} from '~/containers/_utils';
 
 import {
   mapDispatchToProps,

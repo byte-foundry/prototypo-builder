@@ -8,7 +8,7 @@ import actions from '~/actions';
 import {
   SELECTION_MODE,
   NO_PATH_SELECTED
-} from '~/actions/const';
+} from '~/_utils/const';
 
 require('styles/ui/toolbar.scss');
 

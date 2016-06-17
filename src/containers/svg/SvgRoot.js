@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import {
   renderSvgChild,
-  // renderSelectedChild,
   mapStateToProps,
   mapDispatchToProps
 } from './_utils';
@@ -12,7 +11,6 @@ class SvgRoot extends Component {
   constructor(props) {
     super(props);
     this.renderSvgChild = renderSvgChild.bind(this);
-    // this.renderSelectedChild = renderSelectedChild.bind(this);
   }
 
   render() {
