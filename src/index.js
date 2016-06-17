@@ -40,7 +40,7 @@ const store = configureStore({
       contour: 'contour_initial'
     }
   },
-  updaters: {}
+  formulas: {}
 });
 
 render(

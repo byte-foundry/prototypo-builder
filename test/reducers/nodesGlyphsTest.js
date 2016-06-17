@@ -1,8 +1,11 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/nodes';
-import createGlyph from '../../src/actions/glyphs/createGlyph';
-import addGlyph from '../../src/actions/glyphs/addGlyph';
+import reducer from '~/reducers/nodes';
+import actions from '~/actions';
+const {
+  createGlyph,
+  addGlyph
+} = actions;
 
 describe('reducer: nodes (glyphs)', () => {
   it('should handle CREATE_GLYPH action', () => {

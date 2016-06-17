@@ -4,14 +4,6 @@ body {
   background: #222;*/
 }
 
-input:invalid {
-  box-shadow: 0 0 4px red;
-}
-
-input[type="number"] {
-  width: 7rem;
-}
-
 .index img {
   margin: 40px auto;
   border-radius: 4px;
@@ -28,20 +20,6 @@ input[type="number"] {
   background: #666;
 }
 
-button, input, optgroup, select, textarea {
-  color: #29d390;
-  background: white;
-  outline: none;
-  border: solid 1px #29d390;
-  border-radius: 3px;
-  margin: 3px;
-}
-
-input[type=button]:hover, button:hover {
-  background: #29d390;
-  color: #fefefe;
-}
-
 .left-panel {
   background: #3a3a3a;
   color: #fefefe;
@@ -55,4 +33,41 @@ input[type=button]:hover, button:hover {
   -moz-user-select: none;      /* Firefox */
   -ms-user-select: none;       /* Internet Explorer/Edge */
   user-select: none;
+}
+
+/* INPUT GENERIC STYLES */
+
+input,
+textarea {
+  color: #29d390;
+  background: white;
+  outline: none;
+  border: 0 solid #444;
+  border-radius: 0;
+  border-bottom: 1px;
+  margin: 3px;
+}
+
+input[type=button],
+button {
+  background: #29d390;
+  color: #fefefe;
+}
+
+input[type=button]:hover, button:hover {
+  border: solid 1px #fefefe;
+}
+
+input:invalid {
+  box-shadow: 0 0 4px red;
+}
+
+/*input:active,
+input.isActive {
+  border: solid 1px #29d390;
+  border-radius: 3px;
+}*/
+
+input[type="number"] {
+  width: 7rem;
 }

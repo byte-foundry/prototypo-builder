@@ -1,8 +1,11 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/nodes';
-import createContour from '../../src/actions/contours/createContour';
-import addContour from '../../src/actions/contours/addContour';
+import reducer from '~/reducers/nodes';
+import actions from '~/actions';
+const {
+  createContour,
+  addContour
+} = actions;
 
 describe('reducer: nodes (contours)', () => {
   it('should handle CREATE_CONTOUR action', () => {

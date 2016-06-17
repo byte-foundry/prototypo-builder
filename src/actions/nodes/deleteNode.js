@@ -1,5 +1,13 @@
-import {DELETE_NODE} from './../const';
+import { BATCH_ACTIONS } from '~/actions/const';
+import { _deleteNode, deleteFormula } from '~/actions/';
+
 
 module.exports = function(nodeId) {
-  return { type: DELETE_NODE, nodeId };
+  return {
+    type: BATCH_ACTIONS,
+    actions: [
+      _deleteNode(nodeId),
+      deleteFormula(nodeId)
+    ]
+  };
 };

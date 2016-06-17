@@ -16,7 +16,7 @@ import {
   ADD_PARAM,
   ADD_PATH,
   CREATE_CONTOUR,
-  CREATE_CURVE,
+  // CREATE_CURVE,
   CREATE_FONT,
   CREATE_GLYPH,
   CREATE_NODE,
@@ -34,13 +34,15 @@ import {
   // SET_PATH_HOVERED,
   // SET_PATH_SELECTED,
   UPDATE_COORDS,
+  // UPDATE_FORMULA,
   UPDATE_PARAM,
-  UPDATE_PARAM_META,
+  // UPDATE_PARAM_META,
+  // UPDATE_PARAM_META,
   // UPDATE_PARAM_VALUE,
   UPDATE_PROP,
-  UPDATE_PROP_META,
+  // UPDATE_PROP_META,
   // UPDATE_PROP_VALUE,
-  UPDATE_PROPS,
+  // UPDATE_PROPS,
   // UPDATE_PROPS_VALUES,
   UPDATE_X,
   UPDATE_Y,
@@ -142,40 +144,45 @@ function node(state = initialNode, action) {
         ...state,
         params: {
           ...state.params,
-          [action.name]: action.value
-        },
-        paramsMeta: {
-          ...state.paramsMeta,
-          _order: [ ...state.paramsMeta._order, action.name ],
-          // We remove the updater function from state.nodes, but note that
-          // .params and .refs are duplicated in state.updaters
-          [action.name]: R.dissoc('updater', action.meta)
-        }
+          [action.name]: action.props
+        }//,
+        // paramsMeta: {
+        //   ...state.paramsMeta,
+        //   _order: [ ...state.paramsMeta._order, action.name ],
+        //   // We remove the updater function from state.nodes, but note that
+        //   // .params and .refs are duplicated in state.updaters
+        //   [action.name]: R.dissoc('updater', action.meta)
+        // }
       };
     case DELETE_PARAM:
       return {
         ...state,
-        params: R.dissoc(action.name, state.params),
-        paramsMeta: {
-          ...R.dissoc(action.name, state.paramsMeta),
-          _order: state.paramsMeta._order.filter((paramName) => paramName !== action.name)
-        }
+        params: R.dissoc(action.name, state.params)
       }
     case UPDATE_PARAM:
-      return { ...state, params: { ...state.params, [action.name]: action.value } };
-    case UPDATE_PARAM_META:
       return {
         ...state,
-        paramsMeta: {
-          ...state.paramsMeta,
+        params: {
+          ...state.params,
           [action.name]: {
-            ...state.paramsMeta[action.name],
-            // We remove the updater function from state.nodes, but note that
-            // .params and .refs are duplicated in state.updaters
-            ...R.dissoc('updater', action.meta)
+            ...state.params[action.name],
+            ...action.props
           }
         }
       };
+    // case UPDATE_PARAM_META:
+    //   return {
+    //     ...state,
+    //     paramsMeta: {
+    //       ...state.paramsMeta,
+    //       [action.name]: {
+    //         ...state.paramsMeta[action.name],
+    //         // We remove the updater function from state.nodes, but note that
+    //         // .params and .refs are duplicated in state.updaters
+    //         ...R.dissoc('updater', action.meta)
+    //       }
+    //     }
+    //   };
 
     case UPDATE_X:
       return { ...state, x: action.value };
@@ -185,19 +192,19 @@ function node(state = initialNode, action) {
       return { ...state, x: action.coords.x, y: action.coords.y };
     case UPDATE_PROP:
       return { ...state, [action.propNames[0]]: action.value };
-    case UPDATE_PROPS:
-      return { ...state, ...action.props };
-    case UPDATE_PROP_META:
-      return {
-        ...state,
-        [action.propNames[0] + 'Meta']: {
-          _for: action.propNames[0],
-          ...state[action.propNames[0] + 'Meta'],
-          // We remove the updater function from state.nodes, but note that
-          // .params and .refs are duplicated in state.updaters
-          ...R.dissoc('updater', action.meta)
-        }
-      };
+    // case UPDATE_PROPS:
+    //   return { ...state, ...action.props };
+    // case UPDATE_PROP_META:
+    //   return {
+    //     ...state,
+    //     [action.propNames[0] + 'Meta']: {
+    //       _for: action.propNames[0],
+    //       ...state[action.propNames[0] + 'Meta'],
+    //       // We remove the updater function from state.nodes, but note that
+    //       // .params and .refs are duplicated in state.updaters
+    //       ...R.dissoc('updater', action.meta)
+    //     }
+    //   };
     // case UPDATE_PROP_VALUE:
     //   return R.mergeWith(R.merge, state, { [action.propNames[0]]: { value: action.value } });
     // case UPDATE_PROPS_VALUES:
@@ -234,11 +241,15 @@ function deepPositionUpdate(node, nodes, x=0, y=0, result) {
 }
 
 export default function(state = initialState, action) {
-  const { type, nodeId, parentId, nodeIds } = action;
+  const { type, nodeId, parentId } = action;
 
+  // filter-out actions that won't impact that part of the state
+  // TODO: we shouldn't need to filter out actions here. This is what the
+  // 'default' part of every switch is for.
   if (
-    typeof type === 'undefined' ||
-    ( typeof nodeId === 'undefined' && typeof nodeIds === 'undefined' )
+    // propPath is always present in formulas actions
+    'propPath' in action ||
+    typeof nodeId === 'undefined'
   ) {
     return state;
   }
@@ -265,15 +276,15 @@ export default function(state = initialState, action) {
       const descendantIds = Object.keys(getAllDescendants(state, nodeId));
       return deleteMany(state, [ nodeId, ...descendantIds ]);
 
-    case CREATE_CURVE:
-      const nodes = {};
-      nodeIds.forEach((nodeId, i) => {
-        nodes[nodeId] = createNode({
-          nodeId,
-          nodeType: i === 2 ? 'oncurve' : 'offcurve'
-        });
-      });
-      return R.merge(state, nodes);
+    // case CREATE_CURVE:
+    //   const nodes = {};
+    //   nodeIds.forEach((nodeId, i) => {
+    //     nodes[nodeId] = createNode({
+    //       nodeId,
+    //       nodeType: i === 2 ? 'oncurve' : 'offcurve'
+    //     });
+    //   });
+    //   return R.merge(state, nodes);
 
     case MOVE_NODE:
       const path = state[nodeId];
@@ -298,7 +309,7 @@ export default function(state = initialState, action) {
           resultNode[nextIn.id] = { ...nextIn, _isGhost: false};
         }
 
-        const [prevOn, prevIn , prevOut] = getPreviousNode(parentId, nodeId, state);
+        const [prevOn, prevIn, prevOut] = getPreviousNode(parentId, nodeId, state);
         if (prevOut) {
           resultNode[prevOut.id] = { ...prevOut, _isGhost: false};
         }

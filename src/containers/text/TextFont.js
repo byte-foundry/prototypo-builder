@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import {
-  parseFormula,
+  getUpdater,
   getCalculatedParams
-} from './../_utils';
+} from '~/containers/_utils';
 
 import {
   renderTextChild,
@@ -17,7 +17,7 @@ import Foldable from './Foldable';
 
 require('styles/text/TextProplist.scss');
 
-import NodeProperty from 'components/text/NodePropertyComponent';
+import NodeProperty from '~/components/text/NodePropertyComponent';
 
 class TextFont extends Component {
   constructor(props) {
@@ -36,10 +36,11 @@ class TextFont extends Component {
   handleAddParamClick(e) {
     e.preventDefault();
 
-    const { id } = this.props;
+    const { id } = this.props.node;
     const { addParam } = this.props.actions;
 
-    addParam(id, this.refs.paramName.value, +this.refs.paramValue.value, {
+    addParam(id, this.refs.paramName.value, {
+      value: +this.refs.paramValue.value,
       min: +this.refs.paramMin.value,
       max: +this.refs.paramMax.value
     });
@@ -50,22 +51,29 @@ class TextFont extends Component {
     });
   }
 
+  handleFormulaChange() {
+    const { formulaValue } = this.refs;
+    const updater = getUpdater(formulaValue.value);
+
+    formulaValue.className = updater.isInvalid ?
+      'text-node__param-formula--invalid':
+      '';
+  }
+
   handleAddFormulaClick(e) {
     e.preventDefault();
 
-    const { id } = this.props;
+    const { id } = this.props.node;
     const { addParam } = this.props.actions;
-    const formula = parseFormula( this.refs.formulaValue.value );
+    const updater = getUpdater( this.refs.formulaValue.value );
 
-    if ( !formula.updater ) {
-      return this.refs.formulaValue.pattern = '^$';
+    if ( updater.isInvalid ) {
+      return;
     }
 
-    this.refs.formulaValue.pattern = null;
-    // TODO: this 0 value by default is wrong. Ideally we should try to run the
-    // updater once. That would allow detecting problematic formulas at the same
-    // time
-    addParam(id, this.refs.formulaName.value, 0, formula);
+    addParam(id, this.refs.formulaName.value, {
+      formula: this.refs.formulaValue.value
+    });
 
     this.refs.formulaName.value = '$';
     this.refs.formulaValue.value = '';
@@ -74,67 +82,73 @@ class TextFont extends Component {
   handleParamChange(e) {
     e.preventDefault();
 
-    const { id } = this.props;
+    const { id } = this.props.node;
     const { updateParam } = this.props.actions;
 
-    updateParam(id, e.target.name, +e.target.value);
+    updateParam(id, e.target.name, { value: +e.target.value });
   }
 
   handleDeleteParamClick(e) {
     e.preventDefault();
 
-    const { id } = this.props;
+    const { id } = this.props.node;
     const { deleteParam } = this.props.actions;
 
     deleteParam(id, e.target.name);
   }
 
-  handleFormulaChange(e) {
-    e.preventDefault();
-
-    const { id, paramsMeta } = this.props;
-    const { updateParamMeta } = this.props.actions;
-    const { name } = e.target;
-
-    if ( !(name in paramsMeta) || !('formula' in paramsMeta[name]) ) {
-      return;
-    }
-
-    updateParamMeta(id, name, parseFormula(e.target.value));
-  }
-
   renderParamSlider(name) {
-    const { params, paramsMeta } = this.props;
-    const value = params[name];
-    const { min, max } = paramsMeta[name];
+    const { params } = this.props.node;
+    const { value, min, max } = params[name];
     const step = Math.abs(max - min) / 100;
 
     return (
       <label>
         {name}:
-        <input type="range" value={value} name={name} min={min} max={max} step={step} onChange={this.handleParamChange} />
-        <input type="number" value={value} name={name} onChange={this.handleParamChange} />
+        <input
+          type="range"
+          value={value}
+          name={name}
+          min={min} max={max} step={step}
+          onChange={this.handleParamChange} />
+        <input
+          type="number"
+          value={value}
+          name={name}
+          onChange={this.handleParamChange} />
       </label>
     );
   }
 
   renderParamFormula(name) {
-    const { params, paramsMeta } = this.props;
-    const value = params[name];
-    const { formula, isInvalid } = paramsMeta[name];
+    const { node, calculatedParams, tmpFormula, actions } = this.props;
+    const { updateParam, updateTmpFormula, deleteTmpFormula } = actions;
+    const { id, params } = node;
+    // if the formula is currently being edited, use value from state.ui.tmpFormula
+    const propPath = `${id}.${name}`;
+    const formula = tmpFormula && tmpFormula.propPath === propPath ?
+      tmpFormula.formula:
+      params[name].formula;
 
     return (
       <NodeProperty
+        id={id}
         name={name}
-        value={value}
         formula={formula}
-        isInvalid={isInvalid}
+        result={calculatedParams[name]}
+        actions={{
+          updateTmpFormula,
+          deleteTmpFormula,
+          updateFormulaAlt: (id, name, value) => {
+            updateParam(id, name, { formula: value })
+          }
+        }}
       />
     );
   }
 
   renderTextParams() {
-    const { _isPropsUnfolded, paramsMeta } = this.props;
+    const { _isPropsUnfolded, params } = this.props.node;
     const listClass = classNames({
       'unstyled': true,
       'text-proplist': true,
@@ -142,12 +156,12 @@ class TextFont extends Component {
     });
 
     return (
-      <ul className={listClass} onChange={this.handleFormulaChange}>
-        {paramsMeta._order.map((name) => {
+      <ul className={listClass}>
+        {Object.keys(params).map((name) => {
           return (
             <li key={name}>
               {this[(
-                'formula' in paramsMeta[name] ?
+                'formula' in params[name] ?
                   'renderParamFormula' :
                   'renderParamSlider'
               )](name)}
@@ -164,7 +178,7 @@ class TextFont extends Component {
         </li>
         <li>
           <input type="text" ref="formulaName" placeholder="name" defaultValue="$" />
-          <input type="text" ref="formulaValue" placeholder="formula" />
+          <input type="text" ref="formulaValue" placeholder="formula" onChange={this.handleFormulaChange} />
           <input type="button" defaultValue="Add formula" onClick={this.handleAddFormulaClick} />
         </li>
       </ul>
@@ -172,7 +186,7 @@ class TextFont extends Component {
   }
 
   render() {
-    const { id, childIds } = this.props;
+    const { id, childIds } = this.props.node;
 
     return (
       <ul className="unstyled">
@@ -196,10 +210,11 @@ TextFont.propTypes = {
   childTypes: validateChildTypes
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state, ownProps) {
   return {
-    ...state.nodes[props.id],
-    params: getCalculatedParams(state, null, 'font_initial')
+    node: state.nodes[ownProps.id],
+    calculatedParams: getCalculatedParams(state.nodes[ownProps.id].params),
+    tmpFormula: state.ui.tmpFormula
   }
 }
 

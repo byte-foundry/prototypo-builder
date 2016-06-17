@@ -1,16 +1,16 @@
 import deepFreeze from 'deep-freeze';
 
 import {
-  parseFormula,
+  getUpdater,
   buildArgs,
-  // getCalculatedProps,
+  getUpdaters,
   getCalculatedParams,
   getSolvingOrder,
   getCalculatedGlyph
 } from '../../src/containers/_utils';
 
 describe('containers/_utils', () => {
-  describe('parseFormula', () => {
+  describe('getUpdater', () => {
     it('should return a formula with isInvalid === true when the formula can\'t be parsed', (done) => {
       const strFormula = '$width * ';
       const expected = {
@@ -18,7 +18,7 @@ describe('containers/_utils', () => {
         isInvalid: true
       };
 
-      expect(parseFormula(strFormula)).to.deep.equal(expected);
+      expect(getUpdater(strFormula)).to.deep.equal(expected);
 
       done();
     });
@@ -26,10 +26,10 @@ describe('containers/_utils', () => {
     it('should parse a vail formula and extract params and refs', (done) => {
       const strFormula = '( $width * $height ) + ( glyph.oncurve_0.x - glyph.oncurve_1.x ) * 2';
 
-      const result = parseFormula(strFormula);
+      const result = getUpdater(strFormula);
 
       expect(result.isInvalid).to.equal(false);
-      expect(result.updater).to.be.a('function');
+      expect(result.fn).to.be.a('function');
       expect(result.params).to.deep.equal(['$width', '$height']);
       expect(result.refs).to.deep.equal(['oncurve_0.x', 'oncurve_1.x']);
 
@@ -57,88 +57,41 @@ describe('containers/_utils', () => {
     });
   });
 
-  // describe('getCalculatedProps', () => {
-  //   it('should replace props with calculatedProps', (done) => {
-  //     const nodesBefore = {
-  //       'node-0': {
-  //         id: 'node-0',
-  //         xMeta: {
-  //           _for: 'x',
-  //           updater: () => 78,
-  //           params: []
-  //         },
-  //         expandMeta: {
-  //           _for: 'expand',
-  //           updater: () => 90,
-  //           params: []
-  //         },
-  //         x: 12,
-  //         y: 34,
-  //         expand: 56
-  //       }
-  //     };
-  //     const propsAfter = {
-  //       id: 'node-0',
-  //       x: 78,
-  //       y: 34,
-  //       expand: 90
-  //     }
-  //
-  //     // I can't deepFreeze an object that contains functions apparently
-  //     // deepFreeze(nodeBefore);
-  //
-  //     expect(getCalculatedProps(nodesBefore, {}, 'node-0'))
-  //       .to.deep.equal(propsAfter);
-  //
-  //     done();
-  //   });
-  // });
+  describe('getUpdaters', () => {
+    it('should parse all formulas', (done) => {
+      const formulas = {
+        'node_0.x': '$width * 10',
+        'node_1.y': 'glyph.node_0.x + $height'
+      };
+
+      deepFreeze(formulas);
+      const updaters = getUpdaters(formulas);
+
+      expect(updaters['node_0.x'].fn).to.be.a('function');
+      expect(updaters['node_1.y'].fn).to.be.a('function');
+
+      done();
+    });
+  });
 
   describe('getCalculatedParams', () => {
     it('should replace params with calculatedParams', (done) => {
       const stateBefore = {
-        nodes: {
-          'node-0': {
-            id: 'node-0',
-            params: {
-              width: 12
-            },
-            paramsMeta: {
-              _order: ['width', 'expand', 'distrib'],
-              width: {},
-              expand: {
-              },
-              distrib: {
-              }
-            }
-          }
-        },
-        updaters: {
-          'node-0': {
-            expand: {
-              updater: () => 34,
-              params: []
-            },
-            distrib: {
-              updater: () => 56,
-              params: []
-            }
-          }
-        }
+        width: { value: 12 },
+        expand: { formula: '34' },
+        distrib: { formula: '1 *' }
       };
       const parentParams = {};
-      const paramsAfter = {
-        width: 12,
-        expand: 34,
-        distrib: 56
-      };
 
       deepFreeze(parentParams);
-      // I can't deepFreeze an object that contains functions apparently
-      // deepFreeze(nodeBefore);
+      deepFreeze(stateBefore);
 
-      expect(getCalculatedParams(stateBefore, parentParams, 'node-0'))
-        .to.deep.equal(paramsAfter);
+      const calculatedParams =
+        getCalculatedParams(stateBefore, parentParams, 'node-0');
+
+      expect(calculatedParams.width).to.equal(12);
+      expect(calculatedParams.expand).to.equal(34);
+      expect(calculatedParams.distrib).to.be.an('error');
 
       done();
     });
@@ -180,15 +133,13 @@ describe('containers/_utils', () => {
             id: 'font_initial',
             type: 'font',
             childIds: ['glyph_initial'],
-            params: {},
-            paramsMeta: { _order: [] }
+            params: {}
           },
           'glyph_initial': {
             id: 'glyph_initial',
             type: 'glyph',
             childIds: ['contour_initial'],
-            params: {},
-            paramsMeta: { _order: [] }
+            params: {}
           },
           'contour_initial': {
             id: 'contour_initial',
@@ -220,11 +171,11 @@ describe('containers/_utils', () => {
             childIds: []
           }
         },
-        updaters: {
+        formulas: {
           'glyph_initial': {
-            'node_0.x': { updater: () => 21, refs: ['node_1.x'], params: [] },
-            'node_0.y': { updater: () => 43, refs: ['node_1.x'], params: [] },
-            'node_1.x': { updater: () => 78, refs: [], params: ['$width'] }
+            'node_0.x': 'glyph.node_1.x',
+            'node_0.y': 'glyph.node_1.x * 2',
+            'node_1.x': '$width'
           }
         }
       };
@@ -238,8 +189,8 @@ describe('containers/_utils', () => {
         'node_0': {
           id: 'node_0',
           type: 'path',
-          x: 21,
-          y: 43,
+          x: 78,
+          y: 78 * 2,
           isClosed: true,
           childIds: []
         },
@@ -264,7 +215,7 @@ describe('containers/_utils', () => {
 
       deepFreeze(stateBefore.nodes);
 
-      expect(getCalculatedGlyph(stateBefore, { '$width': 90 }, 'glyph_initial'))
+      expect(getCalculatedGlyph(stateBefore, { '$width': 78 }, 'glyph_initial'))
         .to.deep.equal(expected);
 
       done();

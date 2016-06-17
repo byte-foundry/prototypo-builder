@@ -41,11 +41,18 @@ class SvgContainer extends Component {
   }
 
   componentWillMount() {
+    const {
+      setNodeSelected,
+      setPathSelected,
+      setMouseState,
+      moveNode
+    } = this.props.actions;
+
     window.addEventListener('keyup', (e) => {
       if (e.keyCode === 27) {
-        this.props.actions.setNodeSelected();
-        this.props.actions.setPathSelected();
-        this.props.actions.setMouseState(NO_PATH_SELECTED);
+        setNodeSelected();
+        setPathSelected();
+        setMouseState(NO_PATH_SELECTED);
       }
       else if (e.keyCode === 46) {
         if (this.props.ui.uiState === NODE_SELECTED || this.props.ui.uiState === NODE_SELECTED_AND_MOVE) {
@@ -53,9 +60,9 @@ class SvgContainer extends Component {
           if (node.type === 'offcurve') {
             const handles = getCorrespondingHandles(this.props.ui.selected.path, node.id, this.props.nodes);
             const vect = subtractVec(handles[2], node);
-            this.props.actions.moveNode(node.id, this.props.ui.selected.path, {dx: vect.x, dy: vect.y} );
-            this.props.actions.setMouseState(PATH_SELECTED);
-            this.props.actions.setNodeSelected();
+            moveNode(node.id, this.props.ui.selected.path, {dx: vect.x, dy: vect.y} );
+            setMouseState(PATH_SELECTED);
+            setNodeSelected();
           }
         }
       }
@@ -345,7 +352,7 @@ function mapStateToProps(state) {
   return {
     nodes: getCalculatedGlyph(
       state,
-      getCalculatedParams(state, null, 'font_initial'),
+      getCalculatedParams(state.nodes['font_initial'].params),
       state.ui.selected.glyph
     ),
     ui: state.ui

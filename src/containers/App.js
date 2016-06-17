@@ -33,21 +33,20 @@ App.propTypes = {
   actions: PropTypes.object.isRequired,
   nodes: PropTypes.object.isRequired,
   ui: PropTypes.object.isRequired,
-  updaters: PropTypes.object.isRequired
+  formulas: PropTypes.object.isRequired
 };
 function mapStateToProps(state) {
   /* Populated by react-webpack-redux:reducer */
   const props = {
     nodes: state.nodes,
     ui: state.ui,
-    updaters: state.updaters
+    formulas: state.formulas
   };
   return props;
 }
 function mapDispatchToProps(dispatch) {
   /* Populated by react-webpack-redux:action */
-  const actions = {
-  };
+  const actions = {};
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
 }

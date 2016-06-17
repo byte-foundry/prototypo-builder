@@ -9,25 +9,7 @@ import SvgFont from './SvgFont';
 import SvgGlyph from './SvgGlyph';
 import SvgContourSelection from './SvgContourSelection';
 
-import {
-  addOffcurve,
-  addOncurve,
-  addPath,
-  createOffcurve,
-  createOncurve,
-  createPath,
-  loadImageData,
-  loadNodes,
-  moveNode,
-  setCoords,
-  setMouseState,
-  setNodeHovered,
-  setNodeSelected,
-  setNodeOptionsSelected,
-  setPathHovered,
-  setPathSelected,
-  updateProp
-} from '~/actions/all';
+import actions from '~/actions';
 
 const componentMap = {
   contour: SvgContour,
@@ -91,25 +73,6 @@ export function mapStateToProps(state, ownProps) {
 }
 
 export function mapDispatchToProps(dispatch) {
-  const actions = {
-    addOffcurve,
-    addOncurve,
-    addPath,
-    createOffcurve,
-    createOncurve,
-    createPath,
-    loadImageData,
-    loadNodes,
-    moveNode,
-    setCoords,
-    setMouseState,
-    setNodeHovered,
-    setNodeSelected,
-    setNodeOptionsSelected,
-    setPathHovered,
-    setPathSelected,
-    updateProp
-  };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;
 }

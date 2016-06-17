@@ -1,12 +1,13 @@
 import deepFreeze from 'deep-freeze';
 
-import reducer from '../../src/reducers/updaters';
-import {
+import reducer from '~/reducers/updaters';
+import actions from '~/actions';
+const {
   addParam,
   deleteParam,
   updateParamMeta,
   updatePropMeta
-} from 'actions/all';
+} = actions;
 
 describe('updaters', () => {
   let graph;
