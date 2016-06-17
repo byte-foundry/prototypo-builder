@@ -62,11 +62,11 @@ input:invalid {
   box-shadow: 0 0 4px red;
 }
 
-input:active,
+/*input:active,
 input.isActive {
   border: solid 1px #29d390;
   border-radius: 3px;
-}
+}*/
 
 input[type="number"] {
   width: 7rem;

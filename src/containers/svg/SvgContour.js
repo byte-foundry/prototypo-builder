@@ -146,7 +146,7 @@ function mapStateToProps(state, props) {
   return {
     nodes: getCalculatedGlyph(
       state,
-      getCalculatedParams(state, null, 'font_initial'),
+      getCalculatedParams(state.nodes['font_initial'].params),
       getParentGlyphId(state.nodes, props.id)
     ),
     ui: state.ui

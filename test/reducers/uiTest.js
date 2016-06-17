@@ -1,11 +1,40 @@
+import deepFreeze from 'deep-freeze';
+
 import reducer from '~/reducers/ui';
+import actions from '~/actions';
 
-describe('ui', () => {
+const {
+  updateTmpFormula,
+  deleteTmpFormula
+} = actions;
 
-  it('should not change the passed state', (done) => {
+describe('reducer: ui', () => {
+  it('should handle UPDATE_TMP_FORMULA action', (done) => {
+    const stateBefore = {};
+    const action1 = updateTmpFormula('node_0.x', '2 * 3');
+    const stateAfter1 = {
+      tmpFormula: { propPath: 'node_0.x', formula: '2 * 3' }
+    };
 
-    const state = Object.freeze({});
-    reducer(state, {type: 'INVALID'});
+    deepFreeze(stateBefore);
+    deepFreeze(action1);
+
+    expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
+
+    done();
+  });
+
+  it('should hanlde DELETE_TMP_FORMULA action', (done) => {
+    const stateBefore = {
+      tmpFormula: { propPath: 'node_0.x', formula: '2 * 3' }
+    };
+    const action1 = deleteTmpFormula();
+    const stateAfter1 = {}
+
+    deepFreeze(stateBefore);
+    deepFreeze(action1);
+
+    expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
 
     done();
   });

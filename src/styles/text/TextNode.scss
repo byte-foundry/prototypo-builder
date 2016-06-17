@@ -14,38 +14,55 @@
     color: #fefefe;
   }
 
-  &__property {
-
-  }
-
-  &__property-name {
-    width: 70px;
+  &__item {
     display: inline-block;
-    text-align: right;
-    padding-right: 5px;
-  }
-  &__property-name:after {
-    content: ': ';
   }
 
-  &__property-formula--invalid {
-    box-shadow: 0 0 4px red;
+  &__property {
+    &-name {
+      width: 70px;
+      display: inline-block;
+      text-align: right;
+      padding-right: 5px;
+    }
+    &-name:after {
+      content: ': ';
+    }
+
+    // a copy of that subselector is found in &__param
+    &-formula--invalid {
+      box-shadow: 0 0 4px red;
+    }
+
+    // a copy of that subselector is found in &__param
+    &-formula--invalid:focus {
+      outline: 0;
+      box-shadow: 0 0 6px red;
+    }
+
+    &-input {
+      border-width: 0;
+    }
+
+    &-value--text {
+      width: 5rem;
+    }
+
+    &-result--text {
+      width: 5rem;
+    }
   }
 
-  &__property-formula--invalid:focus {
-    outline: 0;
-    box-shadow: 0 0 6px red;
-  }
+  &__param {
+    // a copy of that subselector is found in &__property
+    &-formula--invalid {
+      box-shadow: 0 0 4px red;
+    }
 
-  &__property-input {
-    border-width: 0;
-  }
-
-  &__property-value--text {
-    width: 5rem;
-  }
-
-  &__property-result--text {
-    width: 5rem;
+    // a copy of that subselector is found in &__property
+    &-formula--invalid:focus {
+      outline: 0;
+      box-shadow: 0 0 6px red;
+    }
   }
 }

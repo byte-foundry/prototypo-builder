@@ -11,44 +11,68 @@ export const getAllDescendants = memoize((nodes, parentId, descendants) => {
   }, descendants);
 });
 
-export function getNodePath(nodes, nodeId, path = ['root'], length = 1) {
-  for ( let childId of nodes[path[length - 1]].childIds ) {
-    if ( childId === nodeId ) {
-      return path;
-    }
-    else {
-      const tmp = getNodePath(nodes, nodeId, path.concat(childId), length + 1);
-      if ( tmp ) {
-        return tmp;
-      }
+export function getParentNode(nodes, nodeId) {
+  for (let id in nodes) {
+    if ( 'childIds' in nodes[id] && nodes[id].childIds.includes(nodeId) ) {
+      return id;
     }
   }
-
-  return false;
 }
 
 // a special kind of memoization that checks that the result of the function
-// still holds true
-const _pathCache = {};
-export const getNodePathMemoized = (nodes, nodeId, pathCache = _pathCache) => {
-  let cachedPath = pathCache[nodeId];
-  // check if the cached path is still valid
-  if ( cachedPath && !cachedPath.every((nodeId, i) => {
-    return nodes[nodeId].childIds.includes(pathCache[i+1] || nodeId)
-  }) ) {
-    cachedPath = false;
+// still holds true, even if the 'nodes' argument has changed
+const _parentCache = {};
+export function getParentNodeMemoized(nodes, nodeId, parentCache = _parentCache) {
+  // check if the cached parent is still valid
+  if (
+    nodeId in parentCache &&
+    nodes[parentCache[nodeId]].childIds.includes(nodeId)
+  ) {
+    return parentCache[nodeId];
   }
 
-  if ( !cachedPath ) {
-    cachedPath = pathCache[nodeId] = getNodePath(nodes, nodeId);
-  }
+  // if not, search for it anew
+  parentCache[nodeId] = getParentNode(nodes, nodeId);
 
-  return cachedPath;
-};
-
-export function getParentGlyphId(nodes, nodeId) {
-  const path = getNodePathMemoized(nodes, nodeId);
-
-  // the id of the parent glyph should always be at the 3rd position in the path
-  return path[2];
+  return parentCache[nodeId];
 }
+
+export const getNodePath = memoize((nodes, nodeId) => {
+  const path = [];
+  let currId = nodeId;
+
+  while ( currId !== 'root' ) {
+    path.unshift(currId = getParentNodeMemoized(nodes, currId));
+  }
+
+  return path;
+});
+
+// // a special kind of memoization that checks that the result of the function
+// // still holds true
+// const _pathCache = {};
+// export const getNodePathMemoized = (nodes, nodeId, pathCache = _pathCache) => {
+//   let cachedPath = pathCache[nodeId];
+//   // check if the cached path is still valid
+//   if ( cachedPath && !cachedPath.every((nodeId, i) => {
+//     return nodes[nodeId].childIds.includes(pathCache[i+1] || nodeId)
+//   }) ) {
+//     cachedPath = false;
+//   }
+//
+//   if ( !cachedPath ) {
+//     cachedPath = pathCache[nodeId] = getNodePath(nodes, nodeId);
+//   }
+//
+//   return cachedPath;
+// };
+
+export const getParentGlyphId = memoize((nodes, nodeId) => {
+  let currId = nodeId;
+
+  while ( currId !== 'root' && nodes[currId].type !== 'glyph' ) {
+    currId = getParentNodeMemoized(nodes, currId);
+  }
+
+  return currId !== 'root' && currId;
+});

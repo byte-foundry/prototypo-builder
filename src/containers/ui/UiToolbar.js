@@ -3,14 +3,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import actions from './../../actions';
+import actions from '~/actions';
 
 import {
   SELECTION_MODE,
   NO_PATH_SELECTED
-} from '../../actions/const';
+} from '~/actions/const';
 
-require('../../styles/ui/toolbar.scss');
+require('styles/ui/toolbar.scss');
 
 class UiToolbar extends Component {
   setSelectMode() {

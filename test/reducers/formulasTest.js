@@ -68,31 +68,87 @@ describe('reducer: formulas', () => {
     done();
   });
 
-  it('should handle DELETE_FORMULA action', (done) => {
-    const stateBefore = {
-      'glyph_0': {
-        'node_1.x': '34',
-        'node_1.y': '56'
-      },
-      'glyph_1': {
-        'node_2.expand': '$thickness'
-      }
-    };
-    const action1 = deleteFormula('glyph_0', 'node_1.y');
-    const stateAfter1 = {
-      'glyph_0': {
-        'node_1.x': '34'
-      },
-      'glyph_1': {
-        'node_2.expand': '$thickness'
-      }
-    };
+  describe('DELETE_FORMULA', () => {
+    it('should handle DELETE_FORMULA with path argument', (done) => {
+      const stateBefore = {
+        'glyph_0': {
+          'node_1.x': '34',
+          'node_1.y': '56'
+        },
+        'glyph_1': {
+          'node_2.expand': '$thickness'
+        }
+      };
+      const action1 = deleteFormula('glyph_0', 'node_1.y');
+      const stateAfter1 = {
+        'glyph_0': {
+          'node_1.x': '34'
+        },
+        'glyph_1': {
+          'node_2.expand': '$thickness'
+        }
+      };
 
-    deepFreeze(stateBefore);
-    deepFreeze(action1);
+      deepFreeze(stateBefore);
+      deepFreeze(action1);
 
-    expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
+      expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
 
-    done();
+      done();
+    });
+
+    it('should handle DELETE_FORMULA to delete all formulas of a glyph', (done) => {
+      const stateBefore = {
+        'glyph_0': {
+          'node_1.x': '34',
+          'node_1.y': '56'
+        },
+        'glyph_1': {
+          'node_2.expand': '$thickness'
+        }
+      };
+      const action1 = deleteFormula('glyph_0');
+      const stateAfter1 = {
+        'glyph_1': {
+          'node_2.expand': '$thickness'
+        }
+      };
+
+      deepFreeze(stateBefore);
+      deepFreeze(action1);
+
+      expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
+
+      done();
+    });
+
+    it('should handle DELETE_FORMULA to delete all formulas of a node', (done) => {
+      const stateBefore = {
+        'glyph_0': {
+          'node_1.x': '34',
+          'node_1.y': '56',
+          'node_0.angle': '78'
+        },
+        'glyph_1': {
+          'node_2.expand': '$thickness'
+        }
+      };
+      const action1 = deleteFormula('node_1');
+      const stateAfter1 = {
+        'glyph_0': {
+          'node_0.angle': '78'
+        },
+        'glyph_1': {
+          'node_2.expand': '$thickness'
+        }
+      };
+
+      deepFreeze(stateBefore);
+      deepFreeze(action1);
+
+      expect(reducer(stateBefore, action1)).to.deep.equal(stateAfter1);
+
+      done();
+    });
   });
 });

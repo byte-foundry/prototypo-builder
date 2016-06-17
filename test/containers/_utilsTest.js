@@ -79,20 +79,19 @@ describe('containers/_utils', () => {
       const stateBefore = {
         width: { value: 12 },
         expand: { formula: '34' },
-        distrib: { formula: '56' }
+        distrib: { formula: '1 *' }
       };
       const parentParams = {};
-      const paramsAfter = {
-        width: 12,
-        expand: 34,
-        distrib: 56
-      };
 
       deepFreeze(parentParams);
       deepFreeze(stateBefore);
 
-      expect(getCalculatedParams(stateBefore, parentParams, 'node-0'))
-        .to.deep.equal(paramsAfter);
+      const calculatedParams =
+        getCalculatedParams(stateBefore, parentParams, 'node-0');
+
+      expect(calculatedParams.width).to.equal(12);
+      expect(calculatedParams.expand).to.equal(34);
+      expect(calculatedParams.distrib).to.be.an('error');
 
       done();
     });

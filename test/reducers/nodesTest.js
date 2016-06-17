@@ -2,9 +2,10 @@ import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
 import actions from '~/actions';
+
 const {
   createNode,
-  deleteNode,
+  _deleteNode,
   addChild,
   removeChild
 } = actions;
@@ -55,7 +56,7 @@ describe('reducer: nodes', () => {
         childIds: []
       }
     };
-    const action = deleteNode('node-2');
+    const action = _deleteNode('node-2');
     const stateAfter = {
       'node-0': {
         id: 'node-0',

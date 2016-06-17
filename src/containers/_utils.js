@@ -64,9 +64,9 @@ export const getCalculatedParams = memoize((params, parentParams) => {
           )
         );
       } catch(e) {
-        /* eslint-disable no-console */
-        console.error(`Calculating prop '${paramName}' errored`, e);
-        /* eslint-enable no-console */
+        calculatedParams[paramName] = new Error(
+          `Calculating prop '${paramName}' errored`
+        );
       }
     }
     else if ( 'value' in param ) {

@@ -13,7 +13,7 @@ import {
   mapDispatchToProps
 } from './_utils';
 
-import NodeProperty from './NodeProperty';
+import NodeProperty from '~/components/text/NodePropertyComponent';
 
 class NodeProperties extends Component {
   // constructor(props) {
@@ -45,20 +45,37 @@ class NodeProperties extends Component {
   // }
 
   render() {
-    const { id, type, glyphId } = this.props;
+    const { glyphId, node, calculatedNode, formulas, tmpFormula, actions } = this.props;
+    const { updateProp, updateFormula, updateTmpFormula, deleteTmpFormula } = actions;
+    const { id, type } = node;
     const { propertyOrder, properties } = fontModel[type];
 
     return (
       <ul className="text-node__property-list unstyled">
         { propertyOrder.map((propName) => {
+          // if the formula is currently being edited, use value from state.ui.tmpFormula
+          const propPath = `${id}.${propName}`;
+          const formula = tmpFormula && tmpFormula.propPath === propPath ?
+            tmpFormula.formula:
+            (formulas || {})[propPath];
+
           return (
             <li key={propName}>
               <NodeProperty
                 id={id}
-                glyphId={glyphId}
                 name={propName}
-                result={this.props[propName]}
                 type={properties[propName]}
+                value={node[propName]}
+                formula={formula}
+                result={calculatedNode[propName]}
+                actions={{
+                  updateProp,
+                  updateTmpFormula,
+                  deleteTmpFormula,
+                  updateFormulaAlt: (id, name, value) => {
+                    updateFormula(glyphId, `${id}.${name}`, value);
+                  }
+                }}
               />
             </li>
           );
@@ -75,17 +92,19 @@ NodeProperties.propTypes = {
 function mapStateToProps(state, ownProps) {
   // this computation could be done at the property level as well, but we want
   // to minimize the number of calls to all these methods, and getParentGlyphId
-  // especially (which uses a false memoization)
+  // especially (which uses a faux-memoization)
   const glyphId = getParentGlyphId(state.nodes, ownProps.id);
 
   return {
-    ...state.nodes[ownProps.id],
     glyphId,
-    ...getCalculatedGlyph(
+    node: state.nodes[ownProps.id],
+    calculatedNode: getCalculatedGlyph(
       state,
-      getCalculatedParams(state, null, 'font_initial'),
+      getCalculatedParams(state.nodes['font_initial'].params),
       glyphId
-    )[ownProps.id]
+    )[ownProps.id],
+    formulas: state.formulas[glyphId],
+    tmpFormula: state.ui.tmpFormula
   };
 }
 

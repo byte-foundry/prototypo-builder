@@ -18,9 +18,11 @@ export default {
   createOffcurve: require('../actions/offcurves/createOffcurve.js'),
   createOncurve: require('../actions/oncurves/createOncurve.js'),
   createPath: require('../actions/paths/createPath.js'),
+  _deleteNode: require('../actions/nodes/_deleteNode.js'),
   deleteNode: require('../actions/nodes/deleteNode.js'),
   deleteParam: require('../actions/params/deleteParam.js'),
   deleteFormula: require('../actions/formulas/deleteFormula.js'),
+  deleteTmpFormula: require('../actions/ui/deleteTmpFormula.js'),
   loadImageData: require('../actions/ui/loadImageData.js'),
   loadNodes: require('../actions/nodes/loadNodes.js'),
   moveNode: require('../actions/nodes/moveNode.js'),
@@ -45,6 +47,7 @@ export default {
 //   updateProps: require('../actions/props/updateProps.js'),
 //   updatePropsValues: require('../actions/props/updatePropsValues.js'),
 //   updatePropValue: require('../actions/props/updatePropValue.js'),
+  updateTmpFormula: require('../actions/ui/updateTmpFormula.js'),
   updateX: require('../actions/points/updateX.js'),
   updateY: require('../actions/points/updateY.js')
 };

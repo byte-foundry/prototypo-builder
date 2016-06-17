@@ -20,6 +20,8 @@ export const CREATE_ONCURVE = 'CREATE_ONCURVE';
 export const CREATE_PATH = 'CREATE_PATH';
 export const DELETE_NODE = 'DELETE_NODE';
 export const DELETE_PARAM = 'DELETE_PARAM';
+export const DELETE_FORMULA = 'DELETE_FORMULA';
+export const DELETE_TMP_FORMULA = 'DELETE_TMP_FORMULA';
 export const LOAD_IMAGE_DATA = 'LOAD_IMAGE_DATA';
 export const LOAD_NODES = 'LOAD_NODES';
 export const MOVE_NODE = 'MOVE_NODE';
@@ -44,6 +46,7 @@ export const UPDATE_PROP = 'UPDATE_PROP';
 // export const UPDATE_PROP_VALUE = 'UPDATE_PROP_VALUE';
 // export const UPDATE_PROPS = 'UPDATE_PROPS';
 // export const UPDATE_PROPS_VALUES = 'UPDATE_PROPS_VALUES';
+export const UPDATE_TMP_FORMULA = 'UPDATE_TMP_FORMULA';
 export const UPDATE_X = 'UPDATE_X';
 export const UPDATE_Y = 'UPDATE_Y';
 //Mouse state constants
@@ -57,4 +60,3 @@ export const VARIABLE_MODE = -2;
 //Oncurve types
 export const ONCURVE_SMOOTH = 1;
 export const ONCURVE_CORNER = 2;
-export const DELETE_FORMULA = 'DELETE_FORMULA';
