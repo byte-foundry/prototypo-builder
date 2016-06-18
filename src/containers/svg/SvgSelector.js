@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import {
   ONCURVE_SMOOTH,
   SELECTION_MODE
-} from '~/_utils/const';
+} from '~/const';
 
 import {
   getNode,

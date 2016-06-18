@@ -1,5 +1,5 @@
 import {UPDATE_TMP_FORMULA} from './../const';
 
-module.exports = function(propPath, formula) {
-  return { type: UPDATE_TMP_FORMULA, propPath, formula };
+module.exports = function(name, value) {
+  return { type: UPDATE_TMP_FORMULA, name, value };
 };

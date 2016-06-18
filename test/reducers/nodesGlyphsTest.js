@@ -16,8 +16,7 @@ describe('reducer: nodes (glyphs)', () => {
         id: action.nodeId,
         type: 'glyph',
         childIds: [],
-        params: {},
-        paramsMeta: { _order: [] }
+        params: {}
       }
     };
 

@@ -1,6 +1,6 @@
 import {getNodeId} from '~/actions/_utils';
 import { CREATE_ONCURVE } from '~/actions/const';
-import { ONCURVE_SMOOTH } from '~/_utils/const';
+import { ONCURVE_SMOOTH } from '~/const';
 
 module.exports = function() {
   const nodeType = 'oncurve';

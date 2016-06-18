@@ -69,12 +69,5 @@ export function validateAddParam(state, action) {
     );
   }
 
-  if ( state[nodeId].paramsMeta && name in state[nodeId].paramsMeta) {
-    return new Error(
-      `Can't add param '${name}' to node '${nodeId}':
-      A param with the same name already exists for that node.`
-    );
-  }
-
   return true;
 }

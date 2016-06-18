@@ -12,7 +12,7 @@ import {
 import {
   getCalculatedParams,
   getCalculatedGlyph
-} from '~/containers/_utils';
+} from '~/_utils/parametric';
 
 import {
   mapDispatchToProps,
@@ -32,7 +32,7 @@ import {
   ONCURVE_CORNER,
   ONCURVE_SMOOTH,
   SELECTION_MODE
-} from '~/_utils/const';
+} from '~/const';
 
 class SvgContainer extends Component {
   constructor(props) {
@@ -298,7 +298,7 @@ class SvgContainer extends Component {
       }
       else {
         const state = JSON.parse(data.target.result);
-        this.props.actions.loadNodes(state.nodes, state.updaters);
+        this.props.actions.loadNodes(state.nodes, state.formulas);
       }
     }
 

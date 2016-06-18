@@ -35,7 +35,7 @@ import {
 
 import {
   ONCURVE_SMOOTH
-} from '~/_utils/const';
+} from '~/const';
 
 import {
   validateAddChildren,
@@ -77,8 +77,7 @@ function createNode(action) {
 function initParams(node) {
   return {
     ...node,
-    params: {},
-    paramsMeta: { _order: [] }
+    params: {}
   }
 }
 

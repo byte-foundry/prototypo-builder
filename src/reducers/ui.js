@@ -53,7 +53,7 @@ module.exports = function(state = initialState, action) {
     case UPDATE_TMP_FORMULA: {
       return {
         ...state,
-        tmpFormula: { propPath: action.propPath, formula: action.formula }
+        tmpFormula: { name: action.name, value: action.value }
       };
     }
     case DELETE_TMP_FORMULA: {

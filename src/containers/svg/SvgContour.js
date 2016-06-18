@@ -13,7 +13,7 @@ import {
 import {
   getCalculatedParams,
   getCalculatedGlyph
-} from '~/containers/_utils';
+} from '~/_utils/parametric';
 
 import {
   renderPathData,

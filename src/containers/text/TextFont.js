@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {
   getUpdater,
   getCalculatedParams
-} from '~/containers/_utils';
+} from '~/_utils/parametric';
 
 import {
   renderTextChild,
@@ -17,7 +17,7 @@ import Foldable from './Foldable';
 
 require('styles/text/TextProplist.scss');
 
-import NodeProperty from '~/components/text/NodePropertyComponent';
+import Formula from './Formula';
 
 class TextFont extends Component {
   constructor(props) {
@@ -31,13 +31,14 @@ class TextFont extends Component {
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleDeleteParamClick = this.handleDeleteParamClick.bind(this);
     this.handleFormulaChange = this.handleFormulaChange.bind(this);
+    this.handleFormulaUpdate = this.handleFormulaUpdate.bind(this);
   }
 
   handleAddParamClick(e) {
     e.preventDefault();
 
-    const { id } = this.props.node;
-    const { addParam } = this.props.actions;
+    const { id, actions } = this.props;
+    const { addParam } = actions;
 
     addParam(id, this.refs.paramName.value, {
       value: +this.refs.paramValue.value,
@@ -63,8 +64,8 @@ class TextFont extends Component {
   handleAddFormulaClick(e) {
     e.preventDefault();
 
-    const { id } = this.props.node;
-    const { addParam } = this.props.actions;
+    const { id, actions } = this.props;
+    const { addParam } = actions;
     const updater = getUpdater( this.refs.formulaValue.value );
 
     if ( updater.isInvalid ) {
@@ -79,11 +80,18 @@ class TextFont extends Component {
     this.refs.formulaValue.value = '';
   }
 
+  handleFormulaUpdate(name, value) {
+    const { id, actions } = this.props;
+    const { updateParam } = actions;
+
+    return updateParam(id, name, { formula: value });
+  }
+
   handleParamChange(e) {
     e.preventDefault();
 
-    const { id } = this.props.node;
-    const { updateParam } = this.props.actions;
+    const { id, actions } = this.props;
+    const { updateParam } = actions;
 
     updateParam(id, e.target.name, { value: +e.target.value });
   }
@@ -91,14 +99,14 @@ class TextFont extends Component {
   handleDeleteParamClick(e) {
     e.preventDefault();
 
-    const { id } = this.props.node;
-    const { deleteParam } = this.props.actions;
+    const { id, actions } = this.props;
+    const { deleteParam } = actions;
 
     deleteParam(id, e.target.name);
   }
 
   renderParamSlider(name) {
-    const { params } = this.props.node;
+    const { params } = this.props;
     const { value, min, max } = params[name];
     const step = Math.abs(max - min) / 100;
 
@@ -121,34 +129,26 @@ class TextFont extends Component {
   }
 
   renderParamFormula(name) {
-    const { node, calculatedParams, tmpFormula, actions } = this.props;
-    const { updateParam, updateTmpFormula, deleteTmpFormula } = actions;
-    const { id, params } = node;
-    // if the formula is currently being edited, use value from state.ui.tmpFormula
-    const propPath = `${id}.${name}`;
-    const formula = tmpFormula && tmpFormula.propPath === propPath ?
-      tmpFormula.formula:
-      params[name].formula;
+    const { params, calculatedParams } = this.props;
+    const result = calculatedParams[name];
 
     return (
-      <NodeProperty
-        id={id}
-        name={name}
-        formula={formula}
-        result={calculatedParams[name]}
-        actions={{
-          updateTmpFormula,
-          deleteTmpFormula,
-          updateFormulaAlt: (id, name, value) => {
-            updateParam(id, name, { formula: value })
-          }
-        }}
-      />
+      <span>
+        {name}:
+        <Formula
+          name={name}
+          value={params[name].formula}
+          handleFormulaUpdate={this.handleFormulaUpdate} />
+        &nbsp;→{
+          typeof result === 'number' && result % 1 !== 0 ?
+            result.toFixed(2) : result
+        }
+      </span>
     );
   }
 
   renderTextParams() {
-    const { _isPropsUnfolded, params } = this.props.node;
+    const { _isPropsUnfolded, params } = this.props;
     const listClass = classNames({
       'unstyled': true,
       'text-proplist': true,
@@ -186,7 +186,7 @@ class TextFont extends Component {
   }
 
   render() {
-    const { id, childIds } = this.props.node;
+    const { id, childIds } = this.props;
 
     return (
       <ul className="unstyled">
@@ -212,9 +212,8 @@ TextFont.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    node: state.nodes[ownProps.id],
-    calculatedParams: getCalculatedParams(state.nodes[ownProps.id].params),
-    tmpFormula: state.ui.tmpFormula
+    ...state.nodes[ownProps.id],
+    calculatedParams: getCalculatedParams(state.nodes[ownProps.id].params)
   }
 }
 

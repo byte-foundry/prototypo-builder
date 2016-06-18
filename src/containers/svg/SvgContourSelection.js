@@ -8,7 +8,7 @@ import SvgSelector from './SvgSelector';
 import {
   PATH_SELECTED,
   SELECTION_MODE
-} from '~/_utils/const';
+} from '~/const';
 
 import {
   getParentGlyphId
@@ -17,7 +17,7 @@ import {
 import {
   getCalculatedParams,
   getCalculatedGlyph
-} from '~/containers/_utils';
+} from '~/_utils/parametric';
 
 import {
   mapDispatchToProps,
