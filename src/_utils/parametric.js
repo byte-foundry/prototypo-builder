@@ -4,6 +4,10 @@ import DepTree from 'deptree';
 import memoize from '~/_utils/memoize';
 import { getAllDescendants } from './../_utils/graph';
 
+// parse a text formula and return an updater function, while detecting refs
+// and params used in the formula. Note that this function isn't aware of the
+// context of the formula, so refs is incomplete when parsing the formula of an
+// 'on' param (the segment ids are missing)
 export const getUpdater = memoize(( _strFormula ) => {
   const strFormula = _strFormula.trim();
   const usedParams = strFormula.match(/(\$[a-z0-9_]+)/ig) || [];
@@ -31,17 +35,33 @@ export const getUpdater = memoize(( _strFormula ) => {
 });
 
 export const buildArgs = (nodes, params, usedParams) => {
-  return [nodes].concat( usedParams.map((name) => params[name]) );
+  return [nodes].concat( usedParams.map((name) => {
+    if ( !(name in params) ) {
+      throw new Error(`Param '${name}' doesn't exist`);
+    }
+
+    return params[name];
+  }));
 };
 const buildArgsMemoized = memoize(buildArgs);
 
 // recursively parse formulas
-export const getUpdaters = memoize((formulas) => {
-  return R.mapObjIndexed((formula) => {
-    return getUpdater(formula);
-  }, formulas);
+// Note that this function is aware of the context of the formula.
+// So when the propName is 'on', it's able to append all segment ids to the refs.
+export const getUpdaters = memoize((nodes, formulas) => {
+  return R.mapObjIndexed((formula, propName) => {
+    const updater = getUpdater(formula);
 
-}, { useOneObjArg: true });
+    if ( propName === 'on' ) {
+      return {
+        ...updater,
+        refs: [...updater.refs, ...getSegmentIds()]
+      };
+    }
+
+    return updater;
+  }, formulas);
+});
 
 export const getCalculatedParams = memoize((params, parentParams) => {
   const calculatedParams = parentParams ? { ...parentParams } : {};
@@ -55,7 +75,7 @@ export const getCalculatedParams = memoize((params, parentParams) => {
       // formulas should be stored in the state and reach that point
 
       try {
-        calculatedParams[paramName] = (
+        const tmp = (
           updater.fn.apply(
             // we don't want to use the memoized version of buildArgs here,
             // as the content of calculatedParams will change after calculating
@@ -63,10 +83,16 @@ export const getCalculatedParams = memoize((params, parentParams) => {
             null, buildArgs(null, calculatedParams, updater.params)
           )
         );
+        if ( Number.isNaN(tmp) ) {
+          throw new Error('result is NaN');
+        }
+        else {
+          calculatedParams[paramName] = tmp;
+        }
+
       } catch(e) {
-        calculatedParams[paramName] = new Error(
-          `Calculating prop '${paramName}' errored`
-        );
+        e.message = `Calculating prop '${paramName}' errored: ${e.message}`;
+        calculatedParams[paramName] = e;
       }
     }
     else if ( 'value' in param ) {
@@ -80,11 +106,7 @@ export const getCalculatedParams = memoize((params, parentParams) => {
 
 // This function is quite expensive but it's memoized based on an isolated part
 // of the state, so it's cool.
-export const getSolvingOrder = memoize((glyphUpdaters) => {
-  if ( !glyphUpdaters ) {
-    glyphUpdaters = {};
-  }
-
+export const getSolvingOrder = memoize((glyphUpdaters = {}) => {
   const depTree = new DepTree();
 
   Object.keys(glyphUpdaters).forEach((strPath) => {
@@ -99,10 +121,12 @@ export const getSolvingOrder = memoize((glyphUpdaters) => {
   return depTree.resolve();
 }, { useOneObjArg: true });
 
+export const getOncurveCoordsSolvingOrder = getSolvingOrder;
+
 export const getCalculatedGlyph = memoize((state, parentParams, glyphId) => {
   // TODO: glyphs should be able to have local parameters
   // const params = getCalculatedParams(state, parentParams, glyphId);
-  const glyphUpdaters = getUpdaters(state.formulas[glyphId]);
+  const glyphUpdaters = getUpdaters(state.nodes, state.formulas[glyphId]);
   const solvingOrder = getSolvingOrder(glyphUpdaters);
   const calculatedGlyph = R.map((node) => {
     // copy static properties of the node as is
@@ -126,15 +150,22 @@ export const getCalculatedGlyph = memoize((state, parentParams, glyphId) => {
     const path = strPath.split('.');
 
     try {
-      calculatedGlyph[path[0]][path[1]] = (
+      const tmp = (
         glyphUpdaters[strPath].fn.apply(
           calculatedGlyph[path[0]],
           buildArgsMemoized(calculatedGlyph, parentParams, glyphUpdaters[strPath].params)
         )
       );
+      if ( Number.isNaN(tmp) ) {
+        throw new Error('result is NaN');
+      }
+      else {
+        calculatedGlyph[path[0]][path[1]] = tmp;
+      }
+
     } catch(e) {
-      calculatedGlyph[path[0]][path[1]] =
-        new Error(`Calculating prop '${path[1]}' of node '${path[0]}' errored`);
+      e.message = `Calculating prop '${path[1]}' of node '${path[0]}' errored: ${e.message}`;
+      calculatedGlyph[path[0]][path[1]] = e;
     }
 
   });

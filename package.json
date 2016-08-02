@@ -1,7 +1,7 @@
 {
   "name": "prototypoBuilder",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Parametric glyph builder for Prototypo - WORK IN PROGRESS",
   "main": "",
   "scripts": {

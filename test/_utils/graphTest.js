@@ -2,10 +2,10 @@ import deepFreeze from 'deep-freeze';
 
 import {
   getAllDescendants,
-  getParentNode,
-  getParentNodeMemoized,
+  getParentId,
+  getParentIdMemoized,
   getNodePath,
-  getNodePathMemoized
+  getSegmentIds
 } from '../../src/_utils/graph';
 
 describe('graph', () => {
@@ -54,7 +54,7 @@ describe('graph', () => {
     });
   });
 
-  describe('gatParentNode', () => {
+  describe('gatParentId', () => {
     it('should return the id of the parent node', (done) => {
       const nodes = {
         'root': {
@@ -65,13 +65,13 @@ describe('graph', () => {
         }
       };
 
-      expect(getParentNode(nodes, 'node-0')).to.equal('root');
+      expect(getParentId(nodes, 'node-0')).to.equal('root');
 
       done();
     });
   });
 
-  describe('getParentNodeMemoized', () => {
+  describe('getParentIdMemoized', () => {
     it('should return the id of the parent node', (done) => {
       const nodes = {
         'root': {
@@ -90,8 +90,8 @@ describe('graph', () => {
         'node-1': 'node-0'
       };
 
-      expect(getParentNodeMemoized(nodes, 'node-0', cache)).to.equal('root');
-      expect(getParentNodeMemoized(nodes, 'node-1', cache)).to.equal('root');
+      expect(getParentIdMemoized(nodes, 'node-0', cache)).to.equal('root');
+      expect(getParentIdMemoized(nodes, 'node-1', cache)).to.equal('root');
       expect(cache['node-1']).to.equal('root');
 
       done();
@@ -117,6 +117,57 @@ describe('graph', () => {
       const expected = ['root', 'node-0', 'node-1'];
 
       expect(getNodePath(nodes, 'node-3')).to.deep.equal(expected);
+
+      done();
+    });
+  });
+
+  describe('getSegmentIds', () => {
+    it('should return the ids of all nodes in a segment of the graph', (done) => {
+      const nodes = {
+        'path': {
+          childIds: ['node-0', 'node-1', 'node-2', 'node-3', 'node-4']
+        },
+        'node-0': {
+          childIds: []
+        },
+        'node-1': {
+          childIds: []
+        },
+        'node-2': {
+          childIds: []
+        },
+        'node-3': {
+          childIds: []
+        },
+        'node-4': {
+          childIds: []
+        }
+      };
+
+      expect(getSegmentIds(nodes, 'node-0', 'node-1'))
+        .to.deep.equal(['node-0', 'node-1']);
+      expect(getSegmentIds(nodes, 'node-0', 'node-3'))
+        .to.deep.equal(['node-0', 'node-1', 'node-2', 'node-3']);
+      expect(getSegmentIds(nodes, 'node-4', 'node-3'))
+        .to.deep.equal(['node-4', 'node-3']);
+      expect(getSegmentIds(nodes, 'node-4', 'node-2'))
+        .to.deep.equal(['node-4', 'node-3', 'node-2']);
+
+      done();
+    });
+
+    it('should throw when the second childId isn\'t a sibling of the first one', (done) => {
+      const nodes = {
+        'path': {
+          childIds: ['node-0']
+        },
+        'node-0': {
+          childIds: []
+        }
+      };
+
+      expect(() => { getSegmentIds(nodes, 'node-0', 'node-1'); }).to.throw(Error);
 
       done();
     });

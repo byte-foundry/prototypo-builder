@@ -55,6 +55,17 @@ describe('containers/_utils', () => {
 
       done();
     });
+
+    it('should throw when trying to use a non-existant param', (done) => {
+      const params = {};
+
+      deepFreeze(params);
+
+      expect(() => { buildArgs(null, params, ['$zip']) })
+        .to.throw(Error);
+
+      done();
+    });
   });
 
   describe('getUpdaters', () => {
@@ -66,7 +77,7 @@ describe('containers/_utils', () => {
 
       deepFreeze(formulas);
       const updaters = getUpdaters(formulas);
-
+console.log(updaters);
       expect(updaters['node_0.x'].fn).to.be.a('function');
       expect(updaters['node_1.y'].fn).to.be.a('function');
 

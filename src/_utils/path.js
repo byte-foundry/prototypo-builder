@@ -1,3 +1,5 @@
+// Loop on a path and group each oncurve with two following offcurves
+// returns a new path
 export function mapCurve(nodeId, nodes, callback, dontMap) {
   const { childIds, isClosed } = nodes[nodeId];
   const length = ( childIds.length -1 ) / 3;
@@ -41,6 +43,8 @@ export function forEachCurve() {
   mapCurve.apply(null, [...arguments, true]);
 }
 
+// Loop on a path and group each oncurve with previous offcurve and next offcurve
+// returns a new path
 export function mapNode(nodeId, nodes, callback, dontMap) {
   const { childIds, isClosed } = nodes[nodeId];
   const length = Math.floor( childIds.length / 3 ) + 1;
