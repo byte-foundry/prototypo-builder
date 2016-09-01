@@ -47,25 +47,25 @@ import {
   UPDATE_X,
   UPDATE_Y,
 
-  ONCURVE_SMOOTH
+  ONCURVE_SMOOTH,
 } from './../actions/const';
 
 import {
   validateAddChildren,
   validateUpdateProps,
   validateGraph,
-  validateAddParam
+  validateAddParam,
 } from './_nodesValidateActions';
 
 import {
   getNode,
   getNextNode,
   getPreviousNode,
-  getCorrespondingHandles
+  getCorrespondingHandles,
 } from '../_utils/path';
 
 import {
-  getAllDescendants
+  getAllDescendants,
 } from '../_utils/graph';
 
 /* Define your initial state here.
@@ -83,7 +83,7 @@ function createNode(action) {
     id: nodeId,
     type: nodeType,
     childIds: [],
-    ...props
+    ...props,
   }
 }
 
@@ -91,7 +91,7 @@ function initParams(node) {
   return {
     ...node,
     params: {},
-    paramsMeta: { _order: [] }
+    paramsMeta: { _order: [] },
   }
 }
 
@@ -144,8 +144,8 @@ function node(state = initialNode, action) {
         ...state,
         params: {
           ...state.params,
-          [action.name]: action.props
-        }//,
+          [action.name]: action.props,
+        },//,
         // paramsMeta: {
         //   ...state.paramsMeta,
         //   _order: [ ...state.paramsMeta._order, action.name ],
@@ -157,7 +157,7 @@ function node(state = initialNode, action) {
     case DELETE_PARAM:
       return {
         ...state,
-        params: R.dissoc(action.name, state.params)
+        params: R.dissoc(action.name, state.params),
       }
     case UPDATE_PARAM:
       return {
@@ -166,9 +166,9 @@ function node(state = initialNode, action) {
           ...state.params,
           [action.name]: {
             ...state.params[action.name],
-            ...action.props
-          }
-        }
+            ...action.props,
+          },
+        },
       };
     // case UPDATE_PARAM_META:
     //   return {
@@ -230,7 +230,7 @@ function deepPositionUpdate(node, nodes, x=0, y=0, result) {
     result[node.id] = {
       ...node,
       x: node.x + x,
-      y: node.y + y
+      y: node.y + y,
     }
   } else {
     node.childIds.forEach((childId) => {
@@ -317,7 +317,7 @@ export default function(state = initialState, action) {
       } else if ( type === 'offcurve') {
         const nodesToMove = getCorrespondingHandles(parentId, nodeId, state);
         const result = {...state,
-          [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy}
+          [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy},
         };
         if (nodesToMove[2].state === ONCURVE_SMOOTH) {
           const oppositeNode = nodeId === nodesToMove[1].id ? nodesToMove[0] : nodesToMove[1];

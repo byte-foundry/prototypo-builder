@@ -8,7 +8,7 @@ module.exports = function() {
     nodeId: getNodeId(nodeType),
     nodeType,
     props: {
-      state: ONCURVE_SMOOTH
-    }
+      state: ONCURVE_SMOOTH,
+    },
   };
 };

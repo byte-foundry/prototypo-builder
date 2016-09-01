@@ -5,7 +5,7 @@ import {
   renderSvgChild,
   renderSelectionAreas,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 class SvgGlyph extends Component {
@@ -23,7 +23,7 @@ class SvgGlyph extends Component {
 }
 
 SvgGlyph.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgGlyph);

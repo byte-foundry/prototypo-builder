@@ -49,5 +49,5 @@ export default {
 //   updatePropValue: require('../actions/props/updatePropValue.js'),
   updateTmpFormula: require('../actions/ui/updateTmpFormula.js'),
   updateX: require('../actions/points/updateX.js'),
-  updateY: require('../actions/points/updateY.js')
+  updateY: require('../actions/points/updateY.js'),
 };

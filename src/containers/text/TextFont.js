@@ -4,13 +4,13 @@ import classNames from 'classnames';
 
 import {
   getUpdater,
-  getCalculatedParams
+  getCalculatedParams,
 } from '~/containers/_utils';
 
 import {
   renderTextChild,
   validateChildTypes,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import Foldable from './Foldable';
@@ -42,7 +42,7 @@ class TextFont extends Component {
     addParam(id, this.refs.paramName.value, {
       value: +this.refs.paramValue.value,
       min: +this.refs.paramMin.value,
-      max: +this.refs.paramMax.value
+      max: +this.refs.paramMax.value,
     });
 
     this.refs.paramName.value = '$';
@@ -72,7 +72,7 @@ class TextFont extends Component {
     }
 
     addParam(id, this.refs.formulaName.value, {
-      formula: this.refs.formulaValue.value
+      formula: this.refs.formulaValue.value,
     });
 
     this.refs.formulaName.value = '$';
@@ -141,7 +141,7 @@ class TextFont extends Component {
           deleteTmpFormula,
           updateFormulaAlt: (id, name, value) => {
             updateParam(id, name, { formula: value })
-          }
+          },
         }}
       />
     );
@@ -152,7 +152,7 @@ class TextFont extends Component {
     const listClass = classNames({
       'unstyled': true,
       'text-proplist': true,
-      'text-proplist--unfolded': _isPropsUnfolded
+      'text-proplist--unfolded': _isPropsUnfolded,
     });
 
     return (
@@ -207,14 +207,14 @@ class TextFont extends Component {
 
 TextFont.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 function mapStateToProps(state, ownProps) {
   return {
     node: state.nodes[ownProps.id],
     calculatedParams: getCalculatedParams(state.nodes[ownProps.id].params),
-    tmpFormula: state.ui.tmpFormula
+    tmpFormula: state.ui.tmpFormula,
   }
 }
 

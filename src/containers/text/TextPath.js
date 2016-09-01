@@ -6,7 +6,7 @@ import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperties from './NodeProperties';
@@ -29,7 +29,7 @@ class TextGlyph extends Component {
       createOffcurve,
       addOffcurve,
       createOncurve,
-      addOncurve
+      addOncurve,
     } = this.props.actions;
     const offcurve1Id = createOffcurve().nodeId;
     const offcurve2Id = createOffcurve().nodeId;
@@ -68,7 +68,7 @@ class TextGlyph extends Component {
     const nodeClass = classNames({
       'text-node': true,
       'text-node--path': true,
-      'text-node--unfolded': _isChildrenUnfolded
+      'text-node--unfolded': _isChildrenUnfolded,
     });
 
     return (
@@ -91,7 +91,7 @@ class TextGlyph extends Component {
 
 TextGlyph.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextGlyph);

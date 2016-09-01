@@ -109,7 +109,7 @@ export function getCorrespondingHandles(nodeId, childId, nodes) {
   return [
     offC1,
     offC2,
-    onC
+    onC,
   ];
 }
 
@@ -146,7 +146,7 @@ export function getNode(nodeId, childId, nodes) {
       return [
         nodes[childIds[i]],
         null,
-        null
+        null,
       ];
     }
     else if ( i === 0 ) {
@@ -156,14 +156,14 @@ export function getNode(nodeId, childId, nodes) {
           nodes[childIds[i]],
           isClosed ? nodes[childIds[childIds.length - 2]] : null,
           nodes[childIds[i + 1]],
-          isClosed ? nodes[childIds[childIds.length - 1]] : null
+          isClosed ? nodes[childIds[childIds.length - 1]] : null,
         ];
       }
       else {
         return [
           nodes[childIds[i]],
           isClosed ? nodes[childIds[childIds.length - 2]] : null,
-          nodes[childIds[i + 1]]
+          nodes[childIds[i + 1]],
         ];
       }
     }
@@ -171,14 +171,14 @@ export function getNode(nodeId, childId, nodes) {
       return [
         isClosed ? nodes[childIds[0]] : nodes[childIds[i]],
         nodes[childIds[i - 1]],
-        isClosed ? nodes[childIds[1]] : null
+        isClosed ? nodes[childIds[1]] : null,
       ];
     }
     else {
       return [
         nodes[childIds[i]],
         nodes[childIds[i - 1]],
-        nodes[childIds[i + 1]]
+        nodes[childIds[i + 1]],
       ];
     }
   }

@@ -6,6 +6,6 @@ module.exports = function() {
   return {
     type: CREATE_PATH,
     nodeId: getNodeId(nodeType),
-    nodeType
+    nodeType,
   };
 };

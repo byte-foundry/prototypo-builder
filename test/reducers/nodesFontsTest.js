@@ -4,7 +4,7 @@ import reducer from '~/reducers/nodes';
 import actions from '~/actions';
 const {
   createFont,
-  addFont
+  addFont,
 } = actions;
 
 describe('reducer: nodes (fonts)', () => {
@@ -17,8 +17,8 @@ describe('reducer: nodes (fonts)', () => {
         type: 'font',
         childIds: [],
         params: {},
-        paramsMeta: { _order: [] }
-      }
+        paramsMeta: { _order: [] },
+      },
     };
 
     deepFreeze(stateBefore);
@@ -32,26 +32,26 @@ describe('reducer: nodes (fonts)', () => {
       'node-0': {
         id: 'node-0',
         type: 'root',
-        childIds: []
+        childIds: [],
       },
       'node-1': {
         id: 'node-1',
         type: 'font',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
     const action = addFont('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
         type: 'root',
-        childIds: [ 'node-1' ]
+        childIds: [ 'node-1' ],
       },
       'node-1': {
         id: 'node-1',
         type: 'font',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
 
     deepFreeze(stateBefore);

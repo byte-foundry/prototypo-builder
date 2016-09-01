@@ -8,14 +8,14 @@ import R from 'ramda';
 const initialState = {};
 
 import {
-  getParentGlyphId
+  getParentGlyphId,
 } from './../_utils/graph';
 
 import {
   ADD_PARAM,
   DELETE_PARAM,
   UPDATE_PARAM_META,
-  UPDATE_PROP_META
+  UPDATE_PROP_META,
 } from './../actions/const';
 
 // TODO: each glyph/font in this part of the state should be like:
@@ -37,15 +37,15 @@ module.exports = function(state = initialState, action, nodes = {}) {
           [action.name]: {
             updater: action.meta.updater,
             params: action.meta.params,
-            refs: action.meta.refs
-          }
-        }
+            refs: action.meta.refs,
+          },
+        },
       };
 
     case DELETE_PARAM:
       return {
         ...state,
-        [action.nodeId]: R.dissoc(action.name, state[action.nodeId])
+        [action.nodeId]: R.dissoc(action.name, state[action.nodeId]),
       };
 
     case UPDATE_PARAM_META:
@@ -57,11 +57,11 @@ module.exports = function(state = initialState, action, nodes = {}) {
             [action.name]: {
               updater: action.meta.updater,
               params: action.meta.params,
-              refs: action.meta.refs
-            }
+              refs: action.meta.refs,
+            },
           } :
           R.dissoc(action.name, state[action.nodeId])
-        )
+        ),
       };
 
     case UPDATE_PROP_META:
@@ -77,11 +77,11 @@ module.exports = function(state = initialState, action, nodes = {}) {
               [action.nodeId + '.' + action.propNames[0]]: {
                 updater: action.meta.updater,
                 params: action.meta.params,
-                refs: action.meta.refs
-              }
+                refs: action.meta.refs,
+              },
             } :
             R.dissoc(propPath, state[glyphId])
-          )
+          ),
       };
 
     default: {

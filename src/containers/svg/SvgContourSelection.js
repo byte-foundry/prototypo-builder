@@ -7,17 +7,17 @@ import SvgSelector from './SvgSelector';
 import {PATH_SELECTED, SELECTION_MODE} from '../../actions/const';
 
 import {
-  getParentGlyphId
+  getParentGlyphId,
 } from '~/_utils/graph';
 
 import {
   getCalculatedParams,
-  getCalculatedGlyph
+  getCalculatedGlyph,
 } from './../_utils';
 
 import {
   mapDispatchToProps,
-  getPathBbox
+  getPathBbox,
 } from './_utils';
 
 class SvgContourSelection extends Component {
@@ -118,7 +118,7 @@ class SvgContourSelection extends Component {
 }
 
 SvgContourSelection.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 function mapStateToProps(state, props) {
@@ -128,7 +128,7 @@ function mapStateToProps(state, props) {
       getCalculatedParams(state.nodes['font_initial'].params),
       getParentGlyphId(state.nodes, props.id)
     ),
-    ui: state.ui
+    ui: state.ui,
   };
 }
 

@@ -5,7 +5,7 @@ import { makeGetExpandedSkeleton } from './../../selectors/makeGetExpandedSkelet
 
 import {
   renderPathData,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 class SvgExpandedSkeleton extends Component {
@@ -27,7 +27,7 @@ class SvgExpandedSkeleton extends Component {
 }
 
 SvgExpandedSkeleton.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 function makeMapStateToProps() {
@@ -37,7 +37,7 @@ function makeMapStateToProps() {
     return {
       nodes: state.nodes,
       expanded,
-      expandedSkeletonId: getExpandedSkeleton( state, props )
+      expandedSkeletonId: getExpandedSkeleton( state, props ),
     };
   }
   return mapStateToProps;

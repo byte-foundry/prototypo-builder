@@ -4,13 +4,13 @@ import classnames from 'classnames';
 
 import {
   ONCURVE_SMOOTH,
-  SELECTION_MODE
+  SELECTION_MODE,
 } from '../../actions/const';
 
 import {
   getNode,
   getPreviousNode,
-  getNextNode
+  getNextNode,
 } from '../../_utils/path';
 
 import {
@@ -20,7 +20,7 @@ import {
   getDerivative,
   multiplyVecByN,
   addVec,
-  dist
+  dist,
 } from './_utils';
 
 class SvgSelector extends Component {
@@ -44,7 +44,7 @@ class SvgSelector extends Component {
           const ghostHandlePoint = addVec(this.props.source, ghostVec);
           this.props.actions.updateProp(this.props.point.id, '_ghost', {
             x: ghostHandlePoint.x,
-            y: ghostHandlePoint.y
+            y: ghostHandlePoint.y,
           });
           this.props.actions.updateProp(this.props.point.id, '_isGhost', true);
         }
@@ -57,7 +57,7 @@ class SvgSelector extends Component {
           const ghostHandlePoint = addVec(this.props.source, ghostVec);
           this.props.actions.updateProp(this.props.point.id, '_ghost', {
             x: ghostHandlePoint.x,
-            y: ghostHandlePoint.y
+            y: ghostHandlePoint.y,
           });
           this.props.actions.updateProp(this.props.point.id, '_isGhost', true);
         }
@@ -101,7 +101,7 @@ class SvgSelector extends Component {
 
     const classes = classnames({
       [this.props.className]: true,
-      'is-hovered': this.props.hovered === this.props.point.id
+      'is-hovered': this.props.hovered === this.props.point.id,
     });
 
     const selectionIndicator = this.props.mode === SELECTION_MODE && this.props.point.id === this.props.hovered
@@ -129,7 +129,7 @@ class SvgSelector extends Component {
 }
 
 SvgSelector.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 function mapStateToProps(state) {

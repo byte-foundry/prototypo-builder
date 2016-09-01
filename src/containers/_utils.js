@@ -17,7 +17,7 @@ export const getUpdater = memoize(( _strFormula ) => {
   } catch(e) {
     return {
       formula: _strFormula,
-      isInvalid: true
+      isInvalid: true,
     };
   }
 
@@ -26,7 +26,7 @@ export const getUpdater = memoize(( _strFormula ) => {
     fn: memoize(fn),
     params: usedParams,
     refs: usedRefs,
-    isInvalid: false
+    isInvalid: false,
   };
 });
 

@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import {
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperties from './NodeProperties';
@@ -18,7 +18,7 @@ class TextOffcurve extends Component {
     const nodeClass = classNames({
       'text-node': true,
       'text-node--offcurve': true,
-      'text-node--unfolded': _isPropsUnfolded
+      'text-node--unfolded': _isPropsUnfolded,
     });
 
     return (
@@ -32,7 +32,7 @@ class TextOffcurve extends Component {
 }
 
 TextOffcurve.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextOffcurve);

@@ -6,6 +6,6 @@ module.exports = function() {
   return {
     type: CREATE_GLYPH,
     nodeId: getNodeId(nodeType),
-    nodeType
+    nodeType,
   };
 };

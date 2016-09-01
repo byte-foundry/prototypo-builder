@@ -5,7 +5,7 @@ import actions from '~/actions';
 
 const {
   updateTmpFormula,
-  deleteTmpFormula
+  deleteTmpFormula,
 } = actions;
 
 describe('reducer: ui', () => {
@@ -13,7 +13,7 @@ describe('reducer: ui', () => {
     const stateBefore = {};
     const action1 = updateTmpFormula('node_0.x', '2 * 3');
     const stateAfter1 = {
-      tmpFormula: { propPath: 'node_0.x', formula: '2 * 3' }
+      tmpFormula: { propPath: 'node_0.x', formula: '2 * 3' },
     };
 
     deepFreeze(stateBefore);
@@ -26,7 +26,7 @@ describe('reducer: ui', () => {
 
   it('should hanlde DELETE_TMP_FORMULA action', (done) => {
     const stateBefore = {
-      tmpFormula: { propPath: 'node_0.x', formula: '2 * 3' }
+      tmpFormula: { propPath: 'node_0.x', formula: '2 * 3' },
     };
     const action1 = deleteTmpFormula();
     const stateAfter1 = {}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import {
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 class Foldable extends Component {
@@ -36,7 +36,7 @@ class Foldable extends Component {
 }
 
 Foldable.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Foldable);

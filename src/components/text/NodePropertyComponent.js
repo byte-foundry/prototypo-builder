@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
 import {
-  getUpdater
+  getUpdater,
 } from '~/containers/_utils';
 
 const typeMap = {
   number: 'text',
-  boolean: 'checkbox'
+  boolean: 'checkbox',
 }
 
 require('styles/text/NodeProperty.scss');

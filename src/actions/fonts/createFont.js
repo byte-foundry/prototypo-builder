@@ -6,6 +6,6 @@ module.exports = function() {
   return {
     type: CREATE_FONT,
     nodeId: getNodeId(nodeType),
-    nodeType
+    nodeType,
   };
 };

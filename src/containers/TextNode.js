@@ -2,7 +2,7 @@
 
 import React, {
   Component,
-  PropTypes
+  PropTypes,
 } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -62,7 +62,7 @@ class TextNode extends Component {
 }
 
 TextNode.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -74,7 +74,7 @@ function mapDispatchToProps(dispatch) {
     createNode: require('../actions/nodes/createNode.js'),
     deleteNode: require('../actions/nodes/deleteNode.js'),
     addChild: require('../actions/nodes/addChild.js'),
-    removeChild: require('../actions/nodes/removeChild.js')
+    removeChild: require('../actions/nodes/removeChild.js'),
   };
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
   return actionMap;

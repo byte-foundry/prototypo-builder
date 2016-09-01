@@ -8,7 +8,7 @@ const {
   // updatePropMeta,
   // updatePropValue,
   // updatePropsValues,
-  updateCoords
+  updateCoords,
 } = actions;
 
 describe('reducer: nodes (node props)', () => {
@@ -17,8 +17,8 @@ describe('reducer: nodes (node props)', () => {
       'node-0': {
         id: 'node-0',
         type: 'offcurve',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
     const action1 = updateProp('node-0', 'x', 123);
     const stateAfter1 = {
@@ -26,8 +26,8 @@ describe('reducer: nodes (node props)', () => {
         id: 'node-0',
         type: 'offcurve',
         childIds: [],
-        x: 123
-      }
+        x: 123,
+      },
     };
     const action2 = updateProp('node-0', 'x', 456);
     const stateAfter2 = {
@@ -35,8 +35,8 @@ describe('reducer: nodes (node props)', () => {
         id: 'node-0',
         type: 'offcurve',
         childIds: [],
-        x: 456
-      }
+        x: 456,
+      },
     };
 
     deepFreeze(stateBefore);
@@ -188,8 +188,8 @@ describe('reducer: nodes (node props)', () => {
       'node-0': {
         id: 'node-0',
         type: 'offcurve',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
     const action1 = updateCoords('node-0', 12, 34);
     const stateAfter1 = {
@@ -198,8 +198,8 @@ describe('reducer: nodes (node props)', () => {
         type: 'offcurve',
         childIds: [],
         x: 12,
-        y: 34
-      }
+        y: 34,
+      },
     };
 
     deepFreeze(stateBefore);
@@ -214,8 +214,8 @@ describe('reducer: nodes (node props)', () => {
         type: 'offcurve',
         childIds: [],
         x: 56,
-        y: 78
-      }
+        y: 78,
+      },
     };
 
     deepFreeze(action2);
@@ -229,8 +229,8 @@ describe('reducer: nodes (node props)', () => {
         type: 'offcurve',
         childIds: [],
         x: 90,
-        y: 13
-      }
+        y: 13,
+      },
     };
 
     deepFreeze(action3);

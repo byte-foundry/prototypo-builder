@@ -6,11 +6,11 @@ import { getParentGlyphId } from '~/_utils/graph';
 
 import {
   getCalculatedParams,
-  getCalculatedGlyph
+  getCalculatedGlyph,
 } from '~/containers/_utils';
 
 import {
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperty from '~/components/text/NodePropertyComponent';
@@ -74,7 +74,7 @@ class NodeProperties extends Component {
                   deleteTmpFormula,
                   updateFormulaAlt: (id, name, value) => {
                     updateFormula(glyphId, `${id}.${name}`, value);
-                  }
+                  },
                 }}
               />
             </li>
@@ -86,7 +86,7 @@ class NodeProperties extends Component {
 }
 
 NodeProperties.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -104,7 +104,7 @@ function mapStateToProps(state, ownProps) {
       glyphId
     )[ownProps.id],
     formulas: state.formulas[glyphId],
-    tmpFormula: state.ui.tmpFormula
+    tmpFormula: state.ui.tmpFormula,
   };
 }
 

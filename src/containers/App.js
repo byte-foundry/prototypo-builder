@@ -6,7 +6,7 @@
  */
 import React, {
   Component,
-  PropTypes
+  PropTypes,
 } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -33,14 +33,14 @@ App.propTypes = {
   actions: PropTypes.object.isRequired,
   nodes: PropTypes.object.isRequired,
   ui: PropTypes.object.isRequired,
-  formulas: PropTypes.object.isRequired
+  formulas: PropTypes.object.isRequired,
 };
 function mapStateToProps(state) {
   /* Populated by react-webpack-redux:reducer */
   const props = {
     nodes: state.nodes,
     ui: state.ui,
-    formulas: state.formulas
+    formulas: state.formulas,
   };
   return props;
 }

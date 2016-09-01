@@ -6,7 +6,7 @@ const {
   addParam,
   deleteParam,
   updateParamMeta,
-  updatePropMeta
+  updatePropMeta,
 } = actions;
 
 describe('updaters', () => {
@@ -20,7 +20,7 @@ describe('updaters', () => {
       'glyph_1': { childIds: ['node_2'] },
       'node_0': { childIds:[] },
       'node_1': { childIds:[] },
-      'node_2': { childIds:[] }
+      'node_2': { childIds:[] },
     };
   });
 
@@ -37,15 +37,15 @@ describe('updaters', () => {
     const action1 = addParam('font_0', '$width', undefined, { updater: 12, formula: '12' });
     const stateAfter1 = {
       'font_0': {
-        '$width': { updater: 12, params: undefined, refs: undefined }
-      }
+        '$width': { updater: 12, params: undefined, refs: undefined },
+      },
     };
     const action2 = addParam('font_0', '$height', undefined, { updater: 34, formula: '34' });
     const stateAfter2 = {
       'font_0': {
         '$width': { updater: 12, params: undefined, refs: undefined },
-        '$height': { updater: 34, params: undefined, refs: undefined }
-      }
+        '$height': { updater: 34, params: undefined, refs: undefined },
+      },
     };
 
     deepFreeze(graph);
@@ -65,14 +65,14 @@ describe('updaters', () => {
     const stateBefore = {
       'node_0': {
         '$width': { updater: 56, params: undefined, refs: undefined },
-        '$height': { updater: 34, params: undefined, refs: undefined }
-      }
+        '$height': { updater: 34, params: undefined, refs: undefined },
+      },
     };
     const action = deleteParam('node_0', '$height');
     const stateAfter = {
       'node_0': {
-        '$width': { updater: 56, params: undefined, refs: undefined }
-      }
+        '$width': { updater: 56, params: undefined, refs: undefined },
+      },
     };
 
     deepFreeze(stateBefore);
@@ -88,36 +88,36 @@ describe('updaters', () => {
     const action1 = updatePropMeta('node_0', 'x', { updater: 12, formula: '12' });
     const stateAfter1 = {
       'glyph_0': {
-        'node_0.x': { updater: 12, params: undefined, refs: undefined }
-      }
+        'node_0.x': { updater: 12, params: undefined, refs: undefined },
+      },
     };
     const action2 = updatePropMeta('node_2', 'y', { updater: 34, formula: '34' });
     const stateAfter2 = {
       'glyph_0': {
-        'node_0.x': { updater: 12, params: undefined, refs: undefined }
+        'node_0.x': { updater: 12, params: undefined, refs: undefined },
       },
       'glyph_1': {
-        'node_2.y': { updater: 34, params: undefined, refs: undefined }
-      }
+        'node_2.y': { updater: 34, params: undefined, refs: undefined },
+      },
     };
     const action3 = updatePropMeta('node_1', 'y', { updater: 56, formula: '56' });
     const stateAfter3 = {
       'glyph_0': {
         'node_0.x': { updater: 12, params: undefined, refs: undefined },
-        'node_1.y': { updater: 56, params: undefined, refs: undefined }
+        'node_1.y': { updater: 56, params: undefined, refs: undefined },
       },
       'glyph_1': {
-        'node_2.y': { updater: 34, params: undefined, refs: undefined }
-      }
+        'node_2.y': { updater: 34, params: undefined, refs: undefined },
+      },
     };
     const action4 = updatePropMeta('node_1', 'y', { updater: 56, formula: '' });
     const stateAfter4 = {
       'glyph_0': {
-        'node_0.x': { updater: 12, params: undefined, refs: undefined }
+        'node_0.x': { updater: 12, params: undefined, refs: undefined },
       },
       'glyph_1': {
-        'node_2.y': { updater: 34, params: undefined, refs: undefined }
-      }
+        'node_2.y': { updater: 34, params: undefined, refs: undefined },
+      },
     };
 
     deepFreeze(graph);
@@ -144,28 +144,28 @@ describe('updaters', () => {
     const action1 = updateParamMeta('node_0', '$width', { updater: 12, formula: '12' });
     const stateAfter1 = {
       'node_0': {
-        '$width': { updater: 12, params: undefined, refs: undefined }
-      }
+        '$width': { updater: 12, params: undefined, refs: undefined },
+      },
     };
     const action2 = updateParamMeta('node_0', '$height', { updater: 34, formula: '34' });
     const stateAfter2 = {
       'node_0': {
         '$width': { updater: 12, params: undefined, refs: undefined },
-        '$height': { updater: 34, params: undefined, refs: undefined }
-      }
+        '$height': { updater: 34, params: undefined, refs: undefined },
+      },
     };
     const action3 = updateParamMeta('node_0', '$width', { updater: 56, formula: '56' });
     const stateAfter3 = {
       'node_0': {
         '$width': { updater: 56, params: undefined, refs: undefined },
-        '$height': { updater: 34, params: undefined, refs: undefined }
-      }
+        '$height': { updater: 34, params: undefined, refs: undefined },
+      },
     };
     const action4 = updateParamMeta('node_0', '$height', { updater: 56, formula: '' });
     const stateAfter4 = {
       'node_0': {
-        '$width': { updater: 56, params: undefined, refs: undefined }
-      }
+        '$width': { updater: 56, params: undefined, refs: undefined },
+      },
     };
 
     deepFreeze(graph);

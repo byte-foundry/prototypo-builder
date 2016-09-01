@@ -5,6 +5,6 @@ module.exports = function(nodeId, childIds, childTypes) {
     type: ADD_CHILDREN,
     nodeId,
     childIds,
-    childTypes
+    childTypes,
   };
 };

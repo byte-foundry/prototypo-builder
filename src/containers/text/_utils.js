@@ -18,7 +18,7 @@ const componentMap = {
   glyph: TextGlyph,
   offcurve: TextOffcurve,
   oncurve: TextOncurve,
-  path: TextPath
+  path: TextPath,
 };
 
 export function renderTextChild(childId) {
