@@ -19,7 +19,7 @@ class TextOncurve extends Component {
     this.renderTextChild = renderTextChild.bind(this);
   }
   render() {
-    const { id, type, _isChildrenUnfolded, offcurveIds } = this.props;
+    const { id, parentId, type, _isChildrenUnfolded, offcurveIds } = this.props;
     const nodeClass = classNames({
       'text-node': true,
       'text-node--oncurve': true,
@@ -27,7 +27,7 @@ class TextOncurve extends Component {
     });
 
     return (
-      <Foldable id={id} parentId={this.props.parentId} switchProp="_isChildrenUnfolded">
+      <Foldable id={id} parentId={parentId} switchProp="_isChildrenUnfolded">
         <ul className={nodeClass}>
           <li>
             <ul className="text-node__children-list unstyled">
