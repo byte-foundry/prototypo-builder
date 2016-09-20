@@ -17,13 +17,17 @@ class Foldable extends Component {
 
     const { id, switchProp } = this.props;
     const { updateProp } = this.props.actions;
-
+    if (this.props[switchProp]) {
+      this.props.actions.setNodeSelected();
+    } else {
+      this.props.actions.setNodeSelected(this.props.id, this.props.parentId);
+      this.props.actions.setNodeOptionsSelected(this.props.id);
+    }
     updateProp(id, switchProp, !this.props[switchProp]);
   }
 
   render() {
     const { id, name, switchProp } = this.props;
-
     return (
       <div className="text-node__foldable-wrapper">
         <a id={id} className="text-node__fold-button" onClick={this.handleFoldClick}>

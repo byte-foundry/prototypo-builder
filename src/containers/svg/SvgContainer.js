@@ -311,17 +311,6 @@ class SvgContainer extends Component {
   }
 
   render() {
-    let nodeSelected = false;
-    if (this.props.ui.selected.nodeOptions) {
-      const {id, type} = this.props.nodes[this.props.ui.selected.nodeOptions];
-      nodeSelected = (
-        <div className="floating-prop">
-          <p>{id}</p>
-          <NodeProperties id={id} type={type} />
-        </div>
-      );
-    }
-
     const image = this.props.ui.image
       ? <img className="background-image" src={this.props.ui.image} onDragStart={(e) => {e.preventDefault()}}/>
       : false;
@@ -342,7 +331,6 @@ class SvgContainer extends Component {
           </g>
         </svg>
         <UiToolbar />
-        {nodeSelected}
       </div>
     );
   }

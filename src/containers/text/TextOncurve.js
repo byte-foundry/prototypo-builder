@@ -27,9 +27,8 @@ class TextOncurve extends Component {
     });
 
     return (
-      <Foldable id={id} switchProp="_isChildrenUnfolded">
+      <Foldable id={id} parentId={this.props.parentId} switchProp="_isChildrenUnfolded">
         <ul className={nodeClass}>
-          <li><NodeProperties id={id} type={type} /></li>
           <li>
             <ul className="text-node__children-list unstyled">
               {offcurveIds.map(this.renderTextChild)}

@@ -74,7 +74,6 @@ class TextGlyph extends Component {
     return (
       <Foldable id={id} switchProp="_isChildrenUnfolded">
         <ul className={nodeClass}>
-          <li><NodeProperties id={id} type={type} /></li>
           <li>
             <ul className="text-node__children-list unstyled">
               {childIds.map(this.renderTextCurve)}

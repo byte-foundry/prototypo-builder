@@ -22,10 +22,7 @@ class TextOffcurve extends Component {
     });
 
     return (
-      <Foldable id={id} switchProp="_isPropsUnfolded">
-        <ul className={nodeClass}>
-          <li><NodeProperties id={id} type={type} /></li>
-        </ul>
+      <Foldable id={id} parentId={this.props.parentId} switchProp="_isPropsUnfolded">
       </Foldable>
     );
   }
