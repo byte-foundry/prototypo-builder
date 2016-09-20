@@ -21,4 +21,6 @@ function mapStateToProps(state) {
   return {ui: state.ui};
 }
 
-export default connect(mapStateToProps, () => {return {}})(DebugInfos);
+export default connect(mapStateToProps, () => {
+  return {};
+})(DebugInfos);

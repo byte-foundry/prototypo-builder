@@ -6,7 +6,7 @@ function createNode(nodeType = 'node') {
   return {
     type: CREATE_NODE,
     nodeId: getNodeId(nodeType),
-    nodeType
+    nodeType,
   };
 }
 

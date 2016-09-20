@@ -1,7 +1,7 @@
 import {BATCH_ACTIONS} from './../const';
 import {
   createOffcurve,
-  createOncurve
+  createOncurve,
 } from '~/actions';
 
 module.exports = function() {
@@ -10,7 +10,7 @@ module.exports = function() {
     actions: [
       createOffcurve(),
       createOffcurve(),
-      createOncurve()
-    ]
+      createOncurve(),
+    ],
   };
 };

@@ -5,7 +5,7 @@ import fontModel from '~/_utils/fontModel';
 import { getParentGlyphId } from '~/_utils/graph';
 
 import {
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperty from './NodeProperty';
@@ -34,7 +34,7 @@ class NodeProperties extends Component {
 }
 
 NodeProperties.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -42,7 +42,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     ...state.nodes[ownProps.id],
-    glyphId
+    glyphId,
   };
 }
 

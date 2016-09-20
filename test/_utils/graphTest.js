@@ -5,7 +5,7 @@ import {
   getParentId,
   getParentIdMemoized,
   getNodePath,
-  getSegmentIds
+  getSegmentIds,
 } from '../../src/_utils/graph';
 
 describe('graph', () => {
@@ -13,37 +13,37 @@ describe('graph', () => {
     it('should extract all descendants of a node from the graph', (done) => {
       const graph = {
         'root': {
-          childIds: ['node-0', 'node-1']
+          childIds: ['node-0', 'node-1'],
         },
         'node-0': {
-          childIds: []
+          childIds: [],
         },
         'node-1': {
-          childIds: ['node-2', 'node-3']
+          childIds: ['node-2', 'node-3'],
         },
         'node-2': {
-          childIds: []
+          childIds: [],
         },
         'node-3': {
-          childIds: []
+          childIds: [],
         },
         'node-4': {
-          childIds: []
-        }
+          childIds: [],
+        },
       };
       const expected = {
         'node-0': {
-          childIds: []
+          childIds: [],
         },
         'node-1': {
-          childIds: ['node-2', 'node-3']
+          childIds: ['node-2', 'node-3'],
         },
         'node-2': {
-          childIds: []
+          childIds: [],
         },
         'node-3': {
-          childIds: []
-        }
+          childIds: [],
+        },
       };
 
       deepFreeze(graph);
@@ -58,11 +58,11 @@ describe('graph', () => {
     it('should return the id of the parent node', (done) => {
       const nodes = {
         'root': {
-          childIds: ['node-0']
+          childIds: ['node-0'],
         },
         'node-0': {
-          childIds: []
-        }
+          childIds: [],
+        },
       };
 
       expect(getParentId(nodes, 'node-0')).to.equal('root');
@@ -75,19 +75,19 @@ describe('graph', () => {
     it('should return the id of the parent node', (done) => {
       const nodes = {
         'root': {
-          childIds: ['node-0', 'node-1']
+          childIds: ['node-0', 'node-1'],
         },
         'node-0': {
-          childIds: []
+          childIds: [],
         },
         'node-1': {
-          childIds: []
-        }
+          childIds: [],
+        },
       };
 
       const cache = {
         'node-0': 'root',
-        'node-1': 'node-0'
+        'node-1': 'node-0',
       };
 
       expect(getParentIdMemoized(nodes, 'node-0', cache)).to.equal('root');
@@ -102,17 +102,17 @@ describe('graph', () => {
     it('should return the path to a specific node in the graph', (done) => {
       const nodes = {
         'root': {
-          childIds: ['node-0']
+          childIds: ['node-0'],
         },
         'node-0': {
-          childIds: ['node-1']
+          childIds: ['node-1'],
         },
         'node-1': {
-          childIds: ['node-2', 'node-3', 'node-4']
+          childIds: ['node-2', 'node-3', 'node-4'],
         },
         'node-2': {
-          childIds: []
-        }
+          childIds: [],
+        },
       };
       const expected = ['root', 'node-0', 'node-1'];
 
@@ -126,23 +126,23 @@ describe('graph', () => {
     it('should return the ids of all nodes in a segment of the graph', (done) => {
       const nodes = {
         'path': {
-          childIds: ['node-0', 'node-1', 'node-2', 'node-3', 'node-4']
+          childIds: ['node-0', 'node-1', 'node-2', 'node-3', 'node-4'],
         },
         'node-0': {
-          childIds: []
+          childIds: [],
         },
         'node-1': {
-          childIds: []
+          childIds: [],
         },
         'node-2': {
-          childIds: []
+          childIds: [],
         },
         'node-3': {
-          childIds: []
+          childIds: [],
         },
         'node-4': {
-          childIds: []
-        }
+          childIds: [],
+        },
       };
 
       expect(getSegmentIds(nodes, 'node-0', 'node-1'))
@@ -160,14 +160,16 @@ describe('graph', () => {
     it('should throw when the second childId isn\'t a sibling of the first one', (done) => {
       const nodes = {
         'path': {
-          childIds: ['node-0']
+          childIds: ['node-0'],
         },
         'node-0': {
-          childIds: []
-        }
+          childIds: [],
+        },
       };
 
-      expect(() => { getSegmentIds(nodes, 'node-0', 'node-1'); }).to.throw(Error);
+      expect(() => {
+        getSegmentIds(nodes, 'node-0', 'node-1');
+      }).to.throw(Error);
 
       done();
     });

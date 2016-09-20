@@ -3,7 +3,7 @@ import {
   forEachNode,
   mapCurve,
   mapNode,
-  getNode
+  getNode,
 } from '../../src/_utils/path';
 
 describe('path', () => {
@@ -21,11 +21,11 @@ describe('path', () => {
       const state = {
         'node-0': {
           id: 'node-0',
-          childIds: ['node-1']
+          childIds: ['node-1'],
         },
         'node-1': {
-          id: 'node-1'
-        }
+          id: 'node-1',
+        },
       };
 
       forEachCurve('node-0', state, callback);
@@ -39,20 +39,20 @@ describe('path', () => {
       const state = {
         'node-0': {
           id: 'node-0',
-          childIds: ['node-1', 'node-2', 'node-3', 'node-4']
+          childIds: ['node-1', 'node-2', 'node-3', 'node-4'],
         },
         'node-1': {
-          id: 'node-1'
+          id: 'node-1',
         },
         'node-2': {
-          id: 'node-2'
+          id: 'node-2',
         },
         'node-3': {
-          id: 'node-3'
+          id: 'node-3',
         },
         'node-4': {
-          id: 'node-4'
-        }
+          id: 'node-4',
+        },
       };
       const curve = [
         { id: 'node-1' },
@@ -60,7 +60,7 @@ describe('path', () => {
         { id: 'node-3' },
         { id: 'node-4' },
         0,
-        1
+        1,
       ];
 
       forEachCurve('node-0', state, callback);
@@ -76,30 +76,30 @@ describe('path', () => {
         'node-0': {
           id: 'node-0',
           childIds: [
-            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
-          ]
+            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7',
+          ],
         },
         'node-1': {
-          id: 'node-1'
+          id: 'node-1',
         },
         'node-2': {
-          id: 'node-2'
+          id: 'node-2',
         },
         'node-3': {
-          id: 'node-3'
+          id: 'node-3',
         },
         'node-4': {
-          id: 'node-4'
+          id: 'node-4',
         },
         'node-5': {
-          id: 'node-5'
+          id: 'node-5',
         },
         'node-6': {
-          id: 'node-6'
+          id: 'node-6',
         },
         'node-7': {
-          id: 'node-7'
-        }
+          id: 'node-7',
+        },
       };
       const curve0 = [
         { id: 'node-1' },
@@ -107,7 +107,7 @@ describe('path', () => {
         { id: 'node-3' },
         { id: 'node-4' },
         0,
-        2
+        2,
       ];
       const curve1 = [
         { id: 'node-4' },
@@ -115,7 +115,7 @@ describe('path', () => {
         { id: 'node-6' },
         { id: 'node-7' },
         1,
-        2
+        2,
       ]
 
       forEachCurve('node-0', state, callback);
@@ -139,30 +139,30 @@ describe('path', () => {
         'node-0': {
           id: 'node-0',
           childIds: [
-            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
-          ]
+            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7',
+          ],
         },
         'node-1': {
-          id: 'node-1'
+          id: 'node-1',
         },
         'node-2': {
-          id: 'node-2'
+          id: 'node-2',
         },
         'node-3': {
-          id: 'node-3'
+          id: 'node-3',
         },
         'node-4': {
-          id: 'node-4'
+          id: 'node-4',
         },
         'node-5': {
-          id: 'node-5'
+          id: 'node-5',
         },
         'node-6': {
-          id: 'node-6'
+          id: 'node-6',
         },
         'node-7': {
-          id: 'node-7'
-        }
+          id: 'node-7',
+        },
       };
       const expected = [
         [
@@ -172,7 +172,7 @@ describe('path', () => {
           { id: 'node-4' },
           0,
           2,
-          1
+          1,
         ],
         [
           { id: 'node-4' },
@@ -181,8 +181,8 @@ describe('path', () => {
           { id: 'node-7' },
           1,
           2,
-          11
-        ]
+          11,
+        ],
       ];
 
       const result = mapCurve('node-0', state, callback);
@@ -208,18 +208,18 @@ describe('path', () => {
         const state = {
           'node-0': {
             id: 'node-0',
-            childIds: ['node-1']
+            childIds: ['node-1'],
           },
           'node-1': {
-            id: 'node-1'
-          }
+            id: 'node-1',
+          },
         };
         const node0 = [
           { id: 'node-1' },
           null,
           null,
           0,
-          1
+          1,
         ];
 
         forEachNode('node-0', state, callback);
@@ -234,34 +234,34 @@ describe('path', () => {
         const state = {
           'node-0': {
             id: 'node-0',
-            childIds: ['node-1', 'node-2', 'node-3', 'node-4']
+            childIds: ['node-1', 'node-2', 'node-3', 'node-4'],
           },
           'node-1': {
-            id: 'node-1'
+            id: 'node-1',
           },
           'node-2': {
-            id: 'node-2'
+            id: 'node-2',
           },
           'node-3': {
-            id: 'node-3'
+            id: 'node-3',
           },
           'node-4': {
-            id: 'node-4'
-          }
+            id: 'node-4',
+          },
         };
         const node0 = [
           { id: 'node-1' },
           null,
           { id: 'node-2' },
           0,
-          2
+          2,
         ];
         const node1 = [
           { id: 'node-4' },
           { id: 'node-3' },
           null,
           1,
-          2
+          2,
         ];
 
         forEachNode('node-0', state, callback);
@@ -278,51 +278,51 @@ describe('path', () => {
           'node-0': {
             id: 'node-0',
             childIds: [
-              'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
-            ]
+              'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7',
+            ],
           },
           'node-1': {
-            id: 'node-1'
+            id: 'node-1',
           },
           'node-2': {
-            id: 'node-2'
+            id: 'node-2',
           },
           'node-3': {
-            id: 'node-3'
+            id: 'node-3',
           },
           'node-4': {
-            id: 'node-4'
+            id: 'node-4',
           },
           'node-5': {
-            id: 'node-5'
+            id: 'node-5',
           },
           'node-6': {
-            id: 'node-6'
+            id: 'node-6',
           },
           'node-7': {
-            id: 'node-7'
-          }
+            id: 'node-7',
+          },
         };
         const node0 = [
           { id: 'node-1' },
           null,
           { id: 'node-2' },
           0,
-          3
+          3,
         ];
         const node1 = [
           { id: 'node-4' },
           { id: 'node-3' },
           { id: 'node-5' },
           1,
-          3
+          3,
         ];
         const node2 = [
           { id: 'node-7' },
           { id: 'node-6' },
           null,
           2,
-          3
+          3,
         ];
 
         forEachNode('node-0', state, callback);
@@ -351,18 +351,18 @@ describe('path', () => {
           'node-0': {
             id: 'node-0',
             isClosed: true,
-            childIds: ['node-1']
+            childIds: ['node-1'],
           },
           'node-1': {
-            id: 'node-1'
-          }
+            id: 'node-1',
+          },
         };
         const node0 = [
           { id: 'node-1' },
           null,
           null,
           0,
-          1
+          1,
         ];
 
         forEachNode('node-0', state, callback);
@@ -378,34 +378,34 @@ describe('path', () => {
           'node-0': {
             id: 'node-0',
             isClosed: true,
-            childIds: ['node-1', 'node-2', 'node-3', 'node-4']
+            childIds: ['node-1', 'node-2', 'node-3', 'node-4'],
           },
           'node-1': {
-            id: 'node-1'
+            id: 'node-1',
           },
           'node-2': {
-            id: 'node-2'
+            id: 'node-2',
           },
           'node-3': {
-            id: 'node-3'
+            id: 'node-3',
           },
           'node-4': {
-            id: 'node-4'
-          }
+            id: 'node-4',
+          },
         };
         const node0 = [
           { id: 'node-1' },
           { id: 'node-3' },
           { id: 'node-2' },
           0,
-          2
+          2,
         ];
         const node1 = [
           { id: 'node-1' },
           { id: 'node-3' },
           { id: 'node-2' },
           1,
-          2
+          2,
         ];
 
         forEachNode('node-0', state, callback);
@@ -423,51 +423,51 @@ describe('path', () => {
             id: 'node-0',
             isClosed: true,
             childIds: [
-              'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
-            ]
+              'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7',
+            ],
           },
           'node-1': {
-            id: 'node-1'
+            id: 'node-1',
           },
           'node-2': {
-            id: 'node-2'
+            id: 'node-2',
           },
           'node-3': {
-            id: 'node-3'
+            id: 'node-3',
           },
           'node-4': {
-            id: 'node-4'
+            id: 'node-4',
           },
           'node-5': {
-            id: 'node-5'
+            id: 'node-5',
           },
           'node-6': {
-            id: 'node-6'
+            id: 'node-6',
           },
           'node-7': {
-            id: 'node-7'
-          }
+            id: 'node-7',
+          },
         };
         const node0 = [
           { id: 'node-1' },
           { id: 'node-6' },
           { id: 'node-2' },
           0,
-          3
+          3,
         ];
         const node1 = [
           { id: 'node-4' },
           { id: 'node-3' },
           { id: 'node-5' },
           1,
-          3
+          3,
         ];
         const node2 = [
           { id: 'node-1' },
           { id: 'node-6' },
           { id: 'node-2' },
           2,
-          3
+          3,
         ];
 
         forEachNode('node-0', state, callback);
@@ -493,30 +493,30 @@ describe('path', () => {
           id: 'node-0',
           isClosed: true,
           childIds: [
-            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
-          ]
+            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7',
+          ],
         },
         'node-1': {
-          id: 'node-1'
+          id: 'node-1',
         },
         'node-2': {
-          id: 'node-2'
+          id: 'node-2',
         },
         'node-3': {
-          id: 'node-3'
+          id: 'node-3',
         },
         'node-4': {
-          id: 'node-4'
+          id: 'node-4',
         },
         'node-5': {
-          id: 'node-5'
+          id: 'node-5',
         },
         'node-6': {
-          id: 'node-6'
+          id: 'node-6',
         },
         'node-7': {
-          id: 'node-7'
-        }
+          id: 'node-7',
+        },
       };
       const expected = [
         [
@@ -525,7 +525,7 @@ describe('path', () => {
           { id: 'node-2' },
           0,
           3,
-          1
+          1,
         ],
         [
           { id: 'node-4' },
@@ -533,7 +533,7 @@ describe('path', () => {
           { id: 'node-5' },
           1,
           3,
-          11
+          11,
         ],
         [
           { id: 'node-1' },
@@ -541,8 +541,8 @@ describe('path', () => {
           { id: 'node-2' },
           2,
           3,
-          21
-        ]
+          21,
+        ],
       ];
 
       const result = mapNode('node-0', state, callback);
@@ -560,69 +560,69 @@ describe('path', () => {
           id: 'node-0',
           isClosed: true,
           childIds: [
-            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
-          ]
+            'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7',
+          ],
         },
         'node-1': {
-          id: 'node-1'
+          id: 'node-1',
         },
         'node-2': {
-          id: 'node-2'
+          id: 'node-2',
         },
         'node-3': {
-          id: 'node-3'
+          id: 'node-3',
         },
         'node-4': {
-          id: 'node-4'
+          id: 'node-4',
         },
         'node-5': {
-          id: 'node-5'
+          id: 'node-5',
         },
         'node-6': {
-          id: 'node-6'
+          id: 'node-6',
         },
         'node-7': {
-          id: 'node-7'
-        }
+          id: 'node-7',
+        },
       };
 
       const expected0 = [
         {
-          id: 'node-1'
+          id: 'node-1',
         },
         {
-          id: 'node-6'
+          id: 'node-6',
         },
         {
-          id: 'node-2'
+          id: 'node-2',
         },
         {
-          id: 'node-7'
-        }
+          id: 'node-7',
+        },
       ];
 
       const expected1 = [
         {
-          id: 'node-4'
+          id: 'node-4',
         },
         {
-          id: 'node-3'
+          id: 'node-3',
         },
         {
-          id: 'node-5'
-        }
+          id: 'node-5',
+        },
       ];
 
       const expected2 = [
         {
-          id: 'node-1'
+          id: 'node-1',
         },
         {
-          id: 'node-6'
+          id: 'node-6',
         },
         {
-          id: 'node-2'
-        }
+          id: 'node-2',
+        },
       ];
 
       const result0 = getNode('node-0', 'node-1', state);

@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 
 import {
   getCalculatedGlyph,
-  getCalculatedParams
+  getCalculatedParams,
 } from '~/_utils/parametric';
 
 import {
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 const typeMap = {
   number: 'text',
-  boolean: 'checkbox'
+  boolean: 'checkbox',
 }
 
 import Formula from './Formula';
@@ -48,7 +48,7 @@ class NodeProperties extends Component {
 
   render() {
     const { nodeId, name, type, base, formula, result } = this.props;
-    const inputType = typeMap[type] || 'text';
+    const inputType = typeMap[type] || 'text';
 
     return (
       <div key={name} className="text-node__item">
@@ -78,7 +78,7 @@ class NodeProperties extends Component {
 }
 
 NodeProperties.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -91,7 +91,7 @@ function mapStateToProps(state, ownProps) {
       state,
       getCalculatedParams(state.nodes['font_initial'].params),
       ownProps.glyphId
-    )[ownProps.nodeId][ownProps.name]
+    )[ownProps.nodeId][ownProps.name],
   }
 }
 

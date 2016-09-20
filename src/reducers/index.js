@@ -18,7 +18,7 @@ import formulaReducer from './formulas';
 const reducers = {
   nodes: nodeReducer,
   ui: uiReducer,
-  formulas: formulaReducer
+  formulas: formulaReducer,
 };
 const combinedReducers = combineReducers(reducers);
 
@@ -29,7 +29,7 @@ module.exports = function(state = {}, action) {
       return {
         ...state,
         nodes: action.nodes,
-        formulas: action.formulas
+        formulas: action.formulas,
       };
 
     default:

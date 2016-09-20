@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
 import {
-  getUpdater
+  getUpdater,
 } from '~/containers/_utils';
 
 const typeMap = {
   number: 'text',
-  boolean: 'checkbox'
+  boolean: 'checkbox',
 }
 
 require('styles/text/NodeProperty.scss');
@@ -87,7 +87,7 @@ class NodePropertyComponent extends Component {
 
   render() {
     const { id, name, type, value, formula, result } = this.props;
-    const inputType = typeMap[type] || 'text';
+    const inputType = typeMap[type] || 'text';
 
     return (
       <div key={name} className="text-node__item">

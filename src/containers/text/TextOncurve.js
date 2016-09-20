@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import {
   renderTextChild,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperties from './NodeProperties';
@@ -23,7 +23,7 @@ class TextOncurve extends Component {
     const nodeClass = classNames({
       'text-node': true,
       'text-node--oncurve': true,
-      'text-node--unfolded': _isChildrenUnfolded
+      'text-node--unfolded': _isChildrenUnfolded,
     });
 
     return (
@@ -41,7 +41,7 @@ class TextOncurve extends Component {
 }
 
 TextOncurve.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextOncurve);

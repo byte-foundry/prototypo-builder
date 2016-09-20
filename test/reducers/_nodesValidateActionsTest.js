@@ -5,14 +5,14 @@ const {
   updateProp,
   addChild,
   addChildren,
-  addParam
+  addParam,
 } = actions;
 
 import {
   validateUpdateProps,
   validateAddChildren,
   validateGraph,
-  validateAddParam
+  validateAddParam,
 } from '~/reducers/_nodesValidateActions';
 
 describe('reducers/_nodesValidateAction', () => {
@@ -21,11 +21,11 @@ describe('reducers/_nodesValidateAction', () => {
       const state = {
         'node-0': {
           id: 'node-0',
-          type: 'ab'
-        }
+          type: 'ab',
+        },
       };
       const model = {
-        ab: { properties: { isVisible: true } }
+        ab: { properties: { isVisible: true } },
       };
       const actionAllowed = updateProp('node-0', 'isVisible', true);
       const actionForbidden = updateProp('node-0', 'isSkeleton', true);
@@ -49,26 +49,26 @@ describe('reducers/_nodesValidateAction', () => {
       const state = {
         'node-0': {
           id: 'node-0',
-          type: 'ab'
+          type: 'ab',
         },
         'node-1': {
           id: 'node-1',
-          type: 'cd'
+          type: 'cd',
         },
         'node-2': {
           id: 'node-2',
-          type: 'ef'
+          type: 'ef',
         },
         'node-3': {
           id: 'node-2',
-          type: 'gh'
-        }
+          type: 'gh',
+        },
       };
       const model = {
         ab: { children: { cd: true, ef: true } },
         cd: { children: {} },
         ef: { children: {} },
-        gh: { children: {} }
+        gh: { children: {} },
       };
       const actionAllowed = addChild('node-0', 'node-1');
       const actionMultiAllowed = addChildren('node-0', ['node-1', 'node-2']);
@@ -102,20 +102,20 @@ describe('reducers/_nodesValidateAction', () => {
       const state = {
         'node-0': {
           id: 'node-0',
-          childIds: ['node-1']
+          childIds: ['node-1'],
         },
         'node-1': {
           id: 'node-1',
-          childIds: []
+          childIds: [],
         },
         'node-2': {
           id: 'node-2',
-          childIds: []
+          childIds: [],
         },
         'node-3': {
           id: 'node-3',
-          childIds: []
-        }
+          childIds: [],
+        },
       };
 
       const actionAllowed = addChild('node-0', 'node-2');
@@ -146,8 +146,8 @@ describe('reducers/_nodesValidateAction', () => {
     it('should check that the param name starts with a $', (done) => {
       const state = {
         'node-0': {
-          id: 'node-0'
-        }
+          id: 'node-0',
+        },
       };
 
       const actionAllowed = addParam('node-0', '$allowed');

@@ -6,7 +6,7 @@ import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 class TextRoot extends Component {
@@ -45,7 +45,7 @@ class TextRoot extends Component {
 
 TextRoot.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextRoot);

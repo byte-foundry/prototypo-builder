@@ -14,11 +14,11 @@ import actions from '~/actions';
 const componentMap = {
   contour: SvgContour,
   font: SvgFont,
-  glyph: SvgGlyph
+  glyph: SvgGlyph,
 };
 
 const selectionComponentMap = {
-  contour: SvgContourSelection
+  contour: SvgContourSelection,
 }
 
 export function renderSvgChild(childId) {
@@ -27,7 +27,7 @@ export function renderSvgChild(childId) {
   const SvgNode = componentMap[childType];
 
   return [
-    <SvgNode key={childId} id={childId} parentId={id} />
+    <SvgNode key={childId} id={childId} parentId={id} />,
   ];
 }
 
@@ -37,7 +37,7 @@ export function renderSelectionAreas(childId) {
   const SvgNode = selectionComponentMap[childType];
 
   return [
-    <SvgNode key={childId} id={childId} parentId={id} />
+    <SvgNode key={childId} id={childId} parentId={id} />,
   ];
 }
 
@@ -52,12 +52,12 @@ export function renderPathData(pathId) {
     let sPoint = '';
 
     if ( i === 0 ) {
-      sPoint += `M ${start.x || 0},${start.y || 0}`;
+      sPoint += `M ${start.x || 0},${start.y || 0}`;
     }
 
     if ( end ) {
       sPoint +=
-        `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
+        `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
     }
 
     if ( i === length-1 && nodes[pathId].isClosed ) {
@@ -101,7 +101,7 @@ export const NULL_VEC = {x: 0, y: 0};
 
 export function getNearPath(coord, contour, nodes, error) {
   if ( !(contour in nodes) ) {
-    return;
+    return undefined;
   }
 
   let result;
@@ -130,7 +130,7 @@ export function getNearNode(coord, pathId, nodes, error = 30) {
     if (point._isGhost) {
       point = {
         ...point,
-        ...point._ghost
+        ...point._ghost,
       }
     }
 
@@ -139,6 +139,8 @@ export function getNearNode(coord, pathId, nodes, error = 30) {
       return point.id;
     }
   }
+
+  return undefined;
 }
 
 export function isOnCurve(c0, c1, c2, c3, coord, error = 30) {
@@ -184,7 +186,7 @@ export function computePoint(c0, c1, c2, c3, t) {
 
   const result = {
     x: a * c0.x + b * c1.x + c * c2.x + d * c3.x,
-    y: a * c0.y + b * c1.y + c * c2.y + d * c3.y
+    y: a * c0.y + b * c1.y + c * c2.y + d * c3.y,
   }
 
   return result;
@@ -196,7 +198,7 @@ export function getPathBbox(pathId, nodes) {
     minX: Infinity,
     minY: Infinity,
     maxX: -Infinity,
-    maxY: -Infinity
+    maxY: -Infinity,
   };
 
   forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
@@ -222,7 +224,7 @@ export function getBbox(c0, c1, c2, c3) {
     minX: xMinMax.min,
     maxX: xMinMax.max,
     minY: yMinMax.min,
-    maxY: yMinMax.max
+    maxY: yMinMax.max,
   }
 }
 
@@ -251,7 +253,7 @@ export function getDerivativeControlPoints(c0, c1, c2, c3) {
     for(let j=0, dpt; j<c; j++) {
       dpt = {
         x: c * (p[j+1].x - p[j].x),
-        y: c * (p[j+1].y - p[j].y)
+        y: c * (p[j+1].y - p[j].y),
       };
       list.push(dpt);
     }
@@ -262,10 +264,15 @@ export function getDerivativeControlPoints(c0, c1, c2, c3) {
 }
 
 function getRoots(p) {
+  var a;
+  var b;
+  var c;
+  var d;
+
   if(p.length === 3) {
-    var a = p[0],
-    b = p[1],
-    c = p[2],
+    a = p[0];
+    b = p[1];
+    c = p[2];
     d = a - 2*b + c;
     if(d!==0) {
       const m1 = -Math.sqrt(b*b-a*c),
@@ -282,10 +289,15 @@ function getRoots(p) {
 
   // linear roots are even easier
   if(p.length === 2) {
-    var a = p[0], b = p[1];
-    if(a!==b) { return [a/(a-b)]; }
+    a = p[0];
+    b = p[1];
+    if(a!==b) {
+      return [a/(a-b)];
+    }
     return [];
   }
+
+  return undefined;
 }
 
 function getMinMax(c0, c1, c2, c3, dim, list) {
@@ -308,8 +320,12 @@ function getMinMax(c0, c1, c2, c3, dim, list) {
   for(var i=0,len=list.length; i<len; i++) {
     t = list[i];
     c = computePoint(c0, c1, c2, c3, t);
-    if(c[dim] < min) { min = c[dim]; }
-    if(c[dim] > max) { max = c[dim]; }
+    if(c[dim] < min) {
+      min = c[dim];
+    }
+    if(c[dim] > max) {
+      max = c[dim];
+    }
   }
   return { min, max };
 }
@@ -329,7 +345,7 @@ export function getDerivative(c0, c1, c2, c3, t) {
 
   const ret = {
     x: a * p[0].x + b * p[1].x + c * p[2].x,
-    y: a * p[0].y + b * p[1].y + c * p[2].y
+    y: a * p[0].y + b * p[1].y + c * p[2].y,
   };
 
   return ret;
@@ -367,7 +383,7 @@ function reduce(c0, c1, c2, c3) {
           t2 -= step;
           if(Math.abs(t1-t2) < step) {
             // we can never form a reduction
-            return [];
+            pass2 = [];
           }
           segment = split(p1.c0, p1.c1, p1.c2, p1.c3, p1._t1, p1._t2, t1, t2);
           segment._t1 = map(t1,0,1,p1._t1,p1._t2);
@@ -404,15 +420,15 @@ function split(c0, c1, c2, c3, _t1, _t2, t1, t2) {
       c0: q[0],
       c1: q[4],
       c2: q[7],
-      c3: q[9]
+      c3: q[9],
     },
     right: {
       c0: q[9],
       c1: q[8],
       c2: q[6],
-      c3: q[3]
+      c3: q[3],
     },
-    span: q
+    span: q,
   };
 
   // make sure we bind _t1/_t2 information!
@@ -534,7 +550,7 @@ function scale(c0, c1, c2, c3, d) {
       c0: np[0],
       c1: np[1],
       c2: np[2],
-      c3: np[3]
+      c3: np[3],
     };
   }
 
@@ -544,23 +560,23 @@ function scale(c0, c1, c2, c3, d) {
     var p = points[t+1];
     var ov = {
       x: p.x - o.x,
-      y: p.y - o.y
+      y: p.y - o.y,
     };
     var rc = distanceFn ? distanceFn((t+1)/order) : d;
-    if(distanceFn && !clockwise) rc = -rc;
+    if(distanceFn && !clockwise) {rc = -rc;}
     var m = Math.sqrt(ov.x*ov.x + ov.y*ov.y);
     ov.x /= m;
     ov.y /= m;
     np[t+1] = {
       x: p.x + rc*ov.x,
-      y: p.y + rc*ov.y
+      y: p.y + rc*ov.y,
     }
   });
   return {
     c0: np[0],
     c1: np[1],
     c2: np[2],
-    c3: np[3]
+    c3: np[3],
   };
 }
 
@@ -575,7 +591,7 @@ function bezierOffset(c0, c1, c2, c3, t, d) {
     c,
     n,
     x: c.x + n.x * d,
-    y: c.y + n.y * d
+    y: c.y + n.y * d,
   }
 }
 
@@ -589,7 +605,7 @@ function lli8(x1,y1,x2,y2,x3,y3,x4,y4) {
   const ny = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
   const d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 
-  if(d==0) {
+  if(d===0) {
     return false;
   }
   return { x: nx / d, y: ny / d };
@@ -606,7 +622,7 @@ function lli4(p1, p2, p3, p4) {
 function lerp(r, v1, v2) {
   const ret = {
     x: v1.x + r * (v2.x - v1.x),
-    y: v1.y + r * (v2.y - v1.y)
+    y: v1.y + r * (v2.y - v1.y),
   };
   if(!!v1.z && !!v2.z) {
     ret.z =  v1.z + r*(v2.z-v1.z);
@@ -638,7 +654,8 @@ export function outline(c0, c1, c2, c3, d1, d2, d3, d4) {
     if (graduated) {
       fcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, linearDistanceFunction( d1, d3, tlen, alen, slen)));
       bcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, linearDistanceFunction(-d2,-d4, tlen, alen, slen)));
-    } else {
+    }
+    else {
       fcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, d1));
       bcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, -d2));
     }
@@ -651,7 +668,7 @@ export function outline(c0, c1, c2, c3, d1, d2, d3, d4) {
       c0: c3,
       c1: c2,
       c2: c1,
-      c3: c0
+      c3: c0,
     };
   }).reverse();
 
@@ -671,21 +688,21 @@ export function outline(c0, c1, c2, c3, d1, d2, d3, d4) {
 export function addVec(a, b) {
   return {
     x: a.x + b.x,
-    y: a.y + b.y
+    y: a.y + b.y,
   };
 }
 
 export function subtractVec(a, b) {
   return {
     x: a.x - b.x,
-    y: a.y - b.y
+    y: a.y - b.y,
   };
 }
 
 export function multiplyVecByN(a, n) {
   return {
     x: a.x * n,
-    y: a.y * n
+    y: a.y * n,
   }
 }
 

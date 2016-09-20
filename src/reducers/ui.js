@@ -12,13 +12,13 @@ import {
   SET_PATH_HOVERED,
   SET_CONTOUR_SELECTED,
   UPDATE_TMP_FORMULA,
-  DELETE_TMP_FORMULA
+  DELETE_TMP_FORMULA,
 } from '../actions/const';
 
 const initialState = {
   uiState: NO_PATH_SELECTED,
   selected: {},
-  hovered: {}
+  hovered: {},
 };
 
 module.exports = function(state = initialState, action) {
@@ -53,7 +53,7 @@ module.exports = function(state = initialState, action) {
     case UPDATE_TMP_FORMULA: {
       return {
         ...state,
-        tmpFormula: { name: action.name, value: action.value }
+        tmpFormula: { name: action.name, value: action.value },
       };
     }
     case DELETE_TMP_FORMULA: {

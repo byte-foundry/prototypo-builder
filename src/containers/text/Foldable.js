@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import {
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 class Foldable extends Component {
@@ -20,7 +20,8 @@ class Foldable extends Component {
 
     if (this.props[switchProp]) {
       setNodeSelected();
-    } else {
+    }
+    else {
       setNodeSelected(id, parentId);
       setNodeOptionsSelected(id);
     }
@@ -32,7 +33,7 @@ class Foldable extends Component {
     return (
       <div className="text-node__foldable-wrapper">
         <a id={id} className="text-node__fold-button" onClick={this.handleFoldClick}>
-          { this.props[switchProp] ? '⏷' : '⏵' } <small><i>{name || id}</i></small>
+          { this.props[switchProp] ? '⏷' : '⏵' } <small><i>{name || id}</i></small>
         </a>
         {this.props.children}
       </div>
@@ -41,7 +42,7 @@ class Foldable extends Component {
 }
 
 Foldable.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Foldable);

@@ -5,7 +5,7 @@ import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 class TextGlyph extends Component {
@@ -20,7 +20,7 @@ class TextGlyph extends Component {
     const { id } = this.props;
     const {
       addContour,
-      createContour
+      createContour,
     } = this.props.actions;
 
     const pathId = createContour().nodeId;
@@ -40,7 +40,7 @@ class TextGlyph extends Component {
 
 TextGlyph.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextGlyph);

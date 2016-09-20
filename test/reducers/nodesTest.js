@@ -7,7 +7,7 @@ const {
   createNode,
   _deleteNode,
   addChild,
-  removeChild
+  removeChild,
 } = actions;
 
 describe('reducer: nodes', () => {
@@ -23,8 +23,8 @@ describe('reducer: nodes', () => {
       [action.nodeId]: {
         id: action.nodeId,
         type: 'abc',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
 
     deepFreeze(stateBefore);
@@ -37,35 +37,35 @@ describe('reducer: nodes', () => {
     const stateBefore = {
       'node-0': {
         id: 'node-0',
-        childIds: [ 'node-1' ]
+        childIds: [ 'node-1' ],
       },
       'node-1': {
         id: 'node-1',
-        childIds: []
+        childIds: [],
       },
       'node-2': {
         id: 'node-2',
-        childIds: [ 'node-3', 'node-4' ]
+        childIds: [ 'node-3', 'node-4' ],
       },
       'node-3': {
         id: 'node-3',
-        childIds: []
+        childIds: [],
       },
       'node-4': {
         id: 'node-4',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
     const action = _deleteNode('node-2');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
-        childIds: [ 'node-1' ]
+        childIds: [ 'node-1' ],
       },
       'node-1': {
         id: 'node-1',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
 
     deepFreeze(stateBefore);
@@ -78,23 +78,23 @@ describe('reducer: nodes', () => {
     const stateBefore = {
       'node-0': {
         id: 'node-0',
-        childIds: []
+        childIds: [],
       },
       'node-1': {
         id: 'node-1',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
     const action = addChild('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
-        childIds: [ 'node-1' ]
+        childIds: [ 'node-1' ],
       },
       'node-1': {
         id: 'node-1',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
 
     deepFreeze(stateBefore);
@@ -107,23 +107,23 @@ describe('reducer: nodes', () => {
     const stateBefore = {
       'node-0': {
         id: 'node-0',
-        childIds: [ 'node-1' ]
+        childIds: [ 'node-1' ],
       },
       'node-1': {
         id: 'node-1',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
     const action = removeChild('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
-        childIds: []
+        childIds: [],
       },
       'node-1': {
         id: 'node-1',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
 
     deepFreeze(stateBefore);
