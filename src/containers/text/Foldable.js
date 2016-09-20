@@ -15,13 +15,14 @@ class Foldable extends Component {
   handleFoldClick(e) {
     e.preventDefault();
 
-    const { id, switchProp } = this.props;
-    const { updateProp } = this.props.actions;
+    const { id, parentId, switchProp } = this.props;
+    const { updateProp, setNodeSelected, setNodeOptions } = this.props.actions;
+    
     if (this.props[switchProp]) {
-      this.props.actions.setNodeSelected();
+      setNodeSelected();
     } else {
-      this.props.actions.setNodeSelected(this.props.id, this.props.parentId);
-      this.props.actions.setNodeOptionsSelected(this.props.id);
+      setNodeSelected(id, parentId);
+      setNodeOptionsSelected(id);
     }
     updateProp(id, switchProp, !this.props[switchProp]);
   }
