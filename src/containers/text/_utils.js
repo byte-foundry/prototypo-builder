@@ -34,7 +34,7 @@ export function renderTextChild(childId) {
 }
 
 export function mapStateToProps(state, ownProps) {
-  return state.nodes[ownProps.id];
+  return {ui: state.ui, ...state.nodes[ownProps.id]};
 }
 
 // The last argument is used to make this function stateless during tests

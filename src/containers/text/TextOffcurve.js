@@ -14,7 +14,7 @@ import Foldable from './Foldable';
 
 class TextOffcurve extends Component {
   render() {
-    const { id, type, _isPropsUnfolded } = this.props;
+    const { id, parentId, type, _isPropsUnfolded } = this.props;
     const nodeClass = classNames({
       'text-node': true,
       'text-node--offcurve': true,
@@ -22,10 +22,7 @@ class TextOffcurve extends Component {
     });
 
     return (
-      <Foldable id={id} switchProp="_isPropsUnfolded">
-        <ul className={nodeClass}>
-          <li><NodeProperties id={id} type={type} /></li>
-        </ul>
+      <Foldable id={id} parentId={parentId} switchProp="_isPropsUnfolded">
       </Foldable>
     );
   }

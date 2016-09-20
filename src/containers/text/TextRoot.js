@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import NodeProperties from './NodeProperties';
 
 import {
   renderTextChild,
@@ -16,10 +17,28 @@ class TextRoot extends Component {
 
   render() {
     const { childIds } = this.props;
+
+    let nodeSelected = false;
+    if (this.props.ui.selected.nodeOptions) {
+      const id = this.props.ui.selected.nodeOptions;
+      const type = this.props.ui.selected.nodeOptions.split('_')[0];
+      nodeSelected = (
+        <div className="unstyled">
+          <p>{id}</p>
+          <NodeProperties id={id} type={type} />
+        </div>
+      );
+    }
+
     return (
-      <ul className="unstyled">
-        {childIds.map(this.renderTextChild)}
-      </ul>
+      <div>
+        <ul className="unstyled">
+          {childIds.map(this.renderTextChild)}
+        </ul>
+        <br/>
+        {nodeSelected}
+      </div>
+
     );
   }
 }
