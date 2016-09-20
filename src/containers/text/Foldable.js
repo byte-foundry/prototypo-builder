@@ -16,8 +16,8 @@ class Foldable extends Component {
     e.preventDefault();
 
     const { id, parentId, switchProp } = this.props;
-    const { updateProp, setNodeSelected, setNodeOptions } = this.props.actions;
-    
+    const { updateProp, setNodeSelected, setNodeOptionsSelected } = this.props.actions;
+
     if (this.props[switchProp]) {
       setNodeSelected();
     } else {
