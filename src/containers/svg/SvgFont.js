@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -7,7 +7,7 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
-class SvgFont extends Component {
+class SvgFont extends PureComponent {
   render() {
     const { childIds } = this.props;
     return (

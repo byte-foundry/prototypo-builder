@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -8,7 +8,7 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
-class SvgGlyph extends Component {
+class SvgGlyph extends PureComponent {
   render() {
     const { childIds } = this.props;
     const children = childIds.map(renderSvgChild.bind(this));

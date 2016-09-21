@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -19,7 +19,7 @@ require('styles/text/TextProplist.scss');
 
 import Formula from './Formula';
 
-class TextFont extends Component {
+class TextFont extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);

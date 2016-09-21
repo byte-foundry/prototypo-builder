@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import fontModel from '~/_utils/fontModel';
@@ -10,7 +10,7 @@ import {
 
 import NodeProperty from './NodeProperty';
 
-class NodeProperties extends Component {
+class NodeProperties extends PureComponent {
   render() {
     const { glyphId, id, type } = this.props;
     const { propertyOrder, properties } = fontModel[type];

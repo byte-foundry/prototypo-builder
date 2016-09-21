@@ -1,6 +1,6 @@
 require('styles/svg/Selection.scss');
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { forEachNode } from '../../_utils/path';
 import SvgSelector from './SvgSelector';
@@ -24,7 +24,7 @@ import {
   getPathBbox,
 } from './_utils';
 
-class SvgContourSelection extends Component {
+class SvgContourSelection extends PureComponent {
   constructor(props) {
     super(props);
     this.renderChildren = this.renderChildren.bind(this);

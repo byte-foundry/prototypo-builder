@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -6,7 +6,7 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
-class Foldable extends Component {
+class Foldable extends PureComponent {
   constructor(props) {
     super(props);
     this.handleFoldClick = this.handleFoldClick.bind(this);
@@ -33,7 +33,7 @@ class Foldable extends Component {
     return (
       <div className="text-node__foldable-wrapper">
         <a id={id} className="text-node__fold-button" onClick={this.handleFoldClick}>
-          { this.props[switchProp] ? '⏷' : '⏵' } <small><i>{name || id}</i></small>
+          { this.props[switchProp] ? '▼' : '▶' } <small><i>{name || id}</i></small>
         </a>
         {this.props.children}
       </div>

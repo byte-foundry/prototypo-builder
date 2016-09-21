@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -11,7 +11,7 @@ import {
 
 require('styles/text/NodeProperty.scss');
 
-class Formula extends Component {
+class Formula extends PureComponent {
   constructor(props) {
     super(props);
 

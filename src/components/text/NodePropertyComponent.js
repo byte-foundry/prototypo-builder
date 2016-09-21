@@ -11,7 +11,7 @@ const typeMap = {
 
 require('styles/text/NodeProperty.scss');
 
-class NodePropertyComponent extends Component {
+class NodePropertyComponent extends PureComponent {
   constructor(props) {
     super(props);
 

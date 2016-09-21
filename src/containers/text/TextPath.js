@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -13,7 +13,7 @@ import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 import TextOncurve from './TextOncurve';
 
-class TextGlyph extends Component {
+class TextGlyph extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);

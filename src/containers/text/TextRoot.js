@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import NodeProperties from './NodeProperties';
 
@@ -9,7 +9,7 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
-class TextRoot extends Component {
+class TextRoot extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);

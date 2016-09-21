@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
@@ -23,7 +23,7 @@ import {
   dist,
 } from './_utils';
 
-class SvgSelector extends Component {
+class SvgSelector extends PureComponent {
   constructor(props) {
     super(props);
   }

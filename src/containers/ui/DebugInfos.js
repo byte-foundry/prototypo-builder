@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-class DebugInfos extends Component {
+class DebugInfos extends PureComponent {
   render() {
     return (
       <ul className="unstyled">

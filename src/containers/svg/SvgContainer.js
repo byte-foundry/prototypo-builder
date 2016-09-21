@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SvgRoot from './SvgRoot';
 import UiToolbar from '../ui/UiToolbar';
@@ -34,7 +34,7 @@ import {
   SELECTION_MODE,
 } from '~/const';
 
-class SvgContainer extends Component {
+class SvgContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.handleDown = this.handleDown.bind(this);

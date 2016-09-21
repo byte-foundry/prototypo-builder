@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -12,7 +12,7 @@ import {
 import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 
-class TextContour extends Component {
+class TextContour extends PureComponent {
   constructor(props) {
     super(props);
     this.handleAddPathClick = this.handleAddPathClick.bind(this);

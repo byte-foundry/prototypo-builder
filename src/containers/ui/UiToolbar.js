@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -12,7 +12,7 @@ import {
 
 require('styles/ui/toolbar.scss');
 
-class UiToolbar extends Component {
+class UiToolbar extends PureComponent {
   setSelectMode() {
     this.props.actions.setMouseState(SELECTION_MODE);
     this.props.actions.setPathSelected(undefined, undefined);

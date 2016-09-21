@@ -4,15 +4,12 @@
  *          This modifications only run once when the generator is invoked - if
  *          you edit them, they are not updated again.
  */
-import React, {
-  Component,
-  PropTypes,
-} from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Main from '../components/Main';
 /* Populated by react-webpack-redux:reducer */
-class App extends Component {
+class App extends PureComponent {
   render() {
     const {actions, nodes, ui, updaters} = this.props;
     return (

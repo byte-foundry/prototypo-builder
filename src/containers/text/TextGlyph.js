@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -8,7 +8,7 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
-class TextGlyph extends Component {
+class TextGlyph extends PureComponent {
   constructor(props) {
     super(props);
     this.handleAddContourClick = this.handleAddContourClick.bind(this);

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
@@ -27,7 +27,7 @@ import {
   outline,
 } from './_utils';
 
-class SvgContour extends Component {
+class SvgContour extends PureComponent {
   constructor(props) {
     super(props);
     this.renderPathData = renderPathData.bind(this);

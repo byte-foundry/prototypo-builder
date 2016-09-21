@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -7,7 +7,7 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
-class SvgRoot extends Component {
+class SvgRoot extends PureComponent {
   constructor(props) {
     super(props);
     this.renderSvgChild = renderSvgChild.bind(this);
