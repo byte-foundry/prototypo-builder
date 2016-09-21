@@ -9,7 +9,7 @@ class DebugInfos extends PureComponent {
     super(props);
     this.handleDebugClick = this.handleDebugClick.bind(this);
     this.state = {
-      isToogled: false
+      isToogled: false,
     }
   }
 
