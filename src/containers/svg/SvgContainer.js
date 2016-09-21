@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SvgRoot from './SvgRoot';
 import UiToolbar from '../ui/UiToolbar';
@@ -6,12 +6,12 @@ import NodeProperties from '../text/NodeProperties';
 
 import {
   getNode,
-  getCorrespondingHandles
+  getCorrespondingHandles,
 } from '~/_utils/path';
 
 import {
   getCalculatedParams,
-  getCalculatedGlyph
+  getCalculatedGlyph,
 } from '~/_utils/parametric';
 
 import {
@@ -20,7 +20,7 @@ import {
   getNearPath,
   getNearNode,
   subtractVec,
-  multiplyVecByN
+  multiplyVecByN,
 } from './_utils';
 
 import {
@@ -31,10 +31,10 @@ import {
   PATH_SELECTED_AND_MOVE,
   ONCURVE_CORNER,
   ONCURVE_SMOOTH,
-  SELECTION_MODE
+  SELECTION_MODE,
 } from '~/const';
 
-class SvgContainer extends Component {
+class SvgContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.handleDown = this.handleDown.bind(this);
@@ -45,7 +45,7 @@ class SvgContainer extends Component {
       setNodeSelected,
       setPathSelected,
       setMouseState,
-      moveNode
+      moveNode,
     } = this.props.actions;
 
     window.addEventListener('keyup', (e) => {
@@ -109,7 +109,7 @@ class SvgContainer extends Component {
   handleDown(e) {
     const point = getSvgCoordsFromClientCoords({
       x: e.clientX,
-      y: e.clientY
+      y: e.clientY,
     }, this.refs.svg);
     if (this.props.ui.uiState === NO_PATH_SELECTED) {
       const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
@@ -119,12 +119,13 @@ class SvgContainer extends Component {
         this.props.actions.setCoords(point.x, point.y);
         this.props.actions.setMouseState(PATH_SELECTED_AND_MOVE);
         this.props.actions.setNodeOptionsSelected(path);
-      } else {
+      }
+      else {
         const pathId = this.props.actions.createPath().nodeId;
         this.props.actions.addPath( this.props.ui.selected.contour, pathId);
 
         this.createNewAddToPathAndSelect(point, pathId,{
-          first: true
+          first: true,
         });
       }
     }
@@ -136,7 +137,8 @@ class SvgContainer extends Component {
         this.props.actions.setNodeSelected(node, this.props.ui.selected.path);
         this.props.actions.setNodeOptionsSelected(node);
         this.props.actions.setMouseState(NODE_SELECTED);
-      } else if (!path.isClosed){
+      }
+      else if (!path.isClosed){
         this.createNewAddToPathAndSelect(point, this.props.ui.selected.path);
       }
     }
@@ -155,7 +157,7 @@ class SvgContainer extends Component {
   handleMove(e) {
     const point = getSvgCoordsFromClientCoords({
       x: e.clientX,
-      y: e.clientY
+      y: e.clientY,
     }, this.refs.svg);
 
     if (this.props.ui.uiState === NODE_SELECTED || this.props.ui.uiState === NODE_SELECTED_AND_MOVE) {
@@ -166,13 +168,14 @@ class SvgContainer extends Component {
           const move = subtractVec(pointToMove._ghost, pointToMove);
           this.props.actions.moveNode(pointToMove.id, parentPoint.id, {
             dx: move.x,
-            dy: move.y
+            dy: move.y,
           });
           this.props.actions.updateProp(pointToMove.id, '_isGhost', false);
-        } else {
+        }
+        else {
           const move = {
             dx: point.x - this.props.ui.mouse.x,
-            dy: point.y - this.props.ui.mouse.y
+            dy: point.y - this.props.ui.mouse.y,
           }
           this.props.actions.moveNode(pointToMove.id, parentPoint.id, move);
 
@@ -181,19 +184,21 @@ class SvgContainer extends Component {
           }
         }
       }
-    } else {
+    }
+    else {
       if (this.props.ui.uiState === PATH_SELECTED) {
         const node = getNearNode(point, this.props.ui.selected.path, this.props.nodes);
         if (node) {
           this.props.actions.setNodeHovered(node, this.props.ui.selected.path);
-        } else {
+        }
+        else {
           this.props.actions.setNodeHovered(undefined, undefined);
         }
       }
       else if (this.props.ui.uiState === PATH_SELECTED_AND_MOVE) {
           const move = {
             dx: point.x - this.props.ui.mouse.x,
-            dy: point.y - this.props.ui.mouse.y
+            dy: point.y - this.props.ui.mouse.y,
           }
           this.props.actions.moveNode(this.props.ui.selected.path, this.props.ui.selected.contour, move);
       }
@@ -221,13 +226,15 @@ class SvgContainer extends Component {
         });
         if (node) {
           this.props.actions.setNodeHovered(node, path);
-        } else {
+        }
+        else {
           this.props.actions.setNodeHovered(undefined, undefined);
         }
 
         if (pathHovered) {
           this.props.actions.setPathHovered(pathHovered, contour);
-        } else {
+        }
+        else {
           this.props.actions.setPathHovered(undefined, undefined);
         }
       }
@@ -246,7 +253,7 @@ class SvgContainer extends Component {
         if (path.childIds.indexOf(this.props.ui.selected.point) === 0 && !path.isClosed) {
           const point = this.props.nodes[this.props.ui.selected.point];
           this.createNewAddToPathAndSelect(point, this.props.ui.selected.path, {
-            closed: true
+            closed: true,
           });
           this.props.actions.updateProp(this.props.ui.selected.contour, 'isClosed', true);
           this.props.actions.updateProp(this.props.ui.selected.path, 'isClosed', true);
@@ -265,7 +272,7 @@ class SvgContainer extends Component {
     e.preventDefault();
     const point = getSvgCoordsFromClientCoords({
       x: e.clientX,
-      y: e.clientY
+      y: e.clientY,
     }, this.refs.svg);
 
 
@@ -343,12 +350,12 @@ function mapStateToProps(state) {
       getCalculatedParams(state.nodes['font_initial'].params),
       state.ui.selected.glyph
     ),
-    ui: state.ui
+    ui: state.ui,
   };
 }
 
 SvgContainer.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgContainer);

@@ -17,6 +17,8 @@ export function getParentId(nodes, nodeId) {
       return id;
     }
   }
+
+  return null;
 }
 
 // a special kind of memoization that checks that the result of the function

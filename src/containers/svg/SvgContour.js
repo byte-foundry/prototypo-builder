@@ -1,18 +1,18 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import {
-  forEachCurve
+  forEachCurve,
 } from '~/_utils/path';
 
 import {
-  getParentGlyphId
+  getParentGlyphId,
 } from '~/_utils/graph';
 
 import {
   getCalculatedParams,
-  getCalculatedGlyph
+  getCalculatedGlyph,
 } from '~/_utils/parametric';
 
 import {
@@ -24,10 +24,10 @@ import {
   multiplyVecByN,
   normalizeVec,
   dotProduct,
-  outline
+  outline,
 } from './_utils';
 
-class SvgContour extends Component {
+class SvgContour extends PureComponent {
   constructor(props) {
     super(props);
     this.renderPathData = renderPathData.bind(this);
@@ -125,7 +125,7 @@ class SvgContour extends Component {
     const { nodes, id } = this.props;
     const classes = classnames({
       contour: true,
-      'is-closed': nodes[id].isClosed
+      'is-closed': nodes[id].isClosed,
     });
     return (
       <g>
@@ -137,7 +137,7 @@ class SvgContour extends Component {
 }
 
 SvgContour.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 function mapStateToProps(state, props) {
@@ -147,7 +147,7 @@ function mapStateToProps(state, props) {
       getCalculatedParams(state.nodes['font_initial'].params),
       getParentGlyphId(state.nodes, props.id)
     ),
-    ui: state.ui
+    ui: state.ui,
   };
 }
 

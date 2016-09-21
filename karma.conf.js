@@ -5,29 +5,29 @@ module.exports = function(config) {
     basePath: '',
     browsers: [ 'Chrome' ],
     files: [
-      'test/loadtests.js'
+      'test/loadtests.js',
     ],
     port: 8080,
     captureTimeout: 60000,
     frameworks: [ 'mocha', 'chai' ],
     client: {
-      mocha: {}
+      mocha: {},
     },
     singleRun: true,
     reporters: [ 'mocha', 'coverage' ],
     preprocessors: {
-      'test/loadtests.js': [ 'webpack', 'sourcemap' ]
+      'test/loadtests.js': [ 'webpack', 'sourcemap' ],
     },
     webpack: webpackCfg,
     webpackServer: {
-      noInfo: true
+      noInfo: true,
     },
     coverageReporter: {
       dir: 'coverage/',
       reporters: [
         { type: 'html' },
-        { type: 'text' }
-      ]
-    }
+        { type: 'text' },
+      ],
+    },
   });
 };

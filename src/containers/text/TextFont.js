@@ -1,16 +1,16 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import {
   getUpdater,
-  getCalculatedParams
+  getCalculatedParams,
 } from '~/_utils/parametric';
 
 import {
   renderTextChild,
   validateChildTypes,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import Foldable from './Foldable';
@@ -19,7 +19,7 @@ require('styles/text/TextProplist.scss');
 
 import Formula from './Formula';
 
-class TextFont extends Component {
+class TextFont extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
@@ -43,7 +43,7 @@ class TextFont extends Component {
     addParam(id, this.refs.paramName.value, {
       value: +this.refs.paramValue.value,
       min: +this.refs.paramMin.value,
-      max: +this.refs.paramMax.value
+      max: +this.refs.paramMax.value,
     });
 
     this.refs.paramName.value = '$';
@@ -73,7 +73,7 @@ class TextFont extends Component {
     }
 
     addParam(id, this.refs.formulaName.value, {
-      formula: this.refs.formulaValue.value
+      formula: this.refs.formulaValue.value,
     });
 
     this.refs.formulaName.value = '$';
@@ -152,7 +152,7 @@ class TextFont extends Component {
     const listClass = classNames({
       'unstyled': true,
       'text-proplist': true,
-      'text-proplist--unfolded': _isPropsUnfolded
+      'text-proplist--unfolded': _isPropsUnfolded,
     });
 
     return (
@@ -207,13 +207,13 @@ class TextFont extends Component {
 
 TextFont.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 function mapStateToProps(state, ownProps) {
   return {
     ...state.nodes[ownProps.id],
-    calculatedParams: getCalculatedParams(state.nodes[ownProps.id].params)
+    calculatedParams: getCalculatedParams(state.nodes[ownProps.id].params),
   }
 }
 

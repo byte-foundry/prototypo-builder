@@ -1,30 +1,30 @@
 require('styles/svg/Selection.scss');
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { forEachNode } from '../../_utils/path';
 import SvgSelector from './SvgSelector';
 
 import {
   PATH_SELECTED,
-  SELECTION_MODE
+  SELECTION_MODE,
 } from '~/const';
 
 import {
-  getParentGlyphId
+  getParentGlyphId,
 } from '~/_utils/graph';
 
 import {
   getCalculatedParams,
-  getCalculatedGlyph
+  getCalculatedGlyph,
 } from '~/_utils/parametric';
 
 import {
   mapDispatchToProps,
-  getPathBbox
+  getPathBbox,
 } from './_utils';
 
-class SvgContourSelection extends Component {
+class SvgContourSelection extends PureComponent {
   constructor(props) {
     super(props);
     this.renderChildren = this.renderChildren.bind(this);
@@ -122,7 +122,7 @@ class SvgContourSelection extends Component {
 }
 
 SvgContourSelection.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 function mapStateToProps(state, props) {
@@ -132,7 +132,7 @@ function mapStateToProps(state, props) {
       getCalculatedParams(state.nodes['font_initial'].params),
       getParentGlyphId(state.nodes, props.id)
     ),
-    ui: state.ui
+    ui: state.ui,
   };
 }
 

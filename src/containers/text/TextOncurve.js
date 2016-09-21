@@ -1,19 +1,19 @@
 require('styles/text/TextNode.scss');
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import {
   renderTextChild,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 
-class TextOncurve extends Component {
+class TextOncurve extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
@@ -23,7 +23,7 @@ class TextOncurve extends Component {
     const nodeClass = classNames({
       'text-node': true,
       'text-node--oncurve': true,
-      'text-node--unfolded': _isChildrenUnfolded
+      'text-node--unfolded': _isChildrenUnfolded,
     });
 
     return (
@@ -41,7 +41,7 @@ class TextOncurve extends Component {
 }
 
 TextOncurve.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextOncurve);

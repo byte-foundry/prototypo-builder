@@ -1,14 +1,14 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { makeGetExpandedSkeleton } from '~/selectors/makeGetExpandedSkeleton';
 
 import {
   renderPathData,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
-class SvgExpandedSkeleton extends Component {
+class SvgExpandedSkeleton extends PureComponent {
   constructor(props) {
     super(props);
     this.renderPathData = renderPathData.bind({ props: props.expanded });
@@ -27,7 +27,7 @@ class SvgExpandedSkeleton extends Component {
 }
 
 SvgExpandedSkeleton.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 function makeMapStateToProps() {
@@ -37,7 +37,7 @@ function makeMapStateToProps() {
     return {
       nodes: state.nodes,
       expanded,
-      expandedSkeletonId: getExpandedSkeleton( state, props )
+      expandedSkeletonId: getExpandedSkeleton( state, props ),
     };
   }
   return mapStateToProps;

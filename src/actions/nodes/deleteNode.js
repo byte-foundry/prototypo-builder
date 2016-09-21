@@ -7,7 +7,7 @@ module.exports = function(nodeId) {
     type: BATCH_ACTIONS,
     actions: [
       _deleteNode(nodeId),
-      deleteFormula(nodeId)
-    ]
+      deleteFormula(nodeId),
+    ],
   };
 };

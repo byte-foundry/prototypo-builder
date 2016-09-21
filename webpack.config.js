@@ -10,9 +10,11 @@ const allowedEnvs = ['dev', 'dist', 'test'];
 var env;
 if (args._.length > 0 && args._.indexOf('start') !== -1) {
   env = 'test';
-} else if (args.env) {
+}
+else if (args.env) {
   env = args.env;
-} else {
+}
+else {
   env = 'dev';
 }
 process.env.REACT_WEBPACK_ENV = env;

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import NodeProperties from './NodeProperties';
 
@@ -6,12 +6,10 @@ import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
-require('styles/text/TextRoot.scss');
-
-class TextRoot extends Component {
+class TextRoot extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
@@ -49,7 +47,7 @@ class TextRoot extends Component {
 
 TextRoot.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextRoot);

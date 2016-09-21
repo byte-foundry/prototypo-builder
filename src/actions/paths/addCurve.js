@@ -5,6 +5,6 @@ module.exports = function(nodeId, childIds) {
     type: ADD_CURVE,
     nodeId,
     childIds,
-    childTypes: ['offcurve', 'oncurve']
+    childTypes: ['offcurve', 'oncurve'],
   };
 };

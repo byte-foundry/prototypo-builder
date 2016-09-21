@@ -4,7 +4,7 @@ import reducer from '~/reducers/nodes';
 import actions from '~/actions';
 const {
   createGlyph,
-  addGlyph
+  addGlyph,
 } = actions;
 
 describe('reducer: nodes (glyphs)', () => {
@@ -16,8 +16,8 @@ describe('reducer: nodes (glyphs)', () => {
         id: action.nodeId,
         type: 'glyph',
         childIds: [],
-        params: {}
-      }
+        params: {},
+      },
     };
 
     deepFreeze(stateBefore);
@@ -31,26 +31,26 @@ describe('reducer: nodes (glyphs)', () => {
       'node-0': {
         id: 'node-0',
         type: 'font',
-        childIds: []
+        childIds: [],
       },
       'node-1': {
         id: 'node-1',
         type: 'glyph',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
     const action = addGlyph('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
         type: 'font',
-        childIds: [ 'node-1' ]
+        childIds: [ 'node-1' ],
       },
       'node-1': {
         id: 'node-1',
         type: 'glyph',
-        childIds: []
-      }
+        childIds: [],
+      },
     };
 
     deepFreeze(stateBefore);

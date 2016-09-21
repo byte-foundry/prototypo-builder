@@ -4,7 +4,7 @@ const initialState = {};
 
 import {
   UPDATE_FORMULA,
-  DELETE_FORMULA
+  DELETE_FORMULA,
 } from './../actions/const';
 
 module.exports = function(state = initialState, action) {
@@ -12,13 +12,13 @@ module.exports = function(state = initialState, action) {
     case UPDATE_FORMULA:
       return action.formula.trim() === '' ? {
         ...state,
-        [action.glyphId]: R.dissoc(action.propPath, state[action.glyphId])
+        [action.glyphId]: R.dissoc(action.propPath, state[action.glyphId]),
       }: {
         ...state,
         [action.glyphId]: {
           ...state[action.glyphId],
-          [action.propPath]: action.formula
-        }
+          [action.propPath]: action.formula,
+        },
       };
 
     case DELETE_FORMULA:
@@ -27,7 +27,7 @@ module.exports = function(state = initialState, action) {
           // delete a specific formula in a specific glyph
           return {
             ...state,
-            [action.nodeId]: R.dissoc(action.propPath, state[action.nodeId])
+            [action.nodeId]: R.dissoc(action.propPath, state[action.nodeId]),
           };
         }
 
@@ -56,7 +56,7 @@ module.exports = function(state = initialState, action) {
           if ( foundMatchingProp ) {
             return {
               ...state,
-              [glyphId]: filteredFormulas
+              [glyphId]: filteredFormulas,
             }
           }
         }

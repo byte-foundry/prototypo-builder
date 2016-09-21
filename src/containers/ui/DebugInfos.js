@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 require('styles/ui/DebugInfos.scss');
 
-class DebugInfos extends Component {
+class DebugInfos extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -41,4 +41,6 @@ function mapStateToProps(state) {
   return {ui: state.ui};
 }
 
-export default connect(mapStateToProps, () => {return {}})(DebugInfos);
+export default connect(mapStateToProps, () => {
+  return {};
+})(DebugInfos);

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -6,14 +6,14 @@ import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 import TextOncurve from './TextOncurve';
 
-class TextGlyph extends Component {
+class TextGlyph extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
@@ -29,7 +29,7 @@ class TextGlyph extends Component {
       createOffcurve,
       addOffcurve,
       createOncurve,
-      addOncurve
+      addOncurve,
     } = this.props.actions;
     const offcurve1Id = createOffcurve().nodeId;
     const offcurve2Id = createOffcurve().nodeId;
@@ -45,7 +45,7 @@ class TextGlyph extends Component {
 
     // We only render oncurve points, and wrap following offcurves in a Foldable
     if ( !isOncurve ) {
-      return;
+      return null;
     }
 
     const offcurveIds = [];
@@ -68,7 +68,7 @@ class TextGlyph extends Component {
     const nodeClass = classNames({
       'text-node': true,
       'text-node--path': true,
-      'text-node--unfolded': _isChildrenUnfolded
+      'text-node--unfolded': _isChildrenUnfolded,
     });
 
     return (
@@ -90,7 +90,7 @@ class TextGlyph extends Component {
 
 TextGlyph.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextGlyph);

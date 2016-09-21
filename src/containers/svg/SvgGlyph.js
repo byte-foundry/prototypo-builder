@@ -1,14 +1,14 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
   renderSvgChild,
   renderSelectionAreas,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
-class SvgGlyph extends Component {
+class SvgGlyph extends PureComponent {
   render() {
     const { childIds } = this.props;
     const children = childIds.map(renderSvgChild.bind(this));
@@ -23,7 +23,7 @@ class SvgGlyph extends Component {
 }
 
 SvgGlyph.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgGlyph);

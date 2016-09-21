@@ -6,6 +6,6 @@ module.exports = function() {
   return {
     type: CREATE_CONTOUR,
     nodeId: getNodeId(nodeType),
-    nodeType
+    nodeType,
   };
 };
