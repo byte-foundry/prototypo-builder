@@ -9,6 +9,8 @@ import {
   mapDispatchToProps
 } from './_utils';
 
+require('styles/text/TextRoot.scss');
+
 class TextRoot extends Component {
   constructor(props) {
     super(props);
@@ -31,14 +33,16 @@ class TextRoot extends Component {
     }
 
     return (
-      <div>
-        <ul className="unstyled">
-          {childIds.map(this.renderTextChild)}
-        </ul>
-        <br/>
-        {nodeSelected}
+      <div className="textRoot">
+        <div className="nodeList">
+          <ul className="unstyled">
+            {childIds.map(this.renderTextChild)}
+          </ul>
+        </div>
+        <div className="inspector">
+          {nodeSelected}
+        </div>
       </div>
-
     );
   }
 }
