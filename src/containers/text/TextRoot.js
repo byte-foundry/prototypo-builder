@@ -9,6 +9,8 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
+require('styles/text/TextRoot.scss');
+
 class TextRoot extends PureComponent {
   constructor(props) {
     super(props);
