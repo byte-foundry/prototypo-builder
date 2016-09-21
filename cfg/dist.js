@@ -27,6 +27,13 @@ let config = Object.assign({}, baseConfig, {
     new webpack.NoErrorsPlugin(),
   ],
   module: defaultSettings.getDefaultModules(),
+  resolve: Object.assign({}, baseConfig.resolve, {
+    alias: Object.assign({}, baseConfig.resolve.alias, {
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat',
+      'react-redux': 'preact-redux',
+    }),
+  }),
 });
 
 // Add needed loaders to the defaults here
