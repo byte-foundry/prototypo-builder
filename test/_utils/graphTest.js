@@ -4,6 +4,7 @@ import {
   getAllDescendants,
   getParentId,
   getParentIdMemoized,
+  getNodeType,
   getNodePath,
   getSegmentIds,
 } from '../../src/_utils/graph';
@@ -93,6 +94,18 @@ describe('graph', () => {
       expect(getParentIdMemoized(nodes, 'node-0', cache)).to.equal('root');
       expect(getParentIdMemoized(nodes, 'node-1', cache)).to.equal('root');
       expect(cache['node-1']).to.equal('root');
+
+      done();
+    });
+  });
+
+  describe('getNodeType', () => {
+    it('should extract the node type from the node id', (done) => {
+      const nodeId = 'font_UNIQUE';
+      const node = { id: 'glyph_UNIQUE' };
+
+      expect(getNodeType(nodeId)).to.equal('font');
+      expect(getNodeType(node)).to.equal('glyph');
 
       done();
     });

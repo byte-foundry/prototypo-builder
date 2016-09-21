@@ -1,9 +1,9 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 
-import actions from './../../actions';
-
-import fontModel from './../../_utils/fontModel';
+import actions from '~/actions';
+import fontModel from '~/_utils/fontModel';
+import getNodeType from '~/_utils/graph';
 
 import TextContour from './TextContour';
 import TextFont from './TextFont';
@@ -23,7 +23,7 @@ const componentMap = {
 
 export function renderTextChild(childId) {
   const { id } = this.props;
-  const childType = childId.split('_')[0];
+  const childType = getNodeType(childId);
   const TextNode = componentMap[childType];
 
   return (

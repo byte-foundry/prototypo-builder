@@ -2,6 +2,8 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import NodeProperties from './NodeProperties';
 
+import getNodeType from '~/_utils/graph';
+
 import {
   renderTextChild,
   validateChildTypes,
@@ -21,7 +23,7 @@ class TextRoot extends PureComponent {
     let nodeSelected = false;
     if (this.props.ui.selected.nodeOptions) {
       const id = this.props.ui.selected.nodeOptions;
-      const type = this.props.ui.selected.nodeOptions.split('_')[0];
+      const type = getNodeType(id);
       nodeSelected = (
         <div className="unstyled">
           <p>{id}</p>

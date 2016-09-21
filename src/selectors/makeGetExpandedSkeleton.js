@@ -48,7 +48,6 @@ export function memoizeNodeAndChildren(func, lastNodes = null, lastResultMap = {
       // the children nodes haven't changed
       !childrenEqualityCheck(nodeId, nodes, lastNodes)
     ) {
-      lastNodes = nodes;
       lastResultMap[nodeId] = func(nodes, nodeId);
     }
 
