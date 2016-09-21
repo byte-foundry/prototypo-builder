@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 
 import actions from '~/actions';
 import fontModel from '~/_utils/fontModel';
-import getNodeType from '~/_utils/graph';
+import { getNodeType } from '~/_utils/graph';
 
 import TextContour from './TextContour';
 import TextFont from './TextFont';
@@ -38,7 +38,10 @@ export function mapStateToProps(state, ownProps) {
 }
 
 // The last argument is used to make this function stateless during tests
-export function validateChildTypes(props, propName, componentName, prop, model = fontModel) {
+export function validateChildTypes(props, propName, componentName, prop, _model) {
+  // for some reason _model receives null instead of undefined,
+  // so default arguments cannot be used here
+  const model = _model || fontModel;
   const componentType = (
     componentName.replace(/^.*?([A-Z][a-z]+?)(Component)?$/, function($0, $1) {
       return $1.toLowerCase();
