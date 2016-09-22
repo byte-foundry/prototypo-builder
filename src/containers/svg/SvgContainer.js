@@ -347,7 +347,7 @@ function mapStateToProps(state) {
   return {
     nodes: getCalculatedGlyph(
       state,
-      getCalculatedParams(state.nodes['font_initial'].params),
+      getCalculatedParams(state.nodes.font_initial.params),
       state.ui.selected.glyph
     ),
     ui: state.ui,

@@ -12,6 +12,18 @@
   &__fold-button {
     cursor: default;
     color: #fefefe;
+
+    &:hover {
+      color: mix(black, #fefefe, 20%);
+    }
+
+    &--highlighted {
+      color: #29d390;
+
+      &:hover {
+        color: mix(black, #fefefe, 20%);
+      }
+    }
   }
 
   &__item {

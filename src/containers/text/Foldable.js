@@ -10,6 +10,7 @@ class Foldable extends PureComponent {
   constructor(props) {
     super(props);
     this.handleFoldClick = this.handleFoldClick.bind(this);
+    this.renderArrow = this.renderArrow.bind(this);
   }
 
   handleFoldClick(e) {
@@ -25,15 +26,33 @@ class Foldable extends PureComponent {
       setNodeSelected(id, parentId);
       setNodeOptionsSelected(id);
     }
-    updateProp(id, switchProp, !this.props[switchProp]);
+    if (!this.isOffCurve(id)) {
+      updateProp(id, switchProp, !this.props[switchProp]);
+    }
+  }
+
+  isOffCurve(id) {
+    return /^offcurve[-_]/.test(id);
+  }
+
+  renderArrow() {
+    const { id, switchProp } = this.props;
+    let arrow = '';
+
+    if (!this.isOffCurve(id)) {
+      arrow = this.props[switchProp] ? '▼' : '▶';
+    }
+    return arrow;
   }
 
   render() {
-    const { id, name, switchProp } = this.props;
+    const { id, name } = this.props;
+    const selected = this.props.ui.selected.nodeOptions;
+
     return (
       <div className="text-node__foldable-wrapper">
-        <a id={id} className="text-node__fold-button" onClick={this.handleFoldClick}>
-          { this.props[switchProp] ? '▼' : '▶' } <small><i>{name || id}</i></small>
+        <a id={id} className={`text-node__fold-button${selected === id ? '--highlighted' : ''}`} onClick={this.handleFoldClick}>
+          {this.renderArrow()} <small><i>{name || id}</i></small>
         </a>
         {this.props.children}
       </div>
