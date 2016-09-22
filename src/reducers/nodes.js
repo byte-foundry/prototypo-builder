@@ -53,6 +53,7 @@ import {
 
 import {
   getAllDescendants,
+  getNodeType,
 } from '../_utils/graph';
 
 /* Define your initial state here.
@@ -82,7 +83,7 @@ function initParams(node) {
 }
 
 function childIds(state, action) {
-  switch(action.type.split('_')[0]) {
+  switch(getNodeType(action.type)) {
     case 'ADD':
       return action.childIds ?
         [...state, ...action.childIds ] :
@@ -164,9 +165,9 @@ function node(state = initialNode, action) {
 }
 
 function deleteMany(state, ids) {
-  state = Object.assign({}, state);
-  ids.forEach(id => delete state[id]);
-  return state;
+  const nextState = Object.assign({}, state);
+  ids.forEach((id) => { delete nextState[id]; });
+  return nextState;
 }
 
 function deepPositionUpdate(node, nodes, x=0, y=0, result) {

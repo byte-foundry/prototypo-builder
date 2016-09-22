@@ -1,10 +1,6 @@
 import memoize from './memoize';
 
-export const getAllDescendants = memoize((nodes, parentId, descendants) => {
-  if ( !descendants ) {
-    descendants = {};
-  }
-
+export const getAllDescendants = memoize((nodes, parentId, descendants = {}) => {
   return nodes[parentId].childIds.reduce((acc, childId) => {
     acc[childId] = nodes[childId];
     return getAllDescendants(nodes, childId, descendants);
@@ -38,6 +34,12 @@ export function getParentIdMemoized(nodes, nodeId, parentCache = _parentCache) {
   parentCache[nodeId] = getParentId(nodes, nodeId);
 
   return parentCache[nodeId];
+}
+
+export const getNodeType = ( node ) => {
+  const nodeId = typeof node === 'string' ? node : node.id;
+
+  return nodeId.split('_')[0];
 }
 
 export const getNodePath = memoize((nodes, nodeId) => {

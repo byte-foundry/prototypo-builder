@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import { mapCurve, forEachCurve } from '~/_utils/path';
+import { getNodeType } from '~/_utils/graph';
 
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';
@@ -23,7 +24,7 @@ const selectionComponentMap = {
 
 export function renderSvgChild(childId) {
   const { id } = this.props;
-  const childType = childId.split('_')[0];
+  const childType = getNodeType(childId);
   const SvgNode = componentMap[childType];
 
   return [
@@ -33,7 +34,7 @@ export function renderSvgChild(childId) {
 
 export function renderSelectionAreas(childId) {
   const { id } = this.props;
-  const childType = childId.split('_')[0];
+  const childType = getNodeType(childId);
   const SvgNode = selectionComponentMap[childType];
 
   return [
