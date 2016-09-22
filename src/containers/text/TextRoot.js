@@ -2,7 +2,7 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import NodeProperties from './NodeProperties';
 
-import getNodeType from '~/_utils/graph';
+import { getNodeType } from '~/_utils/graph';
 
 import {
   renderTextChild,
