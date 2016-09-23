@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {
   mapStateToProps,
   mapDispatchToProps,
+  shouldBeUnfolded,
 } from './_utils';
 
 class Foldable extends PureComponent {
@@ -11,6 +12,7 @@ class Foldable extends PureComponent {
     super(props);
     this.handleFoldClick = this.handleFoldClick.bind(this);
     this.renderArrow = this.renderArrow.bind(this);
+    this.shouldBeUnfolded = shouldBeUnfolded.bind(this);
   }
 
   handleFoldClick(e) {
@@ -40,18 +42,18 @@ class Foldable extends PureComponent {
     let arrow = '';
 
     if (!this.isOffCurve(id)) {
-      arrow = this.props[switchProp] ? '▼' : '▶';
+      arrow = (this.shouldBeUnfolded() || this.props[switchProp]) ? '▼' : '▶';
     }
     return arrow;
   }
 
   render() {
     const { id, name } = this.props;
-    const selected = this.props.ui.selected.nodeOptions;
+    const { nodeOptions } = this.props.ui.selected;
 
     return (
       <div className="text-node__foldable-wrapper">
-        <a id={id} className={`text-node__fold-button${selected === id ? '--highlighted' : ''}`} onClick={this.handleFoldClick}>
+        <a id={id} className={`text-node__fold-button${nodeOptions === id ? '--highlighted' : ''}`} onClick={this.handleFoldClick}>
           {this.renderArrow()} <small><i>{name || id}</i></small>
         </a>
         {this.props.children}

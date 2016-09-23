@@ -19,6 +19,7 @@
 
     &--highlighted {
       color: #29d390;
+      background-color: mix(#29d390, #494949, 20%);
 
       &:hover {
         color: mix(black, #fefefe, 20%);

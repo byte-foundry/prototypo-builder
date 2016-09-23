@@ -9,17 +9,11 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
-import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 
 class TextOffcurve extends PureComponent {
   render() {
-    const { id, parentId, type, _isPropsUnfolded } = this.props;
-    const nodeClass = classNames({
-      'text-node': true,
-      'text-node--offcurve': true,
-      'text-node--unfolded': _isPropsUnfolded,
-    });
+    const { id, parentId } = this.props;
 
     return (
       <Foldable id={id} parentId={parentId} switchProp="_isPropsUnfolded">

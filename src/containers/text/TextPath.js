@@ -5,11 +5,11 @@ import classNames from 'classnames';
 import {
   renderTextChild,
   validateChildTypes,
+  shouldBeUnfolded,
   mapStateToProps,
   mapDispatchToProps,
 } from './_utils';
 
-import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 import TextOncurve from './TextOncurve';
 
@@ -18,6 +18,7 @@ class TextGlyph extends PureComponent {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
     this.renderTextCurve = this.renderTextCurve.bind(this);
+    this.shouldBeUnfolded = shouldBeUnfolded.bind(this);
     this.handleAddCurveClick = this.handleAddCurveClick.bind(this);
   }
 
@@ -64,11 +65,11 @@ class TextGlyph extends PureComponent {
   }
 
   render() {
-    const { id, type, childIds, _isChildrenUnfolded } = this.props;
+    const { id, childIds} = this.props;
     const nodeClass = classNames({
       'text-node': true,
       'text-node--path': true,
-      'text-node--unfolded': _isChildrenUnfolded,
+      'text-node--unfolded': this.shouldBeUnfolded(),
     });
 
     return (

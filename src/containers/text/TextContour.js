@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import {
   renderTextChild,
+  shouldBeUnfolded,
   validateChildTypes,
   mapStateToProps,
   mapDispatchToProps,
@@ -18,6 +19,7 @@ class TextContour extends PureComponent {
     this.handleAddPathClick = this.handleAddPathClick.bind(this);
     this.handleAddStartingPathClick = this.handleAddStartingPathClick.bind(this);
     this.renderTextChild = renderTextChild.bind(this);
+    this.shouldBeUnfolded = shouldBeUnfolded.bind(this);
   }
 
   handleAddPathClick(e) {

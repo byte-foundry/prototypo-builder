@@ -33,6 +33,16 @@ export function renderTextChild(childId) {
   );
 }
 
+export function shouldBeUnfolded() {
+  const { id, childIds, _isChildrenUnfolded, offcurveIds } = this.props;
+  const { nodeOptions } = this.props.ui.selected;
+  return _isChildrenUnfolded ? true :
+      _isChildrenUnfolded ||
+      id === nodeOptions ||
+      childIds ? childIds.some(elem => elem === nodeOptions) : false ||
+      offcurveIds ? offcurveIds.some(elem => elem === nodeOptions) : false;
+}
+
 export function mapStateToProps(state, ownProps) {
   return {ui: state.ui, ...state.nodes[ownProps.id]};
 }

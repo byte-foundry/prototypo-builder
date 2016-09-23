@@ -6,24 +6,26 @@ import classNames from 'classnames';
 
 import {
   renderTextChild,
+  shouldBeUnfolded,
   mapStateToProps,
   mapDispatchToProps,
 } from './_utils';
 
-import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 
 class TextOncurve extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
+    this.shouldBeUnfolded = shouldBeUnfolded.bind(this);
   }
   render() {
-    const { id, parentId, type, _isChildrenUnfolded, offcurveIds } = this.props;
+    const { id, parentId, offcurveIds } = this.props;
+
     const nodeClass = classNames({
       'text-node': true,
-      'text-node--oncurve': true,
-      'text-node--unfolded': _isChildrenUnfolded,
+      'text-node--path': true,
+      'text-node--unfolded': this.shouldBeUnfolded(),
     });
 
     return (
