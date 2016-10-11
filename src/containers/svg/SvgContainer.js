@@ -90,7 +90,6 @@ class SvgContainer extends PureComponent {
         return;
       }
       this.setState({...this.state, lastKey: e.keyCode});
-      console.log(e);
       const point = getSvgCoordsFromClientCoords({
         x: e.clientX,
         y: e.clientY,
