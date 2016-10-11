@@ -2,7 +2,6 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SvgRoot from './SvgRoot';
 import UiToolbar from '../ui/UiToolbar';
-import NodeProperties from '../text/NodeProperties';
 
 import {
   getNode,
@@ -32,12 +31,23 @@ import {
   ONCURVE_CORNER,
   ONCURVE_SMOOTH,
   SELECTION_MODE,
+  CAMERA_MODE,
 } from '~/const';
 
 class SvgContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.handleDown = this.handleDown.bind(this);
+    this.cacheSize = this.cacheSize.bind(this);
+    this.state = {
+      camera: {
+        x: 0,
+        y: 0,
+        zoom: 1,
+      },
+      previousState : undefined,
+      lastKey : undefined,
+    }
   }
 
   componentWillMount() {
@@ -49,24 +59,60 @@ class SvgContainer extends PureComponent {
     } = this.props.actions;
 
     window.addEventListener('keyup', (e) => {
-      if (e.keyCode === 27) {
-        setNodeSelected();
-        setPathSelected();
-        setMouseState(NO_PATH_SELECTED);
-      }
-      else if (e.keyCode === 46) {
-        if (this.props.ui.uiState === NODE_SELECTED || this.props.ui.uiState === NODE_SELECTED_AND_MOVE) {
-          const node = this.props.nodes[this.props.ui.selected.point];
-          if (node.type === 'offcurve') {
-            const handles = getCorrespondingHandles(this.props.ui.selected.path, node.id, this.props.nodes);
-            const vect = subtractVec(handles[2], node);
-            moveNode(node.id, this.props.ui.selected.path, {dx: vect.x, dy: vect.y} );
-            setMouseState(PATH_SELECTED);
-            setNodeSelected();
+      this.setState({...this.state, lastKey: false});
+      switch (e.keyCode) {
+        case 27: //escape
+          setNodeSelected();
+          setPathSelected();
+          setMouseState(NO_PATH_SELECTED);
+          break;
+        case 46: //del
+          if (this.props.ui.uiState === NODE_SELECTED || this.props.ui.uiState === NODE_SELECTED_AND_MOVE) {
+            const node = this.props.nodes[this.props.ui.selected.point];
+            if (node.type === 'offcurve') {
+              const handles = getCorrespondingHandles(this.props.ui.selected.path, node.id, this.props.nodes);
+              const vect = subtractVec(handles[2], node);
+              moveNode(node.id, this.props.ui.selected.path, {dx: vect.x, dy: vect.y} );
+              setMouseState(PATH_SELECTED);
+              setNodeSelected();
+            }
           }
-        }
+          break;
+        case 32: //space
+          setMouseState(this.state.previousState);
+          break;
+        default:
+          break;
       }
     });
+    window.addEventListener('keydown', (e) => {
+      if (e.keyCode === this.state.lastKey) {
+        return;
+      }
+      this.setState({...this.state, lastKey: e.keyCode});
+      console.log(e);
+      const point = getSvgCoordsFromClientCoords({
+        x: e.clientX,
+        y: e.clientY,
+      }, this.refs.svg);
+
+      switch (e.keyCode) {
+        case 32: //space
+          if (this.props.ui.uiState !== CAMERA_MODE) {
+            this.setState({...this.state, previousState: this.props.ui.uiState});
+            this.props.actions.setCoords(point.x, point.y);
+            setMouseState(CAMERA_MODE);
+          }
+          break;
+        default:
+          break;
+      }
+    });
+    if (!this.knowsSize()) {
+      // trigger a render in addition to the initial render so svg's size will
+      // be known
+      this.forceUpdate();
+    }
   }
 
   createNewAddToPathAndSelect( coord, pathId, opts = {}) {
@@ -238,6 +284,24 @@ class SvgContainer extends PureComponent {
           this.props.actions.setPathHovered(undefined, undefined);
         }
       }
+      else if (this.props.ui.uiState === CAMERA_MODE){
+        const move = {
+          dx: point.x - this.props.ui.mouse.x,
+          dy: point.y - this.props.ui.mouse.y,
+        }
+        if (!isNaN(move.dx) && !isNaN(move.dy)) {
+          this.setState(function (previousState){
+            return {
+              ...this.state,
+              camera: {
+                x : previousState.camera.x - move.dx,
+                y : previousState.camera.y + move.dy,
+                zoom : previousState.camera.zoom,
+              },
+            }
+          });
+        }
+      }
       else {
         const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
         this.props.actions.setPathHovered(path, this.props.ui.selected.contour);
@@ -317,13 +381,95 @@ class SvgContainer extends PureComponent {
     }
   }
 
+  handleScroll(e){
+    if (this.props.ui.uiState === CAMERA_MODE){
+      e.persist();
+      let newZoom = this.state.camera.zoom - e.deltaY/30;
+      if (newZoom <= 0.5) {
+        newZoom = 0.5;
+      }
+      if (newZoom >= 5) {
+        newZoom = 5;
+      }
+      this.setState(function (previousState){
+        return {
+          ...this.state,
+          camera: {
+            x : previousState.camera.x,
+            y : previousState.camera.y,
+            zoom : newZoom,
+          },
+        }
+      });
+    }
+  }
+
+  cacheSize(svgElement) {
+    if (svgElement) {
+      var rect = svgElement.getBoundingClientRect();
+      this.setSize({
+        width: rect.width,
+        height: rect.height,
+      });
+    }
+    else {
+      this.setSize(null);
+    }
+  }
+
+  knowsSize() {
+    return !!this._size;
+  }
+
+  getSize() {
+    return this._size;
+  }
+
+  setSize(size) {
+    this._size = size;
+  }
+
+  generateViewBox() {
+    if (!this.knowsSize()) {
+      return null;
+    }
+
+    var size = this.getSize();
+    var width = size.width;
+    var height = size.height;
+    var camera = this.state.camera;
+
+    // camera x/y is its center so translate by half size to get its
+    // top/left point because that's what viewbox uses
+    var cameraX = camera.x - width / 2;
+    var cameraY = camera.y - height / 2;
+
+    var viewBoxWidth = width / camera.zoom;
+    var viewBoxHeight = height / camera.zoom;
+
+    var viewBoxX = cameraX - ((viewBoxWidth - width) / 2);
+    var viewBoxY = cameraY - ((viewBoxHeight - height) / 2);
+
+    return viewBoxX + ' ' + viewBoxY + ' ' + viewBoxWidth + ' ' + viewBoxHeight;
+  }
+
   render() {
+    const viewbox = this.generateViewBox();
     const image = this.props.ui.image
       ? <img className="background-image" src={this.props.ui.image} onDragStart={(e) => {e.preventDefault()}}/>
       : false;
+    const svgContainerStyles = {
+      position: 'relative',
+      display:'block',
+      width: '100%',
+      height: '100%',
+    }
+    if (this.props.ui.uiState === CAMERA_MODE) {
+      svgContainerStyles.cursor = 'move';
+    }
 
     return (
-      <div style={{position: 'relative'}}>
+      <div style={{position: 'relative', display:'block', height: '100%'}}>
         {image}
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
           onMouseMove={this.handleMove.bind(this)}
@@ -331,7 +477,10 @@ class SvgContainer extends PureComponent {
           onDoubleClick={this.handleDoubleClick.bind(this)}
           onDrop={this.handleDrop.bind(this)}
           onDragOver={(e) => {e.preventDefault()}}
-          viewBox="-800 -1400 2000 2000" onMouseDown={this.handleDown}
+          onWheel={this.handleScroll.bind(this)}
+          viewBox={viewbox} onMouseDown={this.handleDown}
+          ref={this.cacheSize}
+          style={svgContainerStyles}
         >
           <g ref="svg" transform="matrix(1 0 0 -1 0 0)">
             <SvgRoot id={'root'} />

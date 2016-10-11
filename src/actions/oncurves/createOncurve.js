@@ -1,6 +1,6 @@
 import {getNodeId} from '~/actions/_utils';
 import { CREATE_ONCURVE } from '~/actions/const';
-import { ONCURVE_SMOOTH } from '~/const';
+import { ONCURVE_SMOOTH, DEFAULT_DISTRIB, DEFAULT_ANGLE, DEFAULT_EXPAND } from '~/const';
 
 module.exports = function() {
   const nodeType = 'oncurve';
@@ -10,6 +10,9 @@ module.exports = function() {
     nodeType,
     props: {
       state: ONCURVE_SMOOTH,
+      distrib: DEFAULT_DISTRIB,
+      expand: DEFAULT_EXPAND,
+      angle: DEFAULT_ANGLE,
     },
   };
 };

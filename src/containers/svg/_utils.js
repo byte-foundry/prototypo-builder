@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { mapCurve, forEachCurve } from '~/_utils/path';
 import { getNodeType } from '~/_utils/graph';
+import { lerp as mlerp, rotateVector } from '~/_utils/math';
 
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';
@@ -11,6 +12,8 @@ import SvgGlyph from './SvgGlyph';
 import SvgContourSelection from './SvgContourSelection';
 
 import actions from '~/actions';
+
+import memoize from '~/_utils/memoize';
 
 const componentMap = {
   contour: SvgContour,
@@ -264,6 +267,133 @@ export function getDerivativeControlPoints(c0, c1, c2, c3) {
   return points;
 }
 
+export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
+  let n, c;
+  let tangentPointsOn = [], tangentPointsOff = [];
+  //get the first offcurve tangent
+  ({ n, c } = bezierOffset(c0, c1, c2, c3, 0, c0.expand));
+  if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
+    n = rotateVector(n.x, n.y, c0.angle%360);
+    tangentPointsOn.push(c.x + n.x * (c0.distrib * c0.expand));
+    tangentPointsOn.push(c.y + n.y * (c0.distrib * c0.expand));
+    tangentPointsOff.push(c.x - n.x * ((1 - c0.distrib) * c0.expand));
+    tangentPointsOff.push(c.y - n.y * ((1 - c0.distrib) * c0.expand));
+  }
+  //interpolate on the curve
+  for (let i = 1; i < steps; i++) {
+    ({ n, c } = bezierOffset(c0, c1, c2, c3, i/steps, mlerp(c0.expand, c3.expand, i/steps)));
+    if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
+      n = rotateVector(n.x, n.y, mlerp(c0.angle%360, c3.angle%360, i/steps));
+      tangentPointsOn.push(c.x + n.x * (mlerp(c0.distrib, c3.distrib, i/steps) * mlerp(c0.expand, c3.expand, i/steps)));
+      tangentPointsOn.push(c.y + n.y * (mlerp(c0.distrib, c3.distrib, i/steps) * mlerp(c0.expand, c3.expand, i/steps)));
+      tangentPointsOff.push(c.x - n.x * ((1 - mlerp(c0.distrib, c3.distrib, i/steps)) * mlerp(c0.expand, c3.expand, i/steps)));
+      tangentPointsOff.push(c.y - n.y * ((1 - mlerp(c0.distrib, c3.distrib, i/steps)) * mlerp(c0.expand, c3.expand, i/steps)));
+    }
+  }
+  //get the last offcurve tangent
+  ({ n, c } = bezierOffset(c0, c1, c2, c3, 1, c3.expand));
+  if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
+    n = rotateVector(n.x, n.y, c3.angle%360);
+    tangentPointsOn.push(c.x + n.x * (c3.distrib * c3.expand));
+    tangentPointsOn.push(c.y + n.y * (c3.distrib * c3.expand));
+    tangentPointsOff.push(c.x - n.x * ((1 - c3.distrib) * c3.expand));
+    tangentPointsOff.push(c.y - n.y * ((1 - c3.distrib) * c3.expand));
+  }
+  let tangentOutlineOn = getCurvePoints(tangentPointsOn, 0.5,25,false);
+  let tangentOutlineOff = getCurvePoints(tangentPointsOff, 0.5,25,false);
+  let points = '';
+  points = points.concat(`${tangentOutlineOn[0]},${tangentOutlineOn[1]} `);
+  for (let i = 2; i < tangentOutlineOn.length - 2; i+=2) {
+    points = points.concat(`${tangentOutlineOn[i]},${tangentOutlineOn[i+1]} `);
+  }
+  points = points.concat(`${tangentOutlineOn[tangentOutlineOn.length - 2]},${tangentOutlineOn[tangentOutlineOn.length-1]} `);
+  points = points.concat(`${tangentOutlineOn[tangentOutlineOff.length - 2]},${tangentOutlineOn[tangentOutlineOff.length-1]} `);
+  for (let i = tangentOutlineOff.length - 1; i > 1; i-=2) {
+    points = points.concat(`${tangentOutlineOff[i-1]}, ${tangentOutlineOff[i]} `);
+  }
+  points = points.concat(`${tangentOutlineOff[0]},${tangentOutlineOff[1]} `);
+  return points;
+});
+
+// Find the intersection of two rays.
+// A ray is defined by a point and an angle.
+// Imported from Prototypo.js
+export function rayRayIntersection ( p1, a1, p2, a2 ) {
+	// line equations
+	var a = Math.tan(a1),
+		b = Math.tan(a2),
+		c = p1.y - a * p1.x,
+		d = p2.y - b * p2.x,
+		x,
+		y;
+
+	// When searching for lines intersection,
+	// angles can be normalized to 0 < a < PI
+	// This will be helpful in detecting special cases below.
+	a1 = a1 % Math.PI;
+	if ( a1 < 0 ) {
+		a1 += Math.PI;
+	}
+	a2 = a2 % Math.PI;
+	if ( a2 < 0 ) {
+		a2 += Math.PI;
+	}
+
+	// no intersection
+	if ( a1 === a2 ) {
+		return null;
+	}
+
+	//We want to round a1, a2 and PI to avoid problems with approximation
+	a1 = a1.toFixed(6);
+	a2 = a2.toFixed(6);
+	var piOver2 = (Math.PI / 2).toFixed(6);
+
+	// Optimize frequent and easy special cases.
+	// Without optimization, results would be incorrect when cos(a) === 0
+	if ( a1 === 0 ) {
+		y = p1.y;
+	}
+  else
+  if ( a1 === piOver2 ) {
+		x = p1.x;
+	}
+	if ( a2 === 0 ) {
+		y = p2.y;
+	}
+  else
+  if ( a2 === piOver2 ) {
+		x = p2.x;
+	}
+
+	// easiest case
+	if ( x !== undefined && y !== undefined ) {
+		return new Float32Array([ x, y ]);
+	}
+
+	// other cases that can be optimized
+	if ( a1 === 0 ) {
+		return new Float32Array([ ( y - d ) / b, y ]);
+	}
+	if ( a1 === piOver2 ) {
+		return new Float32Array([ x, b * x + d ]);
+	}
+	if ( a2 === 0 ) {
+		return new Float32Array([ ( y - c ) / a, y ]);
+	}
+	if ( a2 === piOver2 ) {
+		return new Float32Array([ x, a * x + c ]);
+	}
+
+	// intersection from two line equations
+	// algo: http://en.wikipedia.org/wiki/Line–line_intersection#Given_the_equations_of_the_lines
+	return new Float32Array([
+		x = (d - c) / (a - b),
+		// this should work equally well with ax+c or bx+d
+		a * x + c,
+	]);
+}
+
 function getRoots(p) {
   var a;
   var b;
@@ -414,7 +544,7 @@ function split(c0, c1, c2, c3, _t1, _t2, t1, t2) {
     return split(c0, c1, c2, c3, _t1, _t2, t1).right;
   }
 
-  // no shortcut: use "de Casteljau" iteration.
+  // no shortcut: use 'de Casteljau' iteration.
   var q = hull(c0, c1, c2, c3, t1);
   var result = {
     left: {
@@ -555,8 +685,8 @@ function scale(c0, c1, c2, c3, d) {
     };
   }
 
-  // move control points by "however much necessary to
-  // ensure the correct tangent to endpoint".
+  // move control points by 'however much necessary to
+  // ensure the correct tangent to endpoint'.
   [0,1].forEach(function(t) {
     var p = points[t+1];
     var ov = {
@@ -585,7 +715,7 @@ function bezierClockwise(c0, c1, c2, c3) {
   return angle(c0, c3, c1) > 0;
 }
 
-function bezierOffset(c0, c1, c2, c3, t, d) {
+export function bezierOffset(c0, c1, c2, c3, t, d) {
   const c = computePoint(c0, c1, c2, c3, t);
   const n = bezierNormal(c0, c1, c2, c3, t);
   return {
@@ -596,7 +726,7 @@ function bezierOffset(c0, c1, c2, c3, t, d) {
   }
 }
 
-function bezierNormal(c0, c1, c2, c3, t) {
+export function bezierNormal(c0, c1, c2, c3, t) {
   const d = getDerivative(c0, c1, c2, c3, t);
   return normalizeVec({ x: -d.y, y: d.x });
 }
@@ -663,7 +793,7 @@ export function outline(c0, c1, c2, c3, d1, d2, d3, d4) {
     alen += slen;
   });
 
-  // reverse the "return" outline
+  // reverse the 'return' outline
   bcurves = bcurves.map(function({c0, c1, c2, c3}) {
     return {
       c0: c3,
@@ -719,4 +849,126 @@ export function normalizeVec(a) {
 
 export function dotProduct(a, b) {
   return a.x * b.x + a.y * b.y;
+}
+
+
+/*!	Curve calc function for canvas 2.3.6
+ *	(c) Epistemex 2013-2016
+ *	www.epistemex.com
+ *	License: MIT
+ */
+
+/**
+ * Calculates an array containing points representing a cardinal spline through given point array.
+ * Points must be arranged as: [x1, y1, x2, y2, ..., xn, yn].
+ *
+ * There must be a minimum of two points in the input array but the function
+ * is only useful where there are three points or more.
+ *
+ * The points for the cardinal spline are returned as a new array.
+ *
+ * @param {Array} points - point array
+ * @param {Number} [tension=0.5] - tension. Typically between [0.0, 1.0] but can be exceeded
+ * @param {Number} [numOfSeg=25] - number of segments between two points (line resolution)
+ * @param {Boolean} [close=false] - Close the ends making the line continuous
+ * @returns {Float32Array} New array with the calculated points that was added to the path
+ */
+export function getCurvePoints(points, tension, numOfSeg, close) {
+
+	'use strict';
+
+	if (typeof points === 'undefined' || points.length < 2) {return new Float32Array(0)}
+
+	// options or defaults
+	let _tension = typeof tension === 'number' ? tension : 0.5;
+	let _numOfSeg = typeof numOfSeg === 'number' ? numOfSeg : 25;
+
+	var pts,// for cloning point array
+		i = 1,
+		l = points.length,
+		rPos = 0,
+		rLen = (l-2) * _numOfSeg + 2 + (close ? 2 * _numOfSeg: 0),
+		res = new Float32Array(rLen),
+		cache = new Float32Array((_numOfSeg + 2) << 2),
+		cachePtr = 4;
+
+	pts = points.slice(0);
+
+	if (close) {
+		pts.unshift(points[l - 1]);// insert end point as first point
+		pts.unshift(points[l - 2]);
+		pts.push(points[0], points[1]);// first point as last point
+	}
+	else {
+		pts.unshift(points[1]);// copy 1. point and insert at beginning
+		pts.unshift(points[0]);
+		pts.push(points[l - 2], points[l - 1]);// duplicate end-points
+	}
+
+	// cache inner-loop calculations as they are based on t alone
+	cache[0] = 1;// 1,0,0,0
+
+	for (; i < numOfSeg; i++) {
+
+		var st = i / numOfSeg,
+			st2 = st * st,
+			st3 = st2 * st,
+			st23 = st3 * 2,
+			st32 = st2 * 3;
+
+		cache[cachePtr++] =	st23 - st32 + 1;// c1
+		cache[cachePtr++] =	st32 - st23;// c2
+		cache[cachePtr++] =	st3 - 2 * st2 + st;// c3
+		cache[cachePtr++] =	st3 - st2;// c4
+	}
+
+	cache[++cachePtr] = 1;// 0,1,0,0
+
+	// calc. points
+	parse(pts, cache, l, _tension);
+
+	if (close) {
+		//l = points.length;
+		pts = [];
+		pts.push(points[l - 4], points[l - 3],
+        points[l - 2], points[l - 1],// second last and last
+        points[0], points[1],
+        points[2], points[3]);// first and second
+		parse(pts, cache, 4, _tension);
+	}
+
+	function parse(pts, cache, l, tension) {
+
+		for (var i = 2, t; i < l; i += 2) {
+
+			var pt1 = pts[i],
+				pt2 = pts[i+1],
+				pt3 = pts[i+2],
+				pt4 = pts[i+3],
+
+				t1x = (pt3 - pts[i-2]) * tension,
+				t1y = (pt4 - pts[i-1]) * tension,
+				t2x = (pts[i+4] - pt1) * tension,
+				t2y = (pts[i+5] - pt2) * tension,
+				c = 0, c1, c2, c3, c4;
+
+			for (t = 0; t < _numOfSeg; t++) {
+
+				c1 = cache[c++];
+				c2 = cache[c++];
+				c3 = cache[c++];
+				c4 = cache[c++];
+
+				res[rPos++] = c1 * pt1 + c2 * pt3 + c3 * t1x + c4 * t2x;
+				res[rPos++] = c1 * pt2 + c2 * pt4 + c3 * t1y + c4 * t2y;
+			}
+		}
+	}
+
+	// add last point
+	l = close ? 0 : points.length - 2;
+	res[rPos++] = points[l++];
+	res[rPos] = points[l];
+
+	return res
 }

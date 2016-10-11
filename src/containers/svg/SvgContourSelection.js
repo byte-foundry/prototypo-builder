@@ -99,7 +99,6 @@ class SvgContourSelection extends PureComponent {
                 }/>);
           }
         });
-
         if (this.props.ui.uiState !== SELECTION_MODE) {
           const bbox = getPathBbox(pathId, nodes);
           //Draw path bounding box
