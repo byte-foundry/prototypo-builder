@@ -214,45 +214,14 @@ class SvgContour extends PureComponent {
           let result = [];
           // draw tangents
           let j = 0, steps = 10,
-          method = 'none',
+          method = 'catmull',
           drawInterpolatedTangents = false,
           beta1 = 0.55, beta2 = 0.65;
           forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
-            let n, c;
             let c0tanIn, c3tanIn, c0tanOut, c3tanOut;
             if (c2 && c3) {
-              //draw the first offcurve's tangents
-              ({ n, c } = bezierOffset(c0, c1, c2, c3, 0, c0.expand));
-              if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
-                n = rotateVector(n.x, n.y, c0.angle%360);
-                c0tanIn = {x: c.x + n.x * (c0.distrib * c0.expand), y: c.y + n.y * (c0.distrib * c0.expand)};
-                c0tanOut= {x: c.x - n.x * ( (1 - c0.distrib) * c0.expand), y: c.y - n.y * ( (1 - c0.distrib) * c0.expand)}
-                result.push(
-                  <path key={`tan-${pathId}${j}${0}`}
-                    id={`tan-${pathId}${j}${0}`}
-                    d={`M${c0tanIn.x} ${c0tanIn.y}
-                    L${c0tanOut.x} ${c0tanOut.y}`}
-                    stroke="#00ffff" strokeWidth="4"
-                    />
-                );
-              }
               if (drawInterpolatedTangents) {
                 result.push(this.drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j));
-              }
-              //draw the last offcurve tangent
-              ({ n, c } = bezierOffset(c0, c1, c2, c3, 1, c3.expand));
-              if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
-                n = rotateVector(n.x, n.y, c3.angle%360);
-                c3tanIn = {x: c.x + n.x * (c3.distrib * c3.expand), y: c.y + n.y * (c3.distrib * c3.expand)};
-                c3tanOut = {x: c.x - n.x * ( (1 - c3.distrib) * c3.expand), y: c.y - n.y * ( (1 - c3.distrib) * c3.expand)}
-                result.push(
-                  <path key={`tan-${pathId}${j}${10}`}
-                    id={`tan-${pathId}${j}${10}`}
-                    d={`M${c3tanIn.x} ${c3tanIn.y}
-                    L${c3tanOut.x} ${c3tanOut.y}`}
-                    stroke="#00ffff" strokeWidth="4"
-                    />
-                );
               }
               j++;
               if (method === 'catmull') {

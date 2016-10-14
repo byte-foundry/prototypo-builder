@@ -14,3 +14,9 @@ export function rotateVector(x, y, deg) {
     };
     return rotateRadians(x, y, (deg * DegToRad));
 }
+
+export function getAngleBetween2Lines(x1, x2, y1, y2) {
+    let angle1 = Math.atan2(x1.y - x2.y, x1.x - x2.x);
+    let angle2 = Math.atan2(y1.y - y2.y, y1.x - y2.x);
+    return angle1-angle2;
+}

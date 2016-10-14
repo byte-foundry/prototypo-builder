@@ -4,6 +4,7 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { forEachNode } from '../../_utils/path';
 import SvgSelector from './SvgSelector';
+import SvgNodeControls from './SvgNodeControls';
 
 import {
   PATH_SELECTED,
@@ -23,6 +24,8 @@ import {
   mapDispatchToProps,
   getPathBbox,
 } from './_utils';
+
+
 
 class SvgContourSelection extends PureComponent {
   constructor(props) {
@@ -66,6 +69,15 @@ class SvgContourSelection extends PureComponent {
                 parent={pathId}
                 type="in"
                 nodes={this.props.nodes}
+              />
+            );
+            result.push(
+              <SvgNodeControls
+                point={point}
+                key={`${pathId}controls${i}`}
+                inControl={inControl}
+                pathId={pathId}
+                i={i}
               />
             );
           }
