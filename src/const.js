@@ -12,5 +12,5 @@ export const ONCURVE_SMOOTH = 1;
 export const ONCURVE_CORNER = 2;
 //Oncurve default value
 export const DEFAULT_DISTRIB = 0.5;
-export const DEFAULT_EXPAND = 60;
+export const DEFAULT_EXPAND = 20;
 export const DEFAULT_ANGLE = 180;
