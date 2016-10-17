@@ -16,6 +16,7 @@ import {
 
 import {
   rotateVector,
+  rotatePoint,
   getAngleBetween2Lines,
 } from '~/_utils/math';
 
@@ -67,7 +68,7 @@ class SvgNodeControls extends PureComponent {
     );
     //Draw offset control
     let offsetControl1 = {
-      x: point.x - 30,
+      x: point.x - 20,
       y: point.y,
     }
     let offsetControl2 = {
@@ -82,15 +83,11 @@ class SvgNodeControls extends PureComponent {
       x: offsetControl1.x,
       y: offsetControl1.y - 10,
     }
-    let angle = getAngleBetween2Lines(offsetControl1, point, point, inControl);
-    offsetControl1.x = Math.cos(angle) * (offsetControl1.x - point.x) - Math.sin(angle) * (offsetControl1.y - point.y) + point.x;
-    offsetControl1.y = Math.sin(angle) * (offsetControl1.x - point.x) - Math.cos(angle) * (offsetControl1.y - point.y) + point.y;
-    offsetControl2.x = Math.cos(angle) * (offsetControl2.x - point.x) - Math.sin(angle) * (offsetControl2.y - point.y) + point.x;
-    offsetControl2.y = Math.sin(angle) * (offsetControl2.x - point.x) - Math.cos(angle) * (offsetControl2.y - point.y) + point.y;
-    offsetControl3.x = Math.cos(angle) * (offsetControl3.x - point.x) - Math.sin(angle) * (offsetControl3.y - point.y) + point.x;
-    offsetControl3.y = Math.sin(angle) * (offsetControl3.x - point.x) - Math.cos(angle) * (offsetControl3.y - point.y) + point.y;
-    offsetControl4.x = Math.cos(angle) * (offsetControl4.x - point.x) - Math.sin(angle) * (offsetControl4.y - point.y) + point.x;
-    offsetControl4.y = Math.sin(angle) * (offsetControl4.x - point.x) - Math.cos(angle) * (offsetControl4.y - point.y) + point.y;
+    let angle = getAngleBetween2Lines({x: point.x + 100, y: point.y}, point, point, inControl);
+    offsetControl1= rotatePoint(offsetControl1, point, -angle);
+    offsetControl2= rotatePoint(offsetControl2, point, -angle);
+    offsetControl3= rotatePoint(offsetControl3, point, -angle);
+    offsetControl4= rotatePoint(offsetControl4, point, -angle);
     result.push(
       <path
         key={`${pathId}offsetControl${i}`}
@@ -105,7 +102,7 @@ class SvgNodeControls extends PureComponent {
     );
     //Draw angle control
     let angleControl1 = {
-      x: point.x + 30,
+      x: point.x + 20,
       y: point.y + 15,
     }
     let angleControl2 = {
@@ -120,14 +117,10 @@ class SvgNodeControls extends PureComponent {
       x: angleControl1.x,
       y: angleControl1.y - 30,
     }
-    angleControl1.x = Math.cos(angle) * (angleControl1.x - point.x) - Math.sin(angle) * (angleControl1.y - point.y) + point.x;
-    angleControl1.y = Math.sin(angle) * (angleControl1.x - point.x) - Math.cos(angle) * (angleControl1.y - point.y) + point.y;
-    angleControl2.x = Math.cos(angle) * (angleControl2.x - point.x) - Math.sin(angle) * (angleControl2.y - point.y) + point.x;
-    angleControl2.y = Math.sin(angle) * (angleControl2.x - point.x) - Math.cos(angle) * (angleControl2.y - point.y) + point.y;
-    angleControl3.x = Math.cos(angle) * (angleControl3.x - point.x) - Math.sin(angle) * (angleControl3.y - point.y) + point.x;
-    angleControl3.y = Math.sin(angle) * (angleControl3.x - point.x) - Math.cos(angle) * (angleControl3.y - point.y) + point.y;
-    angleControl4.x = Math.cos(angle) * (angleControl4.x - point.x) - Math.sin(angle) * (angleControl4.y - point.y) + point.x;
-    angleControl4.y = Math.sin(angle) * (angleControl4.x - point.x) - Math.cos(angle) * (angleControl4.y - point.y) + point.y;
+    angleControl1= rotatePoint(angleControl1, point, -angle);
+    angleControl2= rotatePoint(angleControl2, point, -angle);
+    angleControl3= rotatePoint(angleControl3, point, -angle);
+    angleControl4= rotatePoint(angleControl4, point, -angle);
     result.push(
       <path
         key={`${pathId}angleControl${i}`}
