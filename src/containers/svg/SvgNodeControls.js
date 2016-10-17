@@ -2,17 +2,8 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  getCalculatedParams,
-  getCalculatedGlyph,
-} from '~/_utils/parametric';
-
-import {
   mapDispatchToProps,
 } from './_utils';
-
-import {
-  getParentGlyphId,
-} from '~/_utils/graph';
 
 import {
   rotateVector,
