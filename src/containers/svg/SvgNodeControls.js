@@ -3,13 +3,8 @@ import { connect } from 'react-redux';
 
 import {
   mapDispatchToProps,
+  getNodeControls,
 } from './_utils';
-
-import {
-  rotateVector,
-  rotatePoint,
-  getAngleBetween2Lines,
-} from '~/_utils/math';
 
 class SvgNodeControls extends PureComponent {
   constructor(props) {
@@ -19,107 +14,46 @@ class SvgNodeControls extends PureComponent {
 
   renderChildren() {
     const { point, inControl, pathId, i} = this.props;
+    let controls = getNodeControls(point, inControl);
     let result = [];
-    //Get normal vector
-    let normal = {x: inControl.x - point.x, y: inControl.y - point.y};
-    normal = rotateVector(normal.x, normal.y, point.angle);
-    //http://math.stackexchange.com/a/1630886
-    let normalDistance = Math.sqrt(
-      Math.pow((point.x - normal.y) - point.x, 2) + Math.pow((point.y + normal.x) - point.y, 2)
-    );
-    let distanceRatioIn = (point.expand * (1 - point.distrib)) / normalDistance;
-    let distanceRatioOut = (point.expand * point.distrib) / normalDistance;
-    //Draw In tangent point
-    let tanIn = {
-      x: ((1 - distanceRatioIn) * point.x + distanceRatioIn * (point.x - normal.y)),
-      y: ((1 - distanceRatioIn) * point.y + distanceRatioIn * (point.y + normal.x)),
-    }
     result.push(
       <circle
         key={`${pathId}inTangent${i}`}
-        cx={tanIn.x}
-        cy={tanIn.y}
+        cx={controls.expand.in.x}
+        cy={controls.expand.in.y}
         r='5'
         fill="orange"
         stroke="orange"/>
     );
-    //Draw Out tangent point
-    let tanOut = {
-      x: ((1 - distanceRatioOut) * point.x + distanceRatioOut * (point.x + normal.y)),
-      y: ((1 - distanceRatioOut) * point.y + distanceRatioOut * (point.y - normal.x)),
-    }
     result.push(
       <circle
         key={`${pathId}outTangent${i}`}
-        cx={tanOut.x}
-        cy={tanOut.y}
+        cx={controls.expand.out.x}
+        cy={controls.expand.out.y}
         r='5'
         fill="orange"
         stroke="orange"/>
     );
-    //Draw offset control
-    let offsetControl1 = {
-      x: point.x - 20,
-      y: point.y,
-    }
-    let offsetControl2 = {
-      x: offsetControl1.x,
-      y: offsetControl1.y + 10,
-    }
-    let offsetControl3 = {
-      x: offsetControl1.x + 10,
-      y: offsetControl1.y,
-    }
-    let offsetControl4 = {
-      x: offsetControl1.x,
-      y: offsetControl1.y - 10,
-    }
-    let angle = getAngleBetween2Lines({x: point.x + 100, y: point.y}, point, point, inControl);
-    offsetControl1= rotatePoint(offsetControl1, point, -angle);
-    offsetControl2= rotatePoint(offsetControl2, point, -angle);
-    offsetControl3= rotatePoint(offsetControl3, point, -angle);
-    offsetControl4= rotatePoint(offsetControl4, point, -angle);
     result.push(
       <path
-        key={`${pathId}offsetControl${i}`}
+        key={`${pathId}distributionControl${i}`}
         d={`
-            M ${offsetControl1.x},${offsetControl1.y}
-            L ${offsetControl2.x},${offsetControl2.y}
-            L ${offsetControl3.x},${offsetControl3.y}
-            L ${offsetControl4.x},${offsetControl4.y}
+            M ${controls.distribution.first.x},${controls.distribution.first.y}
+            L ${controls.distribution.second.x},${controls.distribution.second.y}
+            L ${controls.distribution.third.x},${controls.distribution.third.y}
+            L ${controls.distribution.fourth.x},${controls.distribution.fourth.y}
           `}
           fill="green"
       />
     );
-    //Draw angle control
-    let angleControl1 = {
-      x: point.x + 20,
-      y: point.y + 15,
-    }
-    let angleControl2 = {
-      x: angleControl1.x + 10,
-      y: angleControl1.y - 10,
-    }
-    let angleControl3 = {
-      x: angleControl1.x + 10,
-      y: angleControl1.y - 20,
-    }
-    let angleControl4 = {
-      x: angleControl1.x,
-      y: angleControl1.y - 30,
-    }
-    angleControl1= rotatePoint(angleControl1, point, -angle);
-    angleControl2= rotatePoint(angleControl2, point, -angle);
-    angleControl3= rotatePoint(angleControl3, point, -angle);
-    angleControl4= rotatePoint(angleControl4, point, -angle);
     result.push(
       <path
         key={`${pathId}angleControl${i}`}
         d={`
-          M ${angleControl1.x},${angleControl1.y}
-          C ${angleControl2.x},${angleControl2.y}
-            ${angleControl3.x},${angleControl3.y}
-            ${angleControl4.x},${angleControl4.y}
+          M ${controls.angle.first.x},${controls.angle.first.y}
+          C ${controls.angle.second.x},${controls.angle.second.y}
+            ${controls.angle.third.x},${controls.angle.third.y}
+            ${controls.angle.fourth.x},${controls.angle.fourth.y}
           `}
           stroke="green"
           fill="transparent"
