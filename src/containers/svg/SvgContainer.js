@@ -23,9 +23,16 @@ import {
 } from './_utils';
 
 import {
+  getAngleBetween2Lines,
+} from '~/_utils/math'
+
+import {
   NO_PATH_SELECTED,
   NODE_SELECTED,
   NODE_SELECTED_AND_MOVE,
+  CONTROL_EXPAND_SELECTED,
+  CONTROL_DISTRIB_SELECTED,
+  CONTROL_ANGLE_SELECTED,
   PATH_SELECTED,
   PATH_SELECTED_AND_MOVE,
   ONCURVE_CORNER,
@@ -177,11 +184,30 @@ class SvgContainer extends PureComponent {
     else if (this.props.ui.uiState === PATH_SELECTED) {
       const node = getNearNode(point, this.props.ui.selected.path, this.props.nodes);
       const path = this.props.nodes[this.props.ui.selected.path];
-      if (node) {
+      if (node && node.type === 'node') {
         this.props.actions.setCoords(point.x, point.y);
-        this.props.actions.setNodeSelected(node, this.props.ui.selected.path);
-        this.props.actions.setNodeOptionsSelected(node);
+        this.props.actions.setNodeSelected(node.point.id, this.props.ui.selected.path);
+        this.props.actions.setNodeOptionsSelected(node.point.id);
         this.props.actions.setMouseState(NODE_SELECTED);
+      }
+      else if (node) {
+        // a control is selected
+        this.props.actions.setCoords(point.x, point.y);
+        this.props.actions.setNodeSelected(node.baseNode.id, this.props.ui.selected.path);
+        this.props.actions.setNodeOptionsSelected(node.baseNode.id);
+        switch (node.type) {
+          case 'expandControl':
+            this.props.actions.setMouseState(CONTROL_EXPAND_SELECTED);
+            break;
+          case 'distribControl':
+            this.props.actions.setMouseState(CONTROL_DISTRIB_SELECTED);
+            break;
+          case 'angleControl':
+            this.props.actions.setMouseState(CONTROL_ANGLE_SELECTED);
+            break;
+          default:
+            break;
+        }
       }
       else if (!path.isClosed){
         this.createNewAddToPathAndSelect(point, this.props.ui.selected.path);
@@ -230,11 +256,47 @@ class SvgContainer extends PureComponent {
         }
       }
     }
+    if (this.props.ui.uiState === CONTROL_EXPAND_SELECTED
+        || this.props.ui.uiState === CONTROL_DISTRIB_SELECTED
+        || this.props.ui.uiState === CONTROL_ANGLE_SELECTED) {
+
+      const nodeKeys = Object.keys(this.props.nodes);
+      const pointIndexKey = nodeKeys.indexOf(this.props.ui.selected.point);
+      const pointToUpdate = this.props.nodes[this.props.ui.selected.point];
+      const pointOffCurve = this.props.nodes[nodeKeys[pointIndexKey - 1]];
+
+      if (pointToUpdate) {
+        const move = {
+          dx: point.x - this.props.ui.mouse.x,
+          dy: point.y - this.props.ui.mouse.y,
+        }
+        if (!isNaN(move.dx) && !isNaN(move.dy)) {
+          if (this.props.ui.uiState === CONTROL_EXPAND_SELECTED) {
+            this.props.actions.updateProp(pointToUpdate.id, 'expand', pointToUpdate.expand + move.dy/2);
+          }
+          if (this.props.ui.uiState === CONTROL_DISTRIB_SELECTED) {
+            this.props.actions.updateProp(pointToUpdate.id, 'distrib', pointToUpdate.distrib - (move.dx/100));
+          }
+          if (this.props.ui.uiState === CONTROL_ANGLE_SELECTED) {
+            if (pointOffCurve) {
+              let angle = getAngleBetween2Lines (point, pointOffCurve, this.props.ui.mouse, pointOffCurve);
+              angle = angle * (180/Math.PI);
+              this.props.actions.updateProp(pointToUpdate.id, 'angle', pointToUpdate.angle + angle);
+            }
+          }
+        }
+      }
+    }
     else {
       if (this.props.ui.uiState === PATH_SELECTED) {
         const node = getNearNode(point, this.props.ui.selected.path, this.props.nodes);
         if (node) {
-          this.props.actions.setNodeHovered(node, this.props.ui.selected.path);
+          if (node.type === 'node') {
+            this.props.actions.setNodeHovered(node.point.id, this.props.ui.selected.path);
+          }
+          else {
+            this.props.actions.setNodeHovered(node.baseNode.id, this.props.ui.selected.path);
+          }
         }
         else {
           this.props.actions.setNodeHovered(undefined, undefined);
@@ -256,8 +318,8 @@ class SvgContainer extends PureComponent {
           const currentNode = this.props.nodes[key];
           if (currentNode.type === 'path') {
             const newNode = getNearNode(point, currentNode.id, this.props.nodes);
-            if (newNode) {
-              node = newNode;
+            if (newNode && newNode.type === 'node') {
+              node = newNode.point.id;
               path = currentNode.id;
             }
           }
@@ -270,7 +332,7 @@ class SvgContainer extends PureComponent {
           }
         });
         if (node) {
-          this.props.actions.setNodeHovered(node, path);
+          this.props.actions.setNodeHovered(node.id, path);
         }
         else {
           this.props.actions.setNodeHovered(undefined, undefined);
@@ -326,6 +388,12 @@ class SvgContainer extends PureComponent {
       this.props.actions.setMouseState(PATH_SELECTED);
       this.props.actions.setNodeSelected();
     }
+    if (this.props.ui.uiState === CONTROL_EXPAND_SELECTED
+        || this.props.ui.uiState === CONTROL_DISTRIB_SELECTED
+        || this.props.ui.uiState === CONTROL_ANGLE_SELECTED) {
+      this.props.actions.setMouseState(PATH_SELECTED);
+      this.props.actions.setNodeSelected();
+    }
     else if (this.props.ui.uiState === PATH_SELECTED_AND_MOVE) {
       this.props.actions.setMouseState(PATH_SELECTED);
     }
@@ -341,11 +409,11 @@ class SvgContainer extends PureComponent {
 
     if (this.props.ui.uiState === PATH_SELECTED || this.props.ui.uiState === NODE_SELECTED) {
       const nodeId = getNearNode(point, this.props.ui.selected.path, this.props.nodes);
-      const node = this.props.nodes[nodeId];
+      const node = this.props.nodes[nodeId.point.id];
       if (node) {
         this.props.actions.updateProp(nodeId, 'state', node.state === ONCURVE_CORNER ? ONCURVE_SMOOTH : ONCURVE_CORNER);
         if (node.state === ONCURVE_CORNER) {
-          const handles = getNode( this.props.ui.selected.path, nodeId, this.props.nodes);
+          const handles = getNode( this.props.ui.selected.path, nodeId.id, this.props.nodes);
           const newPos = subtractVec(multiplyVecByN(node, 2), handles[2]);
 
           this.props.actions.updateProp(handles[1].id, 'x', newPos.x);

@@ -140,7 +140,33 @@ export function getNearNode(coord, pathId, nodes, error = 35) {
 
     const distance = dist(point,coord);
     if ( distance < error) {
-      return point.id;
+      if (point.type === 'oncurve') {
+        // An oncurve is selected. Reduce the error to find which control is hovered
+        let error = 5;
+        let controls = getNodeControls(point, nodes[path.childIds[i-1]]);
+        const distanceInExpand = dist(controls.expand.in, coord);
+        const distanceOutExpand = dist(controls.expand.out, coord);
+        const distanceDistrib = dist(controls.distribution.first, coord);
+        const distanceAngle = dist(controls.angle.first, coord);
+        if (distanceInExpand < error) {
+          return {type: 'expandControl', point: controls.expand.in, baseNode: point};
+        }
+        else if (distanceOutExpand < error) {
+          return {type: 'expandControl', point: controls.expand.out, baseNode: point};
+        }
+        else if (distanceDistrib < error) {
+          return {type: 'distribControl', point: controls.distribution.first, baseNode: point};
+        }
+        else if (distanceAngle < error) {
+          return {type: 'angleControl', point: controls.angle.first, baseNode: point};
+        }
+        else {
+          return {type: 'node', point: point};
+        }
+      }
+      else {
+        return {type: 'node', point: point};
+      }
     }
   }
 
