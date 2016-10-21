@@ -272,16 +272,25 @@ class SvgContainer extends PureComponent {
         }
         if (!isNaN(move.dx) && !isNaN(move.dy)) {
           if (this.props.ui.uiState === CONTROL_EXPAND_SELECTED) {
-            this.props.actions.updateProp(pointToUpdate.id, 'expand', pointToUpdate.expand + move.dy/2);
+            let newExpand = pointToUpdate.expand + move.dy/2;
+            if (newExpand > 0) {
+              this.props.actions.updateProp(pointToUpdate.id, 'expand', newExpand);
+            }
           }
           if (this.props.ui.uiState === CONTROL_DISTRIB_SELECTED) {
-            this.props.actions.updateProp(pointToUpdate.id, 'distrib', pointToUpdate.distrib - (move.dx/100));
+            let newDistrib = pointToUpdate.distrib - (move.dx/100);
+            if (newDistrib < 1 && newDistrib > 0) {
+              this.props.actions.updateProp(pointToUpdate.id, 'distrib', newDistrib);
+            }
           }
           if (this.props.ui.uiState === CONTROL_ANGLE_SELECTED) {
             if (pointOffCurve) {
               let angle = getAngleBetween2Lines (point, pointOffCurve, this.props.ui.mouse, pointOffCurve);
               angle = angle * (180/Math.PI);
-              this.props.actions.updateProp(pointToUpdate.id, 'angle', pointToUpdate.angle - angle);
+              let newAngle = pointToUpdate.angle - angle;
+              if (newAngle > 0 && newAngle < 360) {
+                this.props.actions.updateProp(pointToUpdate.id, 'angle', newAngle);
+              }
             }
           }
         }
