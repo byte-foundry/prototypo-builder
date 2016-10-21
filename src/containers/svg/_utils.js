@@ -195,31 +195,32 @@ export function getNodeControls(point, inControl) {
     y: ((1 - distanceRatioOut) * point.y + distanceRatioOut * (point.y - normal.x)),
   }
   /******    Distribution control (triangle)   *****/
-  let offsetControl1 = {
+  let distribControl1 = {
     x: point.x - 20,
-    y: point.y,
+    y: point.y + (point.expand * point.distrib)/2 - (point.expand * (1-point.distrib))/2,
   }
-  let offsetControl2 = {
-    x: offsetControl1.x,
-    y: offsetControl1.y + 10,
+  let distribControl2 = {
+    x: distribControl1.x,
+    y: distribControl1.y + 10,
   }
-  let offsetControl3 = {
-    x: offsetControl1.x + 10,
-    y: offsetControl1.y,
+  let distribControl3 = {
+    x: distribControl1.x + 10,
+    y: distribControl1.y,
   }
-  let offsetControl4 = {
-    x: offsetControl1.x,
-    y: offsetControl1.y - 10,
+  let distribControl4 = {
+    x: distribControl1.x,
+    y: distribControl1.y - 10,
   }
   let angle = getAngleBetween2Lines({x: point.x + 100, y: point.y}, point, point, inControl);
-  offsetControl1= rotatePoint(offsetControl1, point, -angle);
-  offsetControl2= rotatePoint(offsetControl2, point, -angle);
-  offsetControl3= rotatePoint(offsetControl3, point, -angle);
-  offsetControl4= rotatePoint(offsetControl4, point, -angle);
+  let pointAngle = point.angle * Math.PI/180;
+  distribControl1= rotatePoint(distribControl1, point, - angle + pointAngle);
+  distribControl2= rotatePoint(distribControl2, point, - angle + pointAngle);
+  distribControl3= rotatePoint(distribControl3, point, - angle + pointAngle);
+  distribControl4= rotatePoint(distribControl4, point, - angle + pointAngle);
   /******    Angle control (arc)   *****/
   let angleControl1 = {
     x: point.x + 20,
-    y: point.y + 15,
+    y: point.y + 15 + (point.expand * point.distrib)/2 - (point.expand * (1-point.distrib))/2,
   }
   let angleControl2 = {
     x: angleControl1.x + 10,
@@ -233,10 +234,10 @@ export function getNodeControls(point, inControl) {
     x: angleControl1.x,
     y: angleControl1.y - 30,
   }
-  angleControl1= rotatePoint(angleControl1, point, -angle);
-  angleControl2= rotatePoint(angleControl2, point, -angle);
-  angleControl3= rotatePoint(angleControl3, point, -angle);
-  angleControl4= rotatePoint(angleControl4, point, -angle);
+  angleControl1= rotatePoint(angleControl1, point,  - angle + pointAngle);
+  angleControl2= rotatePoint(angleControl2, point, - angle + pointAngle);
+  angleControl3= rotatePoint(angleControl3, point, - angle + pointAngle);
+  angleControl4= rotatePoint(angleControl4, point, - angle + pointAngle);
 
   return {
     point : point,
@@ -245,10 +246,10 @@ export function getNodeControls(point, inControl) {
       out: tanOut,
     },
     distribution: {
-      first: offsetControl1,
-      second: offsetControl2,
-      third: offsetControl3,
-      fourth: offsetControl4,
+      first: distribControl1,
+      second: distribControl2,
+      third: distribControl3,
+      fourth: distribControl4,
     },
     angle: {
       first: angleControl1,
@@ -383,7 +384,7 @@ export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
   let n, c;
   let tangentPointsOn = [], tangentPointsOff = [];
   //get the first offcurve tangent
-  ({ n, c } = bezierOffset(c0, c1, c2, c3, 0, c0.expand));
+  ({ n, c } = bezierdistrib(c0, c1, c2, c3, 0, c0.expand));
   if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
     n = rotateVector(n.x, n.y, c0.angle%360);
     tangentPointsOn.push(c.x + n.x * (c0.distrib * c0.expand));
@@ -393,7 +394,7 @@ export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
   }
   //interpolate on the curve
   for (let i = 1; i < steps; i++) {
-    ({ n, c } = bezierOffset(c0, c1, c2, c3, i/steps, mlerp(c0.expand, c3.expand, i/steps)));
+    ({ n, c } = bezierdistrib(c0, c1, c2, c3, i/steps, mlerp(c0.expand, c3.expand, i/steps)));
     if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
       n = rotateVector(n.x, n.y, mlerp(c0.angle%360, c3.angle%360, i/steps));
       tangentPointsOn.push(c.x + n.x * (mlerp(c0.distrib, c3.distrib, i/steps) * mlerp(c0.expand, c3.expand, i/steps)));
@@ -403,7 +404,7 @@ export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
     }
   }
   //get the last offcurve tangent
-  ({ n, c } = bezierOffset(c0, c1, c2, c3, 1, c3.expand));
+  ({ n, c } = bezierdistrib(c0, c1, c2, c3, 1, c3.expand));
   if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
     n = rotateVector(n.x, n.y, c3.angle%360);
     tangentPointsOn.push(c.x + n.x * (c3.distrib * c3.expand));
@@ -767,7 +768,7 @@ function scale(c0, c1, c2, c3, d) {
   var clockwise = bezierClockwise(c0, c1, c2, c3);
   var r1 = distanceFn ? distanceFn(0) : d;
   var r2 = distanceFn ? distanceFn(1) : d;
-  var v = [ bezierOffset(c0, c1, c2, c3, 0,10), bezierOffset(c0, c1, c2, c3, 1,10) ];
+  var v = [ bezierdistrib(c0, c1, c2, c3, 0,10), bezierdistrib(c0, c1, c2, c3, 1,10) ];
   var o = lli4(v[0], v[0].c, v[1], v[1].c);
   if(!o) { throw new Error('cannot scale this curve. Try reducing it first.'); }
   // move all points by distance 'd' wrt the origin 'o'
@@ -781,7 +782,7 @@ function scale(c0, c1, c2, c3, d) {
   });
 
   if (!distanceFn) {
-    // move control points to lie on the intersection of the offset
+    // move control points to lie on the intersection of the distrib
     // derivative vector, and the origin-through-control vector
     [0,1].forEach(function(t) {
       var p = np[t*order];
@@ -827,7 +828,7 @@ function bezierClockwise(c0, c1, c2, c3) {
   return angle(c0, c3, c1) > 0;
 }
 
-export function bezierOffset(c0, c1, c2, c3, t, d) {
+export function bezierdistrib(c0, c1, c2, c3, t, d) {
   const c = computePoint(c0, c1, c2, c3, t);
   const n = bezierNormal(c0, c1, c2, c3, t);
   return {

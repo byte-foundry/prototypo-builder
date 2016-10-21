@@ -281,7 +281,7 @@ class SvgContainer extends PureComponent {
             if (pointOffCurve) {
               let angle = getAngleBetween2Lines (point, pointOffCurve, this.props.ui.mouse, pointOffCurve);
               angle = angle * (180/Math.PI);
-              this.props.actions.updateProp(pointToUpdate.id, 'angle', pointToUpdate.angle + angle);
+              this.props.actions.updateProp(pointToUpdate.id, 'angle', pointToUpdate.angle - angle);
             }
           }
         }
