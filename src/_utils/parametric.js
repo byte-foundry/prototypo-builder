@@ -2,7 +2,7 @@ import R from 'ramda';
 import DepTree from 'deptree';
 
 import memoize from '~/_utils/memoize';
-import { getAllDescendants } from './../_utils/graph';
+import { getAllDescendants, getSegmentIds } from '~/_utils/graph';
 
 // parse a text formula and return an updater function, while detecting refs
 // and params used in the formula. Note that this function isn't aware of the
@@ -10,7 +10,8 @@ import { getAllDescendants } from './../_utils/graph';
 // 'on' param (the segment ids are missing)
 export const getUpdater = memoize(( _strFormula ) => {
   const strFormula = _strFormula.trim();
-  const usedParams = strFormula.match(/(\$[a-z0-9_]+)/ig) || [];
+  const usedParams = strFormula.match(/(\$[a-z0-9_]+)/ig) || [];
+  /*eslint no-useless-escape: "warn"*/
   const usedRefs = (strFormula.match(/glyph\.[a-z0-9_\.]+/ig) || []).map((id) => {
     return id.replace('glyph.', '');
   });
@@ -18,10 +19,11 @@ export const getUpdater = memoize(( _strFormula ) => {
   let fn;
   try  {
     fn = new Function( 'glyph', ...usedParams, 'return ' + strFormula );
-  } catch(e) {
+  }
+  catch(e) {
     return {
       formula: _strFormula,
-      isInvalid: true
+      isInvalid: true,
     };
   }
 
@@ -30,7 +32,7 @@ export const getUpdater = memoize(( _strFormula ) => {
     fn: memoize(fn),
     params: usedParams,
     refs: usedRefs,
-    isInvalid: false
+    isInvalid: false,
   };
 });
 
@@ -48,6 +50,7 @@ const buildArgsMemoized = memoize(buildArgs);
 // recursively parse formulas
 // Note that this function is aware of the context of the formula.
 // So when the propName is 'on', it's able to append all segment ids to the refs.
+// TODO: I can't remember what the nodes argument is for. For memoization purpose?
 export const getUpdaters = memoize((nodes, formulas) => {
   return R.mapObjIndexed((formula, propName) => {
     const updater = getUpdater(formula);
@@ -55,7 +58,7 @@ export const getUpdaters = memoize((nodes, formulas) => {
     if ( propName === 'on' ) {
       return {
         ...updater,
-        refs: [...updater.refs, ...getSegmentIds()]
+        refs: [...updater.refs, ...getSegmentIds()],
       };
     }
 
@@ -89,8 +92,8 @@ export const getCalculatedParams = memoize((params, parentParams) => {
         else {
           calculatedParams[paramName] = tmp;
         }
-
-      } catch(e) {
+      }
+      catch(e) {
         e.message = `Calculating prop '${paramName}' errored: ${e.message}`;
         calculatedParams[paramName] = e;
       }
@@ -111,7 +114,7 @@ export const getSolvingOrder = memoize((glyphUpdaters = {}) => {
 
   Object.keys(glyphUpdaters).forEach((strPath) => {
     const propUpdater = glyphUpdaters[strPath];
-    if ( typeof propUpdater !== 'object' || !('refs' in propUpdater) ) {
+    if ( typeof propUpdater !== 'object' || !('refs' in propUpdater) ) {
       return;
     }
 
@@ -162,8 +165,8 @@ export const getCalculatedGlyph = memoize((state, parentParams, glyphId) => {
       else {
         calculatedGlyph[path[0]][path[1]] = tmp;
       }
-
-    } catch(e) {
+    }
+    catch(e) {
       e.message = `Calculating prop '${path[1]}' of node '${path[0]}' errored: ${e.message}`;
       calculatedGlyph[path[0]][path[1]] = e;
     }

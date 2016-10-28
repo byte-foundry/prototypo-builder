@@ -1,13 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
   renderSvgChild,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
-class SvgRoot extends Component {
+class SvgRoot extends PureComponent {
   constructor(props) {
     super(props);
     this.renderSvgChild = renderSvgChild.bind(this);
@@ -24,7 +24,7 @@ class SvgRoot extends Component {
 }
 
 SvgRoot.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgRoot);

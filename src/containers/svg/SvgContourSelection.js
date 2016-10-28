@@ -1,30 +1,33 @@
 require('styles/svg/Selection.scss');
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { forEachNode } from '../../_utils/path';
 import SvgSelector from './SvgSelector';
+import SvgNodeControls from './SvgNodeControls';
 
 import {
   PATH_SELECTED,
-  SELECTION_MODE
+  SELECTION_MODE,
 } from '~/const';
 
 import {
-  getParentGlyphId
+  getParentGlyphId,
 } from '~/_utils/graph';
 
 import {
   getCalculatedParams,
-  getCalculatedGlyph
+  getCalculatedGlyph,
 } from '~/_utils/parametric';
 
 import {
   mapDispatchToProps,
-  getPathBbox
+  getPathBbox,
 } from './_utils';
 
-class SvgContourSelection extends Component {
+
+
+class SvgContourSelection extends PureComponent {
   constructor(props) {
     super(props);
     this.renderChildren = this.renderChildren.bind(this);
@@ -84,6 +87,18 @@ class SvgContourSelection extends Component {
               />
             );
           }
+          // Draw node parameters controls
+          if (this.props.ui.hovered.point === point.id && (inControl || outControl)) {
+            result.push(
+              <SvgNodeControls
+                point={point}
+                key={`${pathId}controls${i}`}
+                inControl={inControl || outControl}
+                pathId={pathId}
+                i={i}
+              />
+            );
+          }
 
           if (i === length - 1
             && !this.props.nodes[pathId].isClosed
@@ -99,7 +114,6 @@ class SvgContourSelection extends Component {
                 }/>);
           }
         });
-
         if (this.props.ui.uiState !== SELECTION_MODE) {
           const bbox = getPathBbox(pathId, nodes);
           //Draw path bounding box
@@ -122,17 +136,17 @@ class SvgContourSelection extends Component {
 }
 
 SvgContourSelection.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 function mapStateToProps(state, props) {
   return {
     nodes: getCalculatedGlyph(
       state,
-      getCalculatedParams(state.nodes['font_initial'].params),
+      getCalculatedParams(state.nodes.font_initial.params),
       getParentGlyphId(state.nodes, props.id)
     ),
-    ui: state.ui
+    ui: state.ui,
   };
 }
 

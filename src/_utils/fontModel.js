@@ -8,22 +8,22 @@ export default {
   root: {
     children: { font: true },
     propertyOrder: [],
-    properties: {}
+    properties: {},
   },
   font: {
     children: { glyph: true },
     propertyOrder: [],
     properties: {
-      _isPropsUnfolded: 'boolean'
-    }
+      _isPropsUnfolded: 'boolean',
+    },
   },
   glyph: {
     children: { guideline: true, anchor: true, contour: true, group: true },
     propertyOrder: [],
     properties: {
       _isChildrenUnfolded: 'boolean',
-      _isPropsUnfolded: 'boolean'
-    }
+      _isPropsUnfolded: 'boolean',
+    },
   },
   guideline: {
     children: {},
@@ -33,8 +33,8 @@ export default {
       _isPropsUnfolded: 'boolean',
       x: 'number',
       y: 'number',
-      angle: 'number'
-    }
+      angle: 'number',
+    },
   },
   anchor: {
     children: {},
@@ -43,8 +43,8 @@ export default {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
       x: 'number',
-      y: 'number'
-    }
+      y: 'number',
+    },
   },
   contour: {
     children: { path: true },
@@ -52,24 +52,24 @@ export default {
     properties: {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
-      isClosed: 'boolean'
-    }
+      isClosed: 'boolean',
+    },
   },
   group: {
     children: { group: true, contour: true },
     propertyOrder: [],
     properties: {
       _isChildrenUnfolded: 'boolean',
-      _isPropsUnfolded: 'boolean'
-    }
+      _isPropsUnfolded: 'boolean',
+    },
   },
   component: {
     children: {},
     propertyOrder: [],
     properties: {
       _isChildrenUnfolded: 'boolean',
-      _isPropsUnfolded: 'boolean'
-    }
+      _isPropsUnfolded: 'boolean',
+    },
   },
   path: {
     children: { oncurve: true, offcurve: true },
@@ -78,8 +78,8 @@ export default {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
       isClosed: 'boolean',
-      isSkeleton: 'boolean'
-    }
+      isSkeleton: 'boolean',
+    },
   },
   point: {
     children: {},
@@ -88,12 +88,12 @@ export default {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
       x: 'number',
-      y: 'number'
-    }
+      y: 'number',
+    },
   },
   oncurve: {
     children: {},
-    propertyOrder: [ 'x', 'y', 'on', 'expand', 'distrib', 'selected', 'state', 'isSmoothSkeleton' ],
+    propertyOrder: [ 'x', 'y', 'on', 'expand', 'distrib', 'angle', 'selected', 'state', 'isSmoothSkeleton' ],
     properties: {
       _isChildrenUnfolded: 'boolean',
       _isPropsUnfolded: 'boolean',
@@ -103,9 +103,10 @@ export default {
       selected: 'boolean',
       state: 'number',
       expand: 'number',
-      distrib: 'number',
-      isSmoothSkeleton: 'boolean'
-    }
+      distrib: 'float',
+      angle: 'number',
+      isSmoothSkeleton: 'boolean',
+    },
   },
   offcurve: {
     children: {},
@@ -117,7 +118,7 @@ export default {
       _isPropsUnfolded: 'boolean',
       x: 'number',
       y: 'number',
-      selected: 'boolean'
-    }
-  }
+      selected: 'boolean',
+    },
+  },
 };

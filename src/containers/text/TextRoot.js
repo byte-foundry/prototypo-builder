@@ -1,14 +1,19 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import NodeProperties from './NodeProperties';
+
+import { getNodeType } from '~/_utils/graph';
 
 import {
   renderTextChild,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
-class TextRoot extends Component {
+require('styles/text/TextRoot.scss');
+
+class TextRoot extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
@@ -16,17 +21,36 @@ class TextRoot extends Component {
 
   render() {
     const { childIds } = this.props;
+    let nodeSelected = false;
+    if (this.props.ui.selected.nodeOptions) {
+      const id = this.props.ui.selected.nodeOptions;
+      const type = getNodeType(id);
+      nodeSelected = (
+        <div className="unstyled">
+          <p>{id}</p>
+          <NodeProperties id={id} type={type} />
+        </div>
+      );
+    }
+
     return (
-      <ul className="unstyled">
-        {childIds.map(this.renderTextChild)}
-      </ul>
+      <div className="textRoot">
+        <div className="nodeList">
+          <ul className="unstyled">
+            {childIds.map(this.renderTextChild)}
+          </ul>
+        </div>
+        <div className="inspector">
+          {nodeSelected}
+        </div>
+      </div>
     );
   }
 }
 
 TextRoot.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextRoot);

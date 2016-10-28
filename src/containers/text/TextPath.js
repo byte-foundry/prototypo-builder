@@ -1,23 +1,24 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import {
   renderTextChild,
   validateChildTypes,
+  shouldBeUnfolded,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
-import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 import TextOncurve from './TextOncurve';
 
-class TextGlyph extends Component {
+class TextGlyph extends PureComponent {
   constructor(props) {
     super(props);
     this.renderTextChild = renderTextChild.bind(this);
     this.renderTextCurve = this.renderTextCurve.bind(this);
+    this.shouldBeUnfolded = shouldBeUnfolded.bind(this);
     this.handleAddCurveClick = this.handleAddCurveClick.bind(this);
   }
 
@@ -29,7 +30,7 @@ class TextGlyph extends Component {
       createOffcurve,
       addOffcurve,
       createOncurve,
-      addOncurve
+      addOncurve,
     } = this.props.actions;
     const offcurve1Id = createOffcurve().nodeId;
     const offcurve2Id = createOffcurve().nodeId;
@@ -45,7 +46,7 @@ class TextGlyph extends Component {
 
     // We only render oncurve points, and wrap following offcurves in a Foldable
     if ( !isOncurve ) {
-      return;
+      return null;
     }
 
     const offcurveIds = [];
@@ -64,17 +65,16 @@ class TextGlyph extends Component {
   }
 
   render() {
-    const { id, type, childIds, _isChildrenUnfolded } = this.props;
+    const { id, childIds} = this.props;
     const nodeClass = classNames({
       'text-node': true,
       'text-node--path': true,
-      'text-node--unfolded': _isChildrenUnfolded
+      'text-node--unfolded': this.shouldBeUnfolded(),
     });
 
     return (
       <Foldable id={id} switchProp="_isChildrenUnfolded">
         <ul className={nodeClass}>
-          <li><NodeProperties id={id} type={type} /></li>
           <li>
             <ul className="text-node__children-list unstyled">
               {childIds.map(this.renderTextCurve)}
@@ -91,7 +91,7 @@ class TextGlyph extends Component {
 
 TextGlyph.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextGlyph);

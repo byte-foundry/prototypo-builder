@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/../dist/assets'),
     filename: 'app.js',
-    publicPath: `.${ defaultSettings.publicPath }`
+    publicPath: `.${ defaultSettings.publicPath }`,
   },
   devServer: {
     contentBase: './src/',
@@ -18,13 +18,13 @@ module.exports = {
     hot: true,
     port: defaultSettings.port,
     publicPath: defaultSettings.publicPath,
-    noInfo: false
+    noInfo: false,
   },
   resolve: {
     extensions: [
       '',
       '.js',
-      '.jsx'
+      '.jsx',
     ],
     alias: {
       actions: `${ defaultSettings.srcPath }/actions/`,
@@ -32,11 +32,11 @@ module.exports = {
       sources: `${ defaultSettings.srcPath }/sources/`,
       stores: `${ defaultSettings.srcPath }/stores/`,
       styles: `${ defaultSettings.srcPath }/styles/`,
-      config: `${ defaultSettings.srcPath }/config/` + process.env.REACT_WEBPACK_ENV
-    }
+      config: `${ defaultSettings.srcPath }/config/` + process.env.REACT_WEBPACK_ENV,
+    },
   },
   module: {},
   postcss: function () {
     return [];
-  }
+  },
 };

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -7,12 +7,12 @@ import actions from '~/actions';
 
 import {
   SELECTION_MODE,
-  NO_PATH_SELECTED
+  NO_PATH_SELECTED,
 } from '~/const';
 
 require('styles/ui/toolbar.scss');
 
-class UiToolbar extends Component {
+class UiToolbar extends PureComponent {
   setSelectMode() {
     this.props.actions.setMouseState(SELECTION_MODE);
     this.props.actions.setPathSelected(undefined, undefined);
@@ -27,7 +27,7 @@ class UiToolbar extends Component {
   saveNodes() {
     const json = JSON.stringify({
       nodes: this.props.nodes,
-      formulas: this.props.formulas
+      formulas: this.props.formulas,
     });
 
     const blob = new Blob([json], {type: 'octet/stream'});
@@ -43,12 +43,12 @@ class UiToolbar extends Component {
   render() {
     const selectClasses = classnames({
       'toolbar-item': true,
-      'is-active': this.props.ui.uiState <= SELECTION_MODE
+      'is-active': this.props.ui.uiState <= SELECTION_MODE,
     });
 
     const drawClasses = classnames({
       'toolbar-item': true,
-      'is-active': this.props.ui.uiState >= NO_PATH_SELECTED
+      'is-active': this.props.ui.uiState >= NO_PATH_SELECTED,
     });
 
     return (

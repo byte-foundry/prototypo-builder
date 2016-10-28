@@ -1,17 +1,17 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  getUpdater
+  getUpdater,
 } from '~/_utils/parametric';
 
 import {
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 require('styles/text/NodeProperty.scss');
 
-class Formula extends Component {
+class Formula extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -73,7 +73,7 @@ class Formula extends Component {
   }
 
   render() {
-    const { name, value, tmpFormula } = this.props;
+    const { name, value, tmpFormula } = this.props;
     const formula = tmpFormula && tmpFormula.name === name ?
       tmpFormula.value:
       value;
@@ -94,12 +94,12 @@ class Formula extends Component {
 }
 
 Formula.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    tmpFormula: state.ui.tmpFormula
+    tmpFormula: state.ui.tmpFormula,
   };
 }
 

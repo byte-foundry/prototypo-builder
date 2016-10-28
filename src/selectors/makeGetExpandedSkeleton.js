@@ -10,7 +10,7 @@ import {
   addChild,
   addCurve,
   addOncurve,
-  updateCoords
+  updateCoords,
 } from '~/actions';
 const actionCreators = {
   createPath,
@@ -20,7 +20,7 @@ const actionCreators = {
   addChild,
   addCurve,
   addOncurve,
-  updateCoords
+  updateCoords,
 };
 
 // This returns the list of all oncurves and offcurves in the path
@@ -48,7 +48,6 @@ export function memoizeNodeAndChildren(func, lastNodes = null, lastResultMap = {
       // the children nodes haven't changed
       !childrenEqualityCheck(nodeId, nodes, lastNodes)
     ) {
-      lastNodes = nodes;
       lastResultMap[nodeId] = func(nodes, nodeId);
     }
 
@@ -65,7 +64,7 @@ export function expandPath( nodes, pathId, actions, expanded ) {
     createOncurve,
     createOffcurve,
     addChild,
-    updateCoords
+    updateCoords,
   } = actions;
   const expandedPathId = createPath().nodeId;
 
@@ -76,24 +75,24 @@ export function expandPath( nodes, pathId, actions, expanded ) {
 
     const shift = {
       x: Math.cos(angle / 360 * 2 * Math.PI) * width,
-      y: Math.sin(angle / 360 * 2 * Math.PI) * width
+      y: Math.sin(angle / 360 * 2 * Math.PI) * width,
     }
 
     const leftCoords = {
       x: node.x + shift.x * (distrib - 1),
-      y: node.y + shift.y * (distrib - 1)
+      y: node.y + shift.y * (distrib - 1),
     };
     const rightCoords = {
       x: node.x + shift.x * distrib,
-      y: node.y + shift.y * distrib
+      y: node.y + shift.y * distrib,
     };
     const outCurveVec = {
       x: cOut.x - node.x,
-      y: cOut.y - node.y
+      y: cOut.y - node.y,
     };
     const inCurveVec = {
       x: cIn.x - node.x,
-      y: cIn.y - node.y
+      y: cIn.y - node.y,
     };
     let nodeId;
 
@@ -107,7 +106,8 @@ export function expandPath( nodes, pathId, actions, expanded ) {
     nodeId = createOffcurve().nodeId;
     if ( i === 0 ) {
       expandedRight.push( nodeId );
-    } else {
+    }
+    else {
       expandedLeft.push( nodeId );
     }
     updateCoords( nodeId, leftCoords );

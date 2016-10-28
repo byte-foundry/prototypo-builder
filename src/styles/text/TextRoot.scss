@@ -1,0 +1,13 @@
+.textRoot {
+  max-height: 100vh;
+  .nodeList {
+    height: 50vh;
+    overflow-y: scroll;
+    padding-top: 1.5rem;
+  }
+  .inspector {
+    height: 50vh;
+    overflow-y: scroll;
+    padding-top: 1.5rem;
+  }
+}

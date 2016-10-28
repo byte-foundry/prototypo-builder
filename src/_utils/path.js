@@ -34,13 +34,11 @@ export function mapCurve(nodeId, nodes, callback, dontMap) {
     }
   }
 
-  if ( !dontMap ) {
-    return result;
-  }
+  return dontMap ? undefined : result;
 }
 
 export function forEachCurve() {
-  mapCurve.apply(null, [...arguments, true]);
+  mapCurve(...arguments, true);
 }
 
 // Loop on a path and group each oncurve with previous offcurve and next offcurve
@@ -94,13 +92,11 @@ export function mapNode(nodeId, nodes, callback, dontMap) {
     }
   }
 
-  if ( !dontMap ) {
-    return result;
-  }
+  return dontMap ? undefined : result;
 }
 
 export function forEachNode() {
-  return mapNode.apply(null, [...arguments, true]);
+  return mapNode(...arguments, true);
 }
 
 export function getCorrespondingHandles(nodeId, childId, nodes) {
@@ -113,7 +109,7 @@ export function getCorrespondingHandles(nodeId, childId, nodes) {
   return [
     offC1,
     offC2,
-    onC
+    onC,
   ];
 }
 
@@ -150,7 +146,7 @@ export function getNode(nodeId, childId, nodes) {
       return [
         nodes[childIds[i]],
         null,
-        null
+        null,
       ];
     }
     else if ( i === 0 ) {
@@ -160,14 +156,14 @@ export function getNode(nodeId, childId, nodes) {
           nodes[childIds[i]],
           isClosed ? nodes[childIds[childIds.length - 2]] : null,
           nodes[childIds[i + 1]],
-          isClosed ? nodes[childIds[childIds.length - 1]] : null
+          isClosed ? nodes[childIds[childIds.length - 1]] : null,
         ];
       }
       else {
         return [
           nodes[childIds[i]],
           isClosed ? nodes[childIds[childIds.length - 2]] : null,
-          nodes[childIds[i + 1]]
+          nodes[childIds[i + 1]],
         ];
       }
     }
@@ -175,14 +171,14 @@ export function getNode(nodeId, childId, nodes) {
       return [
         isClosed ? nodes[childIds[0]] : nodes[childIds[i]],
         nodes[childIds[i - 1]],
-        isClosed ? nodes[childIds[1]] : null
+        isClosed ? nodes[childIds[1]] : null,
       ];
     }
     else {
       return [
         nodes[childIds[i]],
         nodes[childIds[i - 1]],
-        nodes[childIds[i + 1]]
+        nodes[childIds[i + 1]],
       ];
     }
   }

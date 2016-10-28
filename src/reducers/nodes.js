@@ -30,29 +30,30 @@ import {
   UPDATE_PARAM,
   UPDATE_PROP,
   UPDATE_X,
-  UPDATE_Y
+  UPDATE_Y,
 } from '~/actions/const';
 
 import {
-  ONCURVE_SMOOTH
+  ONCURVE_SMOOTH,
 } from '~/const';
 
 import {
   validateAddChildren,
   validateUpdateProps,
   validateGraph,
-  validateAddParam
+  validateAddParam,
 } from './_nodesValidateActions';
 
 import {
   getNode,
   getNextNode,
   getPreviousNode,
-  getCorrespondingHandles
+  getCorrespondingHandles,
 } from '../_utils/path';
 
 import {
-  getAllDescendants
+  getAllDescendants,
+  getNodeType,
 } from '../_utils/graph';
 
 /* Define your initial state here.
@@ -70,19 +71,19 @@ function createNode(action) {
     id: nodeId,
     type: nodeType,
     childIds: [],
-    ...props
+    ...props,
   }
 }
 
 function initParams(node) {
   return {
     ...node,
-    params: {}
+    params: {},
   }
 }
 
 function childIds(state, action) {
-  switch(action.type.split('_')[0]) {
+  switch(getNodeType(action.type)) {
     case 'ADD':
       return action.childIds ?
         [...state, ...action.childIds ] :
@@ -130,13 +131,13 @@ function node(state = initialNode, action) {
         ...state,
         params: {
           ...state.params,
-          [action.name]: action.props
-        }
+          [action.name]: action.props,
+        },
       };
     case DELETE_PARAM:
       return {
         ...state,
-        params: R.dissoc(action.name, state.params)
+        params: R.dissoc(action.name, state.params),
       }
     case UPDATE_PARAM:
       return {
@@ -145,9 +146,9 @@ function node(state = initialNode, action) {
           ...state.params,
           [action.name]: {
             ...state.params[action.name],
-            ...action.props
-          }
-        }
+            ...action.props,
+          },
+        },
       };
 
     case UPDATE_X:
@@ -164,9 +165,9 @@ function node(state = initialNode, action) {
 }
 
 function deleteMany(state, ids) {
-  state = Object.assign({}, state);
-  ids.forEach(id => delete state[id]);
-  return state;
+  const nextState = Object.assign({}, state);
+  ids.forEach((id) => { delete nextState[id]; });
+  return nextState;
 }
 
 function deepPositionUpdate(node, nodes, x=0, y=0, result) {
@@ -176,9 +177,10 @@ function deepPositionUpdate(node, nodes, x=0, y=0, result) {
     result[node.id] = {
       ...node,
       x: node.x + x,
-      y: node.y + y
+      y: node.y + y,
     }
-  } else {
+  }
+  else {
     node.childIds.forEach((childId) => {
       const target = nodes[childId];
       deepPositionUpdate(target, nodes, x, y, result);
@@ -218,12 +220,12 @@ export default function(state = initialState, action) {
   }
 
   switch (type) {
-    case DELETE_NODE:
+    case DELETE_NODE: {
       const descendantIds = Object.keys(getAllDescendants(state, nodeId));
       return deleteMany(state, [ nodeId, ...descendantIds ]);
-
+    }
     // TODO: rename, cleanup and test this reducer (and move it elsewhere probably)
-    case MOVE_NODE:
+    case MOVE_NODE: {
       const path = state[nodeId];
       const type = path.type;
       if ( type === 'oncurve') {
@@ -251,10 +253,11 @@ export default function(state = initialState, action) {
           resultNode[prevOut.id] = { ...prevOut, _isGhost: false};
         }
         return {...state, ...resultNode};
-      } else if ( type === 'offcurve') {
+      }
+      else if ( type === 'offcurve') {
         const nodesToMove = getCorrespondingHandles(parentId, nodeId, state);
         const result = {...state,
-          [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy}
+          [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy},
         };
         if (nodesToMove[2].state === ONCURVE_SMOOTH) {
           const oppositeNode = nodeId === nodesToMove[1].id ? nodesToMove[0] : nodesToMove[1];
@@ -263,13 +266,15 @@ export default function(state = initialState, action) {
           }
         }
         return result;
-      } else {
+      }
+      else {
         const result = {};
         deepPositionUpdate(path, state, action.dx, action.dy, result);
         return {...state, ...result};
       }
-
-    default:
+    }
+    default: {
       return R.merge(state, { [nodeId]: node( state[nodeId], action ) });
+    }
   }
 }

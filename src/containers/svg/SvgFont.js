@@ -1,13 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import {
   renderSvgChild,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
-class SvgFont extends Component {
+class SvgFont extends PureComponent {
   render() {
     const { childIds } = this.props;
     return (
@@ -19,7 +19,7 @@ class SvgFont extends Component {
 }
 
 SvgFont.propTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgFont);

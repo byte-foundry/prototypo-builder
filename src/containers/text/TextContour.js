@@ -1,23 +1,25 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import {
   renderTextChild,
+  shouldBeUnfolded,
   validateChildTypes,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './_utils';
 
 import NodeProperties from './NodeProperties';
 import Foldable from './Foldable';
 
-class TextContour extends Component {
+class TextContour extends PureComponent {
   constructor(props) {
     super(props);
     this.handleAddPathClick = this.handleAddPathClick.bind(this);
     this.handleAddStartingPathClick = this.handleAddStartingPathClick.bind(this);
     this.renderTextChild = renderTextChild.bind(this);
+    this.shouldBeUnfolded = shouldBeUnfolded.bind(this);
   }
 
   handleAddPathClick(e) {
@@ -37,7 +39,7 @@ class TextContour extends Component {
       createOncurve,
       addOncurve,
       createPath,
-      addPath
+      addPath,
     } = this.props.actions;
 
     const pathId = createPath().nodeId;
@@ -56,7 +58,7 @@ class TextContour extends Component {
     const nodeClass = classNames({
       'text-node': true,
       'text-node--path': true,
-      'text-node--unfolded': _isChildrenUnfolded
+      'text-node--unfolded': _isChildrenUnfolded,
     });
 
     return (
@@ -80,7 +82,7 @@ class TextContour extends Component {
 
 TextContour.propTypes = {
   actions: PropTypes.object.isRequired,
-  childTypes: validateChildTypes
+  childTypes: validateChildTypes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextContour);

@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import { mapCurve, forEachCurve } from '~/_utils/path';
+import { getNodeType } from '~/_utils/graph';
+import { lerp as mlerp, rotateVector, getAngleBetween2Lines, rotatePoint } from '~/_utils/math';
 
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';
@@ -11,33 +13,35 @@ import SvgContourSelection from './SvgContourSelection';
 
 import actions from '~/actions';
 
+import memoize from '~/_utils/memoize';
+
 const componentMap = {
   contour: SvgContour,
   font: SvgFont,
-  glyph: SvgGlyph
+  glyph: SvgGlyph,
 };
 
 const selectionComponentMap = {
-  contour: SvgContourSelection
+  contour: SvgContourSelection,
 }
 
 export function renderSvgChild(childId) {
   const { id } = this.props;
-  const childType = childId.split('_')[0];
+  const childType = getNodeType(childId);
   const SvgNode = componentMap[childType];
 
   return [
-    <SvgNode key={childId} id={childId} parentId={id} />
+    <SvgNode key={childId} id={childId} parentId={id} />,
   ];
 }
 
 export function renderSelectionAreas(childId) {
   const { id } = this.props;
-  const childType = childId.split('_')[0];
+  const childType = getNodeType(childId);
   const SvgNode = selectionComponentMap[childType];
 
   return [
-    <SvgNode key={childId} id={childId} parentId={id} />
+    <SvgNode key={childId} id={childId} parentId={id} />,
   ];
 }
 
@@ -52,12 +56,12 @@ export function renderPathData(pathId) {
     let sPoint = '';
 
     if ( i === 0 ) {
-      sPoint += `M ${start.x || 0},${start.y || 0}`;
+      sPoint += `M ${start.x || 0},${start.y || 0}`;
     }
 
     if ( end ) {
       sPoint +=
-        `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
+        `C ${c1.x || 0},${c1.y || 0} ${c2.x || 0},${c2.y || 0} ${end.x || 0} ${end.y || 0}`;
     }
 
     if ( i === length-1 && nodes[pathId].isClosed ) {
@@ -101,7 +105,7 @@ export const NULL_VEC = {x: 0, y: 0};
 
 export function getNearPath(coord, contour, nodes, error) {
   if ( !(contour in nodes) ) {
-    return;
+    return undefined;
   }
 
   let result;
@@ -121,7 +125,7 @@ export function getNearPath(coord, contour, nodes, error) {
   return result;
 }
 
-export function getNearNode(coord, pathId, nodes, error = 30) {
+export function getNearNode(coord, pathId, nodes, error = 35) {
   const path = nodes[pathId];
   const length = path.isClosed ? path.childIds.length - 1 : path.childIds.length;
   for (let i = 0; i < length; i++) {
@@ -130,14 +134,151 @@ export function getNearNode(coord, pathId, nodes, error = 30) {
     if (point._isGhost) {
       point = {
         ...point,
-        ...point._ghost
+        ...point._ghost,
       }
     }
 
     const distance = dist(point,coord);
     if ( distance < error) {
-      return point.id;
+      if (point.type === 'oncurve' && point.x) {
+        // An oncurve is selected. Reduce the error to find which control is hovered
+        let error = 8;
+        let control;
+        if (nodes[path.childIds[i-1]]){
+          control = nodes[path.childIds[i-1]];
+        }
+        else {
+          control = nodes[path.childIds[i+1]];
+        }
+        let controls = getNodeControls(point, control);
+        let distribMiddle = {
+          x: (controls.distribution.first.x + controls.distribution.third.x) / 2,
+          y: (controls.distribution.first.y + controls.distribution.third.y) / 2,
+        }
+        let angleMiddle = {
+          x: (controls.angle.second.x + controls.angle.third.x) / 2,
+          y: (controls.angle.second.y + controls.angle.third.y) / 2,
+        }
+        const distanceInExpand = dist(controls.expand.in, coord);
+        const distanceOutExpand = dist(controls.expand.out, coord);
+        const distanceDistrib = dist(distribMiddle, coord);
+        const distanceAngle = dist(angleMiddle, coord);
+        if (distanceInExpand < error) {
+          return {type: 'expandControl', point: controls.expand.in, baseNode: point};
+        }
+        else if (distanceOutExpand < error) {
+          return {type: 'expandControl', point: controls.expand.out, baseNode: point};
+        }
+        else if (distanceDistrib < error) {
+          return {type: 'distribControl', point: distribMiddle, baseNode: point};
+        }
+        else if (distanceAngle < error) {
+          return {type: 'angleControl', point: angleMiddle, baseNode: point};
+        }
+        else {
+          return {type: 'node', point: point};
+        }
+      }
+      else {
+        return {type: 'node', point: point};
+      }
     }
+  }
+
+  return undefined;
+}
+
+export function getNodeControls(point, inControl) {
+  /******    Expand control (tangents)   *****/
+  let tangents = getTangentPoints(point, inControl);
+  /******    Distribution control (triangle)   *****/
+  let distribControl1 = {
+    x: point.x - 20,
+    y: point.y + (point.expand * point.distrib)/2 - (point.expand * (1-point.distrib))/2,
+  }
+  let distribControl2 = {
+    x: distribControl1.x,
+    y: distribControl1.y + 10,
+  }
+  let distribControl3 = {
+    x: distribControl1.x + 10,
+    y: distribControl1.y,
+  }
+  let distribControl4 = {
+    x: distribControl1.x,
+    y: distribControl1.y - 10,
+  }
+  let angle = getAngleBetween2Lines({x: point.x + 100, y: point.y}, point, point, inControl);
+  let pointAngle = point.angle * Math.PI/180;
+  distribControl1= rotatePoint(distribControl1, point, - angle + pointAngle);
+  distribControl2= rotatePoint(distribControl2, point, - angle + pointAngle);
+  distribControl3= rotatePoint(distribControl3, point, - angle + pointAngle);
+  distribControl4= rotatePoint(distribControl4, point, - angle + pointAngle);
+  /******    Angle control (arc)   *****/
+  let angleControl1 = {
+    x: point.x + 20,
+    y: point.y + 15 + (point.expand * point.distrib)/2 - (point.expand * (1-point.distrib))/2,
+  }
+  let angleControl2 = {
+    x: angleControl1.x + 10,
+    y: angleControl1.y - 10,
+  }
+  let angleControl3 = {
+    x: angleControl1.x + 10,
+    y: angleControl1.y - 20,
+  }
+  let angleControl4 = {
+    x: angleControl1.x,
+    y: angleControl1.y - 30,
+  }
+  angleControl1= rotatePoint(angleControl1, point,  - angle + pointAngle);
+  angleControl2= rotatePoint(angleControl2, point, - angle + pointAngle);
+  angleControl3= rotatePoint(angleControl3, point, - angle + pointAngle);
+  angleControl4= rotatePoint(angleControl4, point, - angle + pointAngle);
+
+  return {
+    point : point,
+    expand: {
+      in: tangents.in,
+      out: tangents.out,
+    },
+    distribution: {
+      first: distribControl1,
+      second: distribControl2,
+      third: distribControl3,
+      fourth: distribControl4,
+    },
+    angle: {
+      first: angleControl1,
+      second: angleControl2,
+      third: angleControl3,
+      fourth: angleControl4,
+    },
+  };
+}
+
+export function getTangentPoints(point, inControl) {
+  //Get normal vector
+  let normal = {x: inControl.x - point.x, y: inControl.y - point.y};
+  normal = rotateVector(normal.x, normal.y, point.angle);
+  //http://math.stackexchange.com/a/1630886
+  let normalDistance = Math.sqrt(
+    Math.pow((point.x - normal.y) - point.x, 2) + Math.pow((point.y + normal.x) - point.y, 2)
+  );
+  let distanceRatioIn = (point.expand * (1 - point.distrib)) / normalDistance;
+  let distanceRatioOut = (point.expand * point.distrib) / normalDistance;
+
+  let tanIn = {
+    x: ((1 - distanceRatioIn) * point.x + distanceRatioIn * (point.x - normal.y)),
+    y: ((1 - distanceRatioIn) * point.y + distanceRatioIn * (point.y + normal.x)),
+  };
+  let tanOut = {
+    x: ((1 - distanceRatioOut) * point.x + distanceRatioOut * (point.x + normal.y)),
+    y: ((1 - distanceRatioOut) * point.y + distanceRatioOut * (point.y - normal.x)),
+  }
+  return {
+    in: tanIn,
+    out: tanOut,
   }
 }
 
@@ -184,7 +325,7 @@ export function computePoint(c0, c1, c2, c3, t) {
 
   const result = {
     x: a * c0.x + b * c1.x + c * c2.x + d * c3.x,
-    y: a * c0.y + b * c1.y + c * c2.y + d * c3.y
+    y: a * c0.y + b * c1.y + c * c2.y + d * c3.y,
   }
 
   return result;
@@ -196,7 +337,7 @@ export function getPathBbox(pathId, nodes) {
     minX: Infinity,
     minY: Infinity,
     maxX: -Infinity,
-    maxY: -Infinity
+    maxY: -Infinity,
   };
 
   forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
@@ -222,7 +363,7 @@ export function getBbox(c0, c1, c2, c3) {
     minX: xMinMax.min,
     maxX: xMinMax.max,
     minY: yMinMax.min,
-    maxY: yMinMax.max
+    maxY: yMinMax.max,
   }
 }
 
@@ -251,7 +392,7 @@ export function getDerivativeControlPoints(c0, c1, c2, c3) {
     for(let j=0, dpt; j<c; j++) {
       dpt = {
         x: c * (p[j+1].x - p[j].x),
-        y: c * (p[j+1].y - p[j].y)
+        y: c * (p[j+1].y - p[j].y),
       };
       list.push(dpt);
     }
@@ -261,11 +402,143 @@ export function getDerivativeControlPoints(c0, c1, c2, c3) {
   return points;
 }
 
+export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
+  let n, c;
+  let tangentPointsOn = [], tangentPointsOff = [];
+  //get the first offcurve tangent
+  ({ n, c } = bezierOffset(c0, c1, c2, c3, 0, c0.expand));
+  if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
+    n = rotateVector(n.x, n.y, c0.angle%360);
+    tangentPointsOn.push(c.x + n.x * (c0.distrib * c0.expand));
+    tangentPointsOn.push(c.y + n.y * (c0.distrib * c0.expand));
+    tangentPointsOff.push(c.x - n.x * ((1 - c0.distrib) * c0.expand));
+    tangentPointsOff.push(c.y - n.y * ((1 - c0.distrib) * c0.expand));
+  }
+  //interpolate on the curve
+  for (let i = 1; i < steps; i++) {
+    ({ n, c } = bezierOffset(c0, c1, c2, c3, i/steps, mlerp(c0.expand, c3.expand, i/steps)));
+    if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
+      n = rotateVector(n.x, n.y, mlerp(c0.angle%360, c3.angle%360, i/steps));
+      tangentPointsOn.push(c.x + n.x * (mlerp(c0.distrib, c3.distrib, i/steps) * mlerp(c0.expand, c3.expand, i/steps)));
+      tangentPointsOn.push(c.y + n.y * (mlerp(c0.distrib, c3.distrib, i/steps) * mlerp(c0.expand, c3.expand, i/steps)));
+      tangentPointsOff.push(c.x - n.x * ((1 - mlerp(c0.distrib, c3.distrib, i/steps)) * mlerp(c0.expand, c3.expand, i/steps)));
+      tangentPointsOff.push(c.y - n.y * ((1 - mlerp(c0.distrib, c3.distrib, i/steps)) * mlerp(c0.expand, c3.expand, i/steps)));
+    }
+  }
+  //get the last offcurve tangent
+  ({ n, c } = bezierOffset(c0, c1, c2, c3, 1, c3.expand));
+  if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
+    n = rotateVector(n.x, n.y, c3.angle%360);
+    tangentPointsOn.push(c.x + n.x * (c3.distrib * c3.expand));
+    tangentPointsOn.push(c.y + n.y * (c3.distrib * c3.expand));
+    tangentPointsOff.push(c.x - n.x * ((1 - c3.distrib) * c3.expand));
+    tangentPointsOff.push(c.y - n.y * ((1 - c3.distrib) * c3.expand));
+  }
+  let tangentOutlineOn = getCurvePoints(tangentPointsOn, 0.5,25,false);
+  let tangentOutlineOff = getCurvePoints(tangentPointsOff, 0.5,25,false);
+  let points = '';
+  points = points.concat(`${tangentOutlineOn[0]},${tangentOutlineOn[1]} `);
+  for (let i = 2; i < tangentOutlineOn.length - 2; i+=2) {
+    points = points.concat(`${tangentOutlineOn[i]},${tangentOutlineOn[i+1]} `);
+  }
+  points = points.concat(`${tangentOutlineOn[tangentOutlineOn.length - 2]},${tangentOutlineOn[tangentOutlineOn.length-1]} `);
+  points = points.concat(`${tangentOutlineOn[tangentOutlineOff.length - 2]},${tangentOutlineOn[tangentOutlineOff.length-1]} `);
+  for (let i = tangentOutlineOff.length - 1; i > 1; i-=2) {
+    points = points.concat(`${tangentOutlineOff[i-1]}, ${tangentOutlineOff[i]} `);
+  }
+  points = points.concat(`${tangentOutlineOff[0]},${tangentOutlineOff[1]} `);
+  return points;
+});
+
+// Find the intersection of two rays.
+// A ray is defined by a point and an angle.
+// Imported from Prototypo.js
+export function rayRayIntersection ( p1, a1, p2, a2 ) {
+	// line equations
+	var a = Math.tan(a1),
+		b = Math.tan(a2),
+		c = p1.y - a * p1.x,
+		d = p2.y - b * p2.x,
+		x,
+		y;
+
+	// When searching for lines intersection,
+	// angles can be normalized to 0 < a < PI
+	// This will be helpful in detecting special cases below.
+	a1 = a1 % Math.PI;
+	if ( a1 < 0 ) {
+		a1 += Math.PI;
+	}
+	a2 = a2 % Math.PI;
+	if ( a2 < 0 ) {
+		a2 += Math.PI;
+	}
+
+	// no intersection
+	if ( a1 === a2 ) {
+		return null;
+	}
+
+	//We want to round a1, a2 and PI to avoid problems with approximation
+	a1 = a1.toFixed(6);
+	a2 = a2.toFixed(6);
+	var piOver2 = (Math.PI / 2).toFixed(6);
+
+	// Optimize frequent and easy special cases.
+	// Without optimization, results would be incorrect when cos(a) === 0
+	if ( a1 === 0 ) {
+		y = p1.y;
+	}
+  else
+  if ( a1 === piOver2 ) {
+		x = p1.x;
+	}
+	if ( a2 === 0 ) {
+		y = p2.y;
+	}
+  else
+  if ( a2 === piOver2 ) {
+		x = p2.x;
+	}
+
+	// easiest case
+	if ( x !== undefined && y !== undefined ) {
+		return new Float32Array([ x, y ]);
+	}
+
+	// other cases that can be optimized
+	if ( a1 === 0 ) {
+		return new Float32Array([ ( y - d ) / b, y ]);
+	}
+	if ( a1 === piOver2 ) {
+		return new Float32Array([ x, b * x + d ]);
+	}
+	if ( a2 === 0 ) {
+		return new Float32Array([ ( y - c ) / a, y ]);
+	}
+	if ( a2 === piOver2 ) {
+		return new Float32Array([ x, a * x + c ]);
+	}
+
+	// intersection from two line equations
+	// algo: http://en.wikipedia.org/wiki/Line–line_intersection#Given_the_equations_of_the_lines
+	return new Float32Array([
+		x = (d - c) / (a - b),
+		// this should work equally well with ax+c or bx+d
+		a * x + c,
+	]);
+}
+
 function getRoots(p) {
+  var a;
+  var b;
+  var c;
+  var d;
+
   if(p.length === 3) {
-    var a = p[0],
-    b = p[1],
-    c = p[2],
+    a = p[0];
+    b = p[1];
+    c = p[2];
     d = a - 2*b + c;
     if(d!==0) {
       const m1 = -Math.sqrt(b*b-a*c),
@@ -282,10 +555,15 @@ function getRoots(p) {
 
   // linear roots are even easier
   if(p.length === 2) {
-    var a = p[0], b = p[1];
-    if(a!==b) { return [a/(a-b)]; }
+    a = p[0];
+    b = p[1];
+    if(a!==b) {
+      return [a/(a-b)];
+    }
     return [];
   }
+
+  return undefined;
 }
 
 function getMinMax(c0, c1, c2, c3, dim, list) {
@@ -308,8 +586,12 @@ function getMinMax(c0, c1, c2, c3, dim, list) {
   for(var i=0,len=list.length; i<len; i++) {
     t = list[i];
     c = computePoint(c0, c1, c2, c3, t);
-    if(c[dim] < min) { min = c[dim]; }
-    if(c[dim] > max) { max = c[dim]; }
+    if(c[dim] < min) {
+      min = c[dim];
+    }
+    if(c[dim] > max) {
+      max = c[dim];
+    }
   }
   return { min, max };
 }
@@ -329,7 +611,7 @@ export function getDerivative(c0, c1, c2, c3, t) {
 
   const ret = {
     x: a * p[0].x + b * p[1].x + c * p[2].x,
-    y: a * p[0].y + b * p[1].y + c * p[2].y
+    y: a * p[0].y + b * p[1].y + c * p[2].y,
   };
 
   return ret;
@@ -367,7 +649,7 @@ function reduce(c0, c1, c2, c3) {
           t2 -= step;
           if(Math.abs(t1-t2) < step) {
             // we can never form a reduction
-            return [];
+            pass2 = [];
           }
           segment = split(p1.c0, p1.c1, p1.c2, p1.c3, p1._t1, p1._t2, t1, t2);
           segment._t1 = map(t1,0,1,p1._t1,p1._t2);
@@ -397,22 +679,22 @@ function split(c0, c1, c2, c3, _t1, _t2, t1, t2) {
     return split(c0, c1, c2, c3, _t1, _t2, t1).right;
   }
 
-  // no shortcut: use "de Casteljau" iteration.
+  // no shortcut: use 'de Casteljau' iteration.
   var q = hull(c0, c1, c2, c3, t1);
   var result = {
     left: {
       c0: q[0],
       c1: q[4],
       c2: q[7],
-      c3: q[9]
+      c3: q[9],
     },
     right: {
       c0: q[9],
       c1: q[8],
       c2: q[6],
-      c3: q[3]
+      c3: q[3],
     },
-    span: q
+    span: q,
   };
 
   // make sure we bind _t1/_t2 information!
@@ -522,7 +804,7 @@ function scale(c0, c1, c2, c3, d) {
   });
 
   if (!distanceFn) {
-    // move control points to lie on the intersection of the offset
+    // move control points to lie on the intersection of the distrib
     // derivative vector, and the origin-through-control vector
     [0,1].forEach(function(t) {
       var p = np[t*order];
@@ -534,33 +816,33 @@ function scale(c0, c1, c2, c3, d) {
       c0: np[0],
       c1: np[1],
       c2: np[2],
-      c3: np[3]
+      c3: np[3],
     };
   }
 
-  // move control points by "however much necessary to
-  // ensure the correct tangent to endpoint".
+  // move control points by 'however much necessary to
+  // ensure the correct tangent to endpoint'.
   [0,1].forEach(function(t) {
     var p = points[t+1];
     var ov = {
       x: p.x - o.x,
-      y: p.y - o.y
+      y: p.y - o.y,
     };
     var rc = distanceFn ? distanceFn((t+1)/order) : d;
-    if(distanceFn && !clockwise) rc = -rc;
+    if(distanceFn && !clockwise) {rc = -rc;}
     var m = Math.sqrt(ov.x*ov.x + ov.y*ov.y);
     ov.x /= m;
     ov.y /= m;
     np[t+1] = {
       x: p.x + rc*ov.x,
-      y: p.y + rc*ov.y
+      y: p.y + rc*ov.y,
     }
   });
   return {
     c0: np[0],
     c1: np[1],
     c2: np[2],
-    c3: np[3]
+    c3: np[3],
   };
 }
 
@@ -568,18 +850,18 @@ function bezierClockwise(c0, c1, c2, c3) {
   return angle(c0, c3, c1) > 0;
 }
 
-function bezierOffset(c0, c1, c2, c3, t, d) {
+export function bezierOffset(c0, c1, c2, c3, t, d) {
   const c = computePoint(c0, c1, c2, c3, t);
   const n = bezierNormal(c0, c1, c2, c3, t);
   return {
     c,
     n,
     x: c.x + n.x * d,
-    y: c.y + n.y * d
+    y: c.y + n.y * d,
   }
 }
 
-function bezierNormal(c0, c1, c2, c3, t) {
+export function bezierNormal(c0, c1, c2, c3, t) {
   const d = getDerivative(c0, c1, c2, c3, t);
   return normalizeVec({ x: -d.y, y: d.x });
 }
@@ -589,7 +871,7 @@ function lli8(x1,y1,x2,y2,x3,y3,x4,y4) {
   const ny = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
   const d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 
-  if(d==0) {
+  if(d===0) {
     return false;
   }
   return { x: nx / d, y: ny / d };
@@ -606,7 +888,7 @@ function lli4(p1, p2, p3, p4) {
 function lerp(r, v1, v2) {
   const ret = {
     x: v1.x + r * (v2.x - v1.x),
-    y: v1.y + r * (v2.y - v1.y)
+    y: v1.y + r * (v2.y - v1.y),
   };
   if(!!v1.z && !!v2.z) {
     ret.z =  v1.z + r*(v2.z-v1.z);
@@ -638,20 +920,21 @@ export function outline(c0, c1, c2, c3, d1, d2, d3, d4) {
     if (graduated) {
       fcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, linearDistanceFunction( d1, d3, tlen, alen, slen)));
       bcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, linearDistanceFunction(-d2,-d4, tlen, alen, slen)));
-    } else {
+    }
+    else {
       fcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, d1));
       bcurves.push(scale(segment.c0, segment.c1, segment.c2, segment.c3, -d2));
     }
     alen += slen;
   });
 
-  // reverse the "return" outline
+  // reverse the 'return' outline
   bcurves = bcurves.map(function({c0, c1, c2, c3}) {
     return {
       c0: c3,
       c1: c2,
       c2: c1,
-      c3: c0
+      c3: c0,
     };
   }).reverse();
 
@@ -671,21 +954,21 @@ export function outline(c0, c1, c2, c3, d1, d2, d3, d4) {
 export function addVec(a, b) {
   return {
     x: a.x + b.x,
-    y: a.y + b.y
+    y: a.y + b.y,
   };
 }
 
 export function subtractVec(a, b) {
   return {
     x: a.x - b.x,
-    y: a.y - b.y
+    y: a.y - b.y,
   };
 }
 
 export function multiplyVecByN(a, n) {
   return {
     x: a.x * n,
-    y: a.y * n
+    y: a.y * n,
   }
 }
 
@@ -701,4 +984,126 @@ export function normalizeVec(a) {
 
 export function dotProduct(a, b) {
   return a.x * b.x + a.y * b.y;
+}
+
+
+/*!	Curve calc function for canvas 2.3.6
+ *	(c) Epistemex 2013-2016
+ *	www.epistemex.com
+ *	License: MIT
+ */
+
+/**
+ * Calculates an array containing points representing a cardinal spline through given point array.
+ * Points must be arranged as: [x1, y1, x2, y2, ..., xn, yn].
+ *
+ * There must be a minimum of two points in the input array but the function
+ * is only useful where there are three points or more.
+ *
+ * The points for the cardinal spline are returned as a new array.
+ *
+ * @param {Array} points - point array
+ * @param {Number} [tension=0.5] - tension. Typically between [0.0, 1.0] but can be exceeded
+ * @param {Number} [numOfSeg=25] - number of segments between two points (line resolution)
+ * @param {Boolean} [close=false] - Close the ends making the line continuous
+ * @returns {Float32Array} New array with the calculated points that was added to the path
+ */
+export function getCurvePoints(points, tension, numOfSeg, close) {
+
+	'use strict';
+
+	if (typeof points === 'undefined' || points.length < 2) {return new Float32Array(0)}
+
+	// options or defaults
+	let _tension = typeof tension === 'number' ? tension : 0.5;
+	let _numOfSeg = typeof numOfSeg === 'number' ? numOfSeg : 25;
+
+	var pts,// for cloning point array
+		i = 1,
+		l = points.length,
+		rPos = 0,
+		rLen = (l-2) * _numOfSeg + 2 + (close ? 2 * _numOfSeg: 0),
+		res = new Float32Array(rLen),
+		cache = new Float32Array((_numOfSeg + 2) << 2),
+		cachePtr = 4;
+
+	pts = points.slice(0);
+
+	if (close) {
+		pts.unshift(points[l - 1]);// insert end point as first point
+		pts.unshift(points[l - 2]);
+		pts.push(points[0], points[1]);// first point as last point
+	}
+	else {
+		pts.unshift(points[1]);// copy 1. point and insert at beginning
+		pts.unshift(points[0]);
+		pts.push(points[l - 2], points[l - 1]);// duplicate end-points
+	}
+
+	// cache inner-loop calculations as they are based on t alone
+	cache[0] = 1;// 1,0,0,0
+
+	for (; i < numOfSeg; i++) {
+
+		var st = i / numOfSeg,
+			st2 = st * st,
+			st3 = st2 * st,
+			st23 = st3 * 2,
+			st32 = st2 * 3;
+
+		cache[cachePtr++] =	st23 - st32 + 1;// c1
+		cache[cachePtr++] =	st32 - st23;// c2
+		cache[cachePtr++] =	st3 - 2 * st2 + st;// c3
+		cache[cachePtr++] =	st3 - st2;// c4
+	}
+
+	cache[++cachePtr] = 1;// 0,1,0,0
+
+	// calc. points
+	parse(pts, cache, l, _tension);
+
+	if (close) {
+		//l = points.length;
+		pts = [];
+		pts.push(points[l - 4], points[l - 3],
+        points[l - 2], points[l - 1],// second last and last
+        points[0], points[1],
+        points[2], points[3]);// first and second
+		parse(pts, cache, 4, _tension);
+	}
+
+	function parse(pts, cache, l, tension) {
+
+		for (var i = 2, t; i < l; i += 2) {
+
+			var pt1 = pts[i],
+				pt2 = pts[i+1],
+				pt3 = pts[i+2],
+				pt4 = pts[i+3],
+
+				t1x = (pt3 - pts[i-2]) * tension,
+				t1y = (pt4 - pts[i-1]) * tension,
+				t2x = (pts[i+4] - pt1) * tension,
+				t2y = (pts[i+5] - pt2) * tension,
+				c = 0, c1, c2, c3, c4;
+
+			for (t = 0; t < _numOfSeg; t++) {
+
+				c1 = cache[c++];
+				c2 = cache[c++];
+				c3 = cache[c++];
+				c4 = cache[c++];
+
+				res[rPos++] = c1 * pt1 + c2 * pt3 + c3 * t1x + c4 * t2x;
+				res[rPos++] = c1 * pt2 + c2 * pt4 + c3 * t1y + c4 * t2y;
+			}
+		}
+	}
+
+	// add last point
+	l = close ? 0 : points.length - 2;
+	res[rPos++] = points[l++];
+	res[rPos] = points[l];
+
+	return res
 }

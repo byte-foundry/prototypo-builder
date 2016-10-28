@@ -1,9 +1,9 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 
-import actions from './../../actions';
-
-import fontModel from './../../_utils/fontModel';
+import actions from '~/actions';
+import fontModel from '~/_utils/fontModel';
+import { getNodeType } from '~/_utils/graph';
 
 import TextContour from './TextContour';
 import TextFont from './TextFont';
@@ -18,12 +18,12 @@ const componentMap = {
   glyph: TextGlyph,
   offcurve: TextOffcurve,
   oncurve: TextOncurve,
-  path: TextPath
+  path: TextPath,
 };
 
 export function renderTextChild(childId) {
   const { id } = this.props;
-  const childType = childId.split('_')[0];
+  const childType = getNodeType(childId);
   const TextNode = componentMap[childType];
 
   return (
@@ -33,12 +33,25 @@ export function renderTextChild(childId) {
   );
 }
 
+export function shouldBeUnfolded() {
+  const { id, childIds, _isChildrenUnfolded, offcurveIds } = this.props;
+  const { nodeOptions } = this.props.ui.selected;
+  return _isChildrenUnfolded ? true :
+      _isChildrenUnfolded ||
+      id === nodeOptions ||
+      childIds ? childIds.some(elem => elem === nodeOptions) : false ||
+      offcurveIds ? offcurveIds.some(elem => elem === nodeOptions) : false;
+}
+
 export function mapStateToProps(state, ownProps) {
-  return state.nodes[ownProps.id];
+  return {ui: state.ui, ...state.nodes[ownProps.id]};
 }
 
 // The last argument is used to make this function stateless during tests
-export function validateChildTypes(props, propName, componentName, prop, model = fontModel) {
+export function validateChildTypes(props, propName, componentName, prop, _model) {
+  // for some reason _model receives null instead of undefined,
+  // so default arguments cannot be used here
+  const model = _model || fontModel;
   const componentType = (
     componentName.replace(/^.*?([A-Z][a-z]+?)(Component)?$/, function($0, $1) {
       return $1.toLowerCase();
@@ -55,6 +68,8 @@ export function validateChildTypes(props, propName, componentName, prop, model =
       );
     }
   }
+
+  return null;
 }
 
 export function mapDispatchToProps(dispatch) {

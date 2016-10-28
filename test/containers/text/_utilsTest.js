@@ -5,13 +5,13 @@ import { validateChildTypes } from '../../../src/containers/text/_utils';
 describe('containers/text/_utils', () => {
   describe('validateChildTypes', () => {
     const modelBefore = {
-      ab: { cd: true, ef: true }
+      ab: { cd: true, ef: true },
     };
     deepFreeze(modelBefore);
 
     it('should accept valid child types for the font model', (done) => {
       const propsBefore = {
-        childTypes: { 'node-1': 'cd', 'node-2': 'ef', 'node-3': 'cd' }
+        childTypes: { 'node-1': 'cd', 'node-2': 'ef', 'node-3': 'cd' },
       };
 
       deepFreeze(propsBefore);
@@ -24,7 +24,7 @@ describe('containers/text/_utils', () => {
 
     it('should throw on invalid child types for the font model', (done) => {
       const propsBefore = {
-        childTypes: { 'node-1': 'cd', 'node-2': 'ef', 'node-3': 'gh' }
+        childTypes: { 'node-1': 'cd', 'node-2': 'ef', 'node-3': 'gh' },
       };
 
       deepFreeze(propsBefore);

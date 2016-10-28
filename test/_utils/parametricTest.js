@@ -6,7 +6,7 @@ import {
   getUpdaters,
   getCalculatedParams,
   getSolvingOrder,
-  getCalculatedGlyph
+  getCalculatedGlyph,
 } from '../../src/_utils/parametric';
 
 describe('containers/_utils', () => {
@@ -15,7 +15,7 @@ describe('containers/_utils', () => {
       const strFormula = '$width * ';
       const expected = {
         formula: strFormula,
-        isInvalid: true
+        isInvalid: true,
       };
 
       expect(getUpdater(strFormula)).to.deep.equal(expected);
@@ -42,7 +42,7 @@ describe('containers/_utils', () => {
       const params = {
         $width: 12,
         $height: 34,
-        $expand: 56
+        $expand: 56,
       };
 
       deepFreeze(params);
@@ -61,8 +61,9 @@ describe('containers/_utils', () => {
 
       deepFreeze(params);
 
-      expect(() => { buildArgs(null, params, ['$zip']) })
-        .to.throw(Error);
+      expect(() => {
+        buildArgs(null, params, ['$zip'])
+      }).to.throw(Error);
 
       done();
     });
@@ -72,12 +73,12 @@ describe('containers/_utils', () => {
     it('should parse all formulas', (done) => {
       const formulas = {
         'node_0.x': '$width * 10',
-        'node_1.y': 'glyph.node_0.x + $height'
+        'node_1.y': 'glyph.node_0.x + $height',
       };
 
       deepFreeze(formulas);
-      const updaters = getUpdaters(formulas);
-console.log(updaters);
+      const updaters = getUpdaters([], formulas);
+
       expect(updaters['node_0.x'].fn).to.be.a('function');
       expect(updaters['node_1.y'].fn).to.be.a('function');
 
@@ -88,9 +89,9 @@ console.log(updaters);
   describe('getCalculatedParams', () => {
     it('should replace params with calculatedParams', (done) => {
       const stateBefore = {
-        width: { value: 12 },
+        width: { value: 12 },
         expand: { formula: '34' },
-        distrib: { formula: '1 *' }
+        distrib: { formula: '1 *' },
       };
       const parentParams = {};
 
@@ -114,13 +115,13 @@ console.log(updaters);
         'node_0.x': { refs: ['node_1.x'] },
         'node_0.y': { refs: [] },
         'node_1.x': { refs: [] },
-        'node_1.y': { refs: ['node_0.y'] }
+        'node_1.y': { refs: ['node_0.y'] },
       };
       const expected = [
         'node_1.x',
         'node_0.x',
         'node_0.y',
-        'node_1.y'
+        'node_1.y',
       ];
 
       expect(getSolvingOrder(glyphUpdaters)).to.deep.equal(expected);
@@ -138,24 +139,24 @@ console.log(updaters);
           'root': {
             id: 'root',
             type: 'root',
-            childIds: ['font_initial']
+            childIds: ['font_initial'],
           },
           'font_initial': {
             id: 'font_initial',
             type: 'font',
             childIds: ['glyph_initial'],
-            params: {}
+            params: {},
           },
           'glyph_initial': {
             id: 'glyph_initial',
             type: 'glyph',
             childIds: ['contour_initial'],
-            params: {}
+            params: {},
           },
           'contour_initial': {
             id: 'contour_initial',
             type: 'contour',
-            childIds: ['node_0', 'node_1']
+            childIds: ['node_0', 'node_1'],
           },
           'node_0': {
             id: 'node_0',
@@ -163,39 +164,39 @@ console.log(updaters);
             x: 12,
             y: 34,
             isClosed: true,
-            childIds: []
+            childIds: [],
           },
           'node_1': {
             id: 'node_1',
             type: 'path',
             expand: 56,
-            childIds: ['node_2', 'node_3']
+            childIds: ['node_2', 'node_3'],
           },
           'node_2': {
             id: 'node_2',
             type: 'path',
-            childIds: []
+            childIds: [],
           },
           'node_3': {
             id: 'node_3',
             type: 'path',
-            childIds: []
-          }
+            childIds: [],
+          },
         },
         formulas: {
           'glyph_initial': {
             'node_0.x': 'glyph.node_1.x',
             'node_0.y': 'glyph.node_1.x * 2',
-            'node_1.x': '$width'
-          }
-        }
+            'node_1.x': '$width',
+          },
+        },
       };
 
       const expected = {
         'contour_initial': {
           id: 'contour_initial',
           type: 'contour',
-          childIds: ['node_0', 'node_1']
+          childIds: ['node_0', 'node_1'],
         },
         'node_0': {
           id: 'node_0',
@@ -203,25 +204,25 @@ console.log(updaters);
           x: 78,
           y: 78 * 2,
           isClosed: true,
-          childIds: []
+          childIds: [],
         },
         'node_1': {
           id: 'node_1',
           type: 'path',
           x: 78,
           expand: 56,
-          childIds: ['node_2', 'node_3']
+          childIds: ['node_2', 'node_3'],
         },
         'node_2': {
           id: 'node_2',
           type: 'path',
-          childIds: []
+          childIds: [],
         },
         'node_3': {
           id: 'node_3',
           type: 'path',
-          childIds: []
-        }
+          childIds: [],
+        },
       };
 
       deepFreeze(stateBefore.nodes);

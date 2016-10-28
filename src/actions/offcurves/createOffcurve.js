@@ -6,6 +6,6 @@ module.exports = function() {
   return {
     type: CREATE_OFFCURVE,
     nodeId: getNodeId(nodeType),
-    nodeType
+    nodeType,
   };
 };

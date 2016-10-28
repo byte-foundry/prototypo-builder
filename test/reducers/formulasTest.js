@@ -4,7 +4,7 @@ import reducer from '~/reducers/formulas';
 import actions from '~/actions';
 const {
   updateFormula,
-  deleteFormula
+  deleteFormula,
 } = actions;
 
 describe('reducer: formulas', () => {
@@ -13,36 +13,36 @@ describe('reducer: formulas', () => {
     const action1 = updateFormula('glyph_0', 'node_1.x', '34');
     const stateAfter1 = {
       'glyph_0': {
-        'node_1.x': '34'
-      }
+        'node_1.x': '34',
+      },
     };
     const action2 = updateFormula('glyph_1', 'node_2.expand', '$thickness');
     const stateAfter2 = {
       'glyph_0': {
-        'node_1.x': '34'
+        'node_1.x': '34',
       },
       'glyph_1': {
-        'node_2.expand': '$thickness'
-      }
+        'node_2.expand': '$thickness',
+      },
     };
     const action3 = updateFormula('glyph_0', 'node_1.y', '56');
     const stateAfter3 = {
       'glyph_0': {
         'node_1.x': '34',
-        'node_1.y': '56'
+        'node_1.y': '56',
       },
       'glyph_1': {
-        'node_2.expand': '$thickness'
-      }
+        'node_2.expand': '$thickness',
+      },
     };
     const action4 = updateFormula('glyph_0', 'node_1.x', '');
     const stateAfter4 = {
       'glyph_0': {
-        'node_1.y': '56'
+        'node_1.y': '56',
       },
       'glyph_1': {
-        'node_2.expand': '$thickness'
-      }
+        'node_2.expand': '$thickness',
+      },
     };
 
     deepFreeze(stateBefore);
@@ -73,20 +73,20 @@ describe('reducer: formulas', () => {
       const stateBefore = {
         'glyph_0': {
           'node_1.x': '34',
-          'node_1.y': '56'
+          'node_1.y': '56',
         },
         'glyph_1': {
-          'node_2.expand': '$thickness'
-        }
+          'node_2.expand': '$thickness',
+        },
       };
       const action1 = deleteFormula('glyph_0', 'node_1.y');
       const stateAfter1 = {
         'glyph_0': {
-          'node_1.x': '34'
+          'node_1.x': '34',
         },
         'glyph_1': {
-          'node_2.expand': '$thickness'
-        }
+          'node_2.expand': '$thickness',
+        },
       };
 
       deepFreeze(stateBefore);
@@ -101,17 +101,17 @@ describe('reducer: formulas', () => {
       const stateBefore = {
         'glyph_0': {
           'node_1.x': '34',
-          'node_1.y': '56'
+          'node_1.y': '56',
         },
         'glyph_1': {
-          'node_2.expand': '$thickness'
-        }
+          'node_2.expand': '$thickness',
+        },
       };
       const action1 = deleteFormula('glyph_0');
       const stateAfter1 = {
         'glyph_1': {
-          'node_2.expand': '$thickness'
-        }
+          'node_2.expand': '$thickness',
+        },
       };
 
       deepFreeze(stateBefore);
@@ -127,20 +127,20 @@ describe('reducer: formulas', () => {
         'glyph_0': {
           'node_1.x': '34',
           'node_1.y': '56',
-          'node_0.angle': '78'
+          'node_0.angle': '78',
         },
         'glyph_1': {
-          'node_2.expand': '$thickness'
-        }
+          'node_2.expand': '$thickness',
+        },
       };
       const action1 = deleteFormula('node_1');
       const stateAfter1 = {
         'glyph_0': {
-          'node_0.angle': '78'
+          'node_0.angle': '78',
         },
         'glyph_1': {
-          'node_2.expand': '$thickness'
-        }
+          'node_2.expand': '$thickness',
+        },
       };
 
       deepFreeze(stateBefore);

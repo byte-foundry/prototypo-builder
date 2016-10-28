@@ -41,5 +41,7 @@ export default {
   updateProp: require('../actions/props/updateProp.js'),
   updateTmpFormula: require('../actions/ui/updateTmpFormula.js'),
   updateX: require('../actions/points/updateX.js'),
-  updateY: require('../actions/points/updateY.js')
+  updateY: require('../actions/points/updateY.js'),
+  setContourMode: require('../actions/ui/setContourMode.js'),
+  setInterpolatedTangentsMode: require('../actions/ui/setInterpolatedTangentsMode.js'),
 };
