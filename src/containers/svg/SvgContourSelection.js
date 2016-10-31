@@ -71,15 +71,6 @@ class SvgContourSelection extends PureComponent {
                 nodes={this.props.nodes}
               />
             );
-            result.push(
-              <SvgNodeControls
-                point={point}
-                key={`${pathId}controls${i}`}
-                inControl={inControl}
-                pathId={pathId}
-                i={i}
-              />
-            );
           }
           //Draw out control
           if (outControl) {
@@ -93,6 +84,18 @@ class SvgContourSelection extends PureComponent {
                 parent={pathId}
                 type="out"
                 nodes={this.props.nodes}
+              />
+            );
+          }
+          // Draw node parameters controls
+          if (this.props.ui.hovered.point === point.id && (inControl || outControl)) {
+            result.push(
+              <SvgNodeControls
+                point={point}
+                key={`${pathId}controls${i}`}
+                inControl={inControl || outControl}
+                pathId={pathId}
+                i={i}
               />
             );
           }

@@ -65,7 +65,7 @@ class SvgNodeControls extends PureComponent {
   render() {
     return (
       <g>
-        {this.props.hovered === this.props.point.id ? this.renderChildren() : null}
+        {this.renderChildren()}
       </g>
     );
   }
