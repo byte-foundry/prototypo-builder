@@ -460,7 +460,7 @@ class SvgContainer extends PureComponent {
   handleScroll(e){
     if (this.props.ui.uiState === CAMERA_MODE){
       e.persist();
-      let newZoom = this.state.camera.zoom - e.deltaY/30;
+      let newZoom = this.state.camera.zoom - e.deltaY/200;
       if (newZoom <= 0.5) {
         newZoom = 0.5;
       }
