@@ -13,12 +13,16 @@ import {
   SET_CONTOUR_SELECTED,
   UPDATE_TMP_FORMULA,
   DELETE_TMP_FORMULA,
+  SET_CONTOUR_MODE,
+  SET_INTERPOLATED_TANGENTS_MODE,
 } from '../actions/const';
 
 const initialState = {
   uiState: NO_PATH_SELECTED,
   selected: {},
   hovered: {},
+  contourMode: 'catmull',
+  showInterpolatedTangents: false,
 };
 
 module.exports = function(state = initialState, action) {
@@ -58,6 +62,18 @@ module.exports = function(state = initialState, action) {
     }
     case DELETE_TMP_FORMULA: {
       return R.dissoc('tmpFormula', state);
+    }
+    case SET_CONTOUR_MODE: {
+      return {
+        ...state,
+        contourMode: (action.mode === 'simple' ? 'simple' : 'catmull'),
+      }
+    }
+    case SET_INTERPOLATED_TANGENTS_MODE: {
+      return {
+        ...state,
+        showInterpolatedTangents: action.mode,
+      }
     }
     default: {
       return state;

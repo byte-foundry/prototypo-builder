@@ -202,8 +202,10 @@ class SvgContour extends PureComponent {
     return result;
   }
   renderOutline() {
-    const { nodes, id } = this.props;
+    const { nodes, id, ui } = this.props;
     const { childIds } = nodes[id];
+    let contourMode = ui.contourMode || 'catmull';
+    let drawInterpolatedTangents = ui.showInterpolatedTangents || false;
 
     return (
       childIds
@@ -214,8 +216,6 @@ class SvgContour extends PureComponent {
           let result = [];
           // draw tangents
           let j = 0, steps = 10,
-          method = 'catmull',
-          drawInterpolatedTangents = false,
           beta1 = 0.55, beta2 = 0.65;
           forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
             let c0tanIn, c3tanIn, c0tanOut, c3tanOut;
@@ -224,12 +224,12 @@ class SvgContour extends PureComponent {
                 result.push(this.drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j));
               }
               j++;
-              if (method === 'catmull') {
+              if (contourMode === 'catmull') {
                 result.push(
                   this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j)
                 );
               }
-              if (method === 'simple' && c3tanIn && c0tanIn) {
+              if (contourMode === 'simple' && c3tanIn && c0tanIn) {
                 result = result.concat(this.drawSimpleOutline(c0,c1,c2,c3, c0tanIn, c3tanIn, c0tanOut, c3tanOut, beta1, beta2, pathId, j));
               }
             }
