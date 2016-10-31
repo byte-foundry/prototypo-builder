@@ -39,6 +39,7 @@ module.exports = function(state = initialState, action) {
       // they are (slowest reducer)
       else if ( !action.propPath ) {
         let foundMatchingProp = false;
+        /*eslint no-useless-escape: "warn"*/
         const rInNode = new RegExp(`^${action.nodeId}(\.|$)`);
 
         for ( let glyphId in state ) {

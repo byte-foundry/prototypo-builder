@@ -143,7 +143,14 @@ export function getNearNode(coord, pathId, nodes, error = 35) {
       if (point.type === 'oncurve') {
         // An oncurve is selected. Reduce the error to find which control is hovered
         let error = 8;
-        let controls = getNodeControls(point, nodes[path.childIds[i-1]]);
+        let control;
+        if (nodes[path.childIds[i-1]]){
+          control = nodes[path.childIds[i-1]];
+        }
+        else {
+          control = nodes[path.childIds[i+1]];
+        }
+        let controls = getNodeControls(point, control);
         let distribMiddle = {
           x: (controls.distribution.first.x + controls.distribution.third.x) / 2,
           y: (controls.distribution.first.y + controls.distribution.third.y) / 2,

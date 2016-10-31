@@ -11,6 +11,7 @@ import { getAllDescendants, getSegmentIds } from '~/_utils/graph';
 export const getUpdater = memoize(( _strFormula ) => {
   const strFormula = _strFormula.trim();
   const usedParams = strFormula.match(/(\$[a-z0-9_]+)/ig) || [];
+  /*eslint no-useless-escape: "warn"*/
   const usedRefs = (strFormula.match(/glyph\.[a-z0-9_\.]+/ig) || []).map((id) => {
     return id.replace('glyph.', '');
   });
