@@ -140,7 +140,7 @@ export function getNearNode(coord, pathId, nodes, error = 35) {
 
     const distance = dist(point,coord);
     if ( distance < error) {
-      if (point.type === 'oncurve') {
+      if (point.type === 'oncurve' && point.x) {
         // An oncurve is selected. Reduce the error to find which control is hovered
         let error = 8;
         let control;
@@ -190,25 +190,7 @@ export function getNearNode(coord, pathId, nodes, error = 35) {
 
 export function getNodeControls(point, inControl) {
   /******    Expand control (tangents)   *****/
-  //Get normal vector
-  let normal = {x: inControl.x - point.x, y: inControl.y - point.y};
-  normal = rotateVector(normal.x, normal.y, point.angle);
-  //http://math.stackexchange.com/a/1630886
-  let normalDistance = Math.sqrt(
-    Math.pow((point.x - normal.y) - point.x, 2) + Math.pow((point.y + normal.x) - point.y, 2)
-  );
-  let distanceRatioIn = (point.expand * (1 - point.distrib)) / normalDistance;
-  let distanceRatioOut = (point.expand * point.distrib) / normalDistance;
-  //Draw In tangent point
-  let tanIn = {
-    x: ((1 - distanceRatioIn) * point.x + distanceRatioIn * (point.x - normal.y)),
-    y: ((1 - distanceRatioIn) * point.y + distanceRatioIn * (point.y + normal.x)),
-  };
-  //Draw Out tangent point
-  let tanOut = {
-    x: ((1 - distanceRatioOut) * point.x + distanceRatioOut * (point.x + normal.y)),
-    y: ((1 - distanceRatioOut) * point.y + distanceRatioOut * (point.y - normal.x)),
-  }
+  let tangents = getTangentPoints(point, inControl);
   /******    Distribution control (triangle)   *****/
   let distribControl1 = {
     x: point.x - 20,
@@ -257,8 +239,8 @@ export function getNodeControls(point, inControl) {
   return {
     point : point,
     expand: {
-      in: tanIn,
-      out: tanOut,
+      in: tangents.in,
+      out: tangents.out,
     },
     distribution: {
       first: distribControl1,
@@ -273,6 +255,31 @@ export function getNodeControls(point, inControl) {
       fourth: angleControl4,
     },
   };
+}
+
+export function getTangentPoints(point, inControl) {
+  //Get normal vector
+  let normal = {x: inControl.x - point.x, y: inControl.y - point.y};
+  normal = rotateVector(normal.x, normal.y, point.angle);
+  //http://math.stackexchange.com/a/1630886
+  let normalDistance = Math.sqrt(
+    Math.pow((point.x - normal.y) - point.x, 2) + Math.pow((point.y + normal.x) - point.y, 2)
+  );
+  let distanceRatioIn = (point.expand * (1 - point.distrib)) / normalDistance;
+  let distanceRatioOut = (point.expand * point.distrib) / normalDistance;
+
+  let tanIn = {
+    x: ((1 - distanceRatioIn) * point.x + distanceRatioIn * (point.x - normal.y)),
+    y: ((1 - distanceRatioIn) * point.y + distanceRatioIn * (point.y + normal.x)),
+  };
+  let tanOut = {
+    x: ((1 - distanceRatioOut) * point.x + distanceRatioOut * (point.x + normal.y)),
+    y: ((1 - distanceRatioOut) * point.y + distanceRatioOut * (point.y - normal.x)),
+  }
+  return {
+    in: tanIn,
+    out: tanOut,
+  }
 }
 
 export function isOnCurve(c0, c1, c2, c3, coord, error = 30) {
@@ -399,7 +406,7 @@ export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
   let n, c;
   let tangentPointsOn = [], tangentPointsOff = [];
   //get the first offcurve tangent
-  ({ n, c } = bezierdistrib(c0, c1, c2, c3, 0, c0.expand));
+  ({ n, c } = bezierOffset(c0, c1, c2, c3, 0, c0.expand));
   if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
     n = rotateVector(n.x, n.y, c0.angle%360);
     tangentPointsOn.push(c.x + n.x * (c0.distrib * c0.expand));
@@ -409,7 +416,7 @@ export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
   }
   //interpolate on the curve
   for (let i = 1; i < steps; i++) {
-    ({ n, c } = bezierdistrib(c0, c1, c2, c3, i/steps, mlerp(c0.expand, c3.expand, i/steps)));
+    ({ n, c } = bezierOffset(c0, c1, c2, c3, i/steps, mlerp(c0.expand, c3.expand, i/steps)));
     if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
       n = rotateVector(n.x, n.y, mlerp(c0.angle%360, c3.angle%360, i/steps));
       tangentPointsOn.push(c.x + n.x * (mlerp(c0.distrib, c3.distrib, i/steps) * mlerp(c0.expand, c3.expand, i/steps)));
@@ -419,7 +426,7 @@ export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
     }
   }
   //get the last offcurve tangent
-  ({ n, c } = bezierdistrib(c0, c1, c2, c3, 1, c3.expand));
+  ({ n, c } = bezierOffset(c0, c1, c2, c3, 1, c3.expand));
   if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
     n = rotateVector(n.x, n.y, c3.angle%360);
     tangentPointsOn.push(c.x + n.x * (c3.distrib * c3.expand));
@@ -783,7 +790,7 @@ function scale(c0, c1, c2, c3, d) {
   var clockwise = bezierClockwise(c0, c1, c2, c3);
   var r1 = distanceFn ? distanceFn(0) : d;
   var r2 = distanceFn ? distanceFn(1) : d;
-  var v = [ bezierdistrib(c0, c1, c2, c3, 0,10), bezierdistrib(c0, c1, c2, c3, 1,10) ];
+  var v = [ bezierOffset(c0, c1, c2, c3, 0,10), bezierOffset(c0, c1, c2, c3, 1,10) ];
   var o = lli4(v[0], v[0].c, v[1], v[1].c);
   if(!o) { throw new Error('cannot scale this curve. Try reducing it first.'); }
   // move all points by distance 'd' wrt the origin 'o'
@@ -843,7 +850,7 @@ function bezierClockwise(c0, c1, c2, c3) {
   return angle(c0, c3, c1) > 0;
 }
 
-export function bezierdistrib(c0, c1, c2, c3, t, d) {
+export function bezierOffset(c0, c1, c2, c3, t, d) {
   const c = computePoint(c0, c1, c2, c3, t);
   const n = bezierNormal(c0, c1, c2, c3, t);
   return {

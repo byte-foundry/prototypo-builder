@@ -33,6 +33,7 @@ import {
   bezierOffset,
   getCurveOutline,
   rayRayIntersection,
+  getTangentPoints,
 } from './_utils';
 
 class SvgContour extends PureComponent {
@@ -204,9 +205,8 @@ class SvgContour extends PureComponent {
   renderOutline() {
     const { nodes, id, ui } = this.props;
     const { childIds } = nodes[id];
-    let contourMode = ui.contourMode || 'catmull';
-    let drawInterpolatedTangents = ui.showInterpolatedTangents || false;
-
+    const contourMode = ui.contourMode || 'catmull';
+    const drawInterpolatedTangents = ui.showInterpolatedTangents || false;
     return (
       childIds
         .filter((pathId) => {
@@ -218,8 +218,9 @@ class SvgContour extends PureComponent {
           let j = 0, steps = 10,
           beta1 = 0.55, beta2 = 0.65;
           forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
-            let c0tanIn, c3tanIn, c0tanOut, c3tanOut;
             if (c2 && c3) {
+              const c0tangents = getTangentPoints(c0, c1);
+              const c3tangents = getTangentPoints(c3, c2);
               if (drawInterpolatedTangents) {
                 result.push(this.drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j));
               }
@@ -229,8 +230,8 @@ class SvgContour extends PureComponent {
                   this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j)
                 );
               }
-              if (contourMode === 'simple' && c3tanIn && c0tanIn) {
-                result = result.concat(this.drawSimpleOutline(c0,c1,c2,c3, c0tanIn, c3tanIn, c0tanOut, c3tanOut, beta1, beta2, pathId, j));
+              if (contourMode === 'simple' && c3tangents.in && c0tangents.in) {
+                result = result.concat(this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.in, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j));
               }
             }
           });
