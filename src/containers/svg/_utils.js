@@ -189,6 +189,10 @@ export function getNearNode(coord, pathId, nodes, error = 35) {
 }
 
 export function getNodeControls(point, inControl) {
+  if (inControl._isGhost) {
+    inControl.x = inControl._ghost.x;
+    inControl.y = inControl._ghost.y;
+  }
   /******    Expand control (tangents)   *****/
   let tangents = getTangentPoints(point, inControl);
   /******    Distribution control (triangle)   *****/

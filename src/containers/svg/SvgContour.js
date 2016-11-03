@@ -219,8 +219,6 @@ class SvgContour extends PureComponent {
           beta1 = 0.55, beta2 = 0.65;
           forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
             if (c2 && c3) {
-              const c0tangents = getTangentPoints(c0, c1);
-              const c3tangents = getTangentPoints(c3, c2);
               if (drawInterpolatedTangents) {
                 result.push(this.drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j));
               }
@@ -230,6 +228,16 @@ class SvgContour extends PureComponent {
                   this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j)
                 );
               }
+              if (c1._isGhost) {
+                c1.x = c1._ghost.x;
+                c1.y = c1._ghost.y;
+              }
+              if (c2._isGhost) {
+                c2.x = c2._ghost.x;
+                c2.y = c2._ghost.y;
+              }
+              const c0tangents = getTangentPoints(c0, c1);
+              const c3tangents = getTangentPoints(c3, c2);
               if (contourMode === 'simple' && c3tangents.in && c0tangents.in) {
                 result = result.concat(this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.in, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j));
               }
