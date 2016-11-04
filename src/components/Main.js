@@ -10,12 +10,12 @@ import TabView from './../containers/ui/TabView';
 class AppComponent extends React.Component {
   render() {
     return (
-      <div className="grid-1-2 app">
-        <div className="left-panel">
+      <div className="grid app">
+        <div className="left-panel one-third">
           <TextRoot id={'root'} />
           <DebugInfos />
         </div>
-        <div className="right-panel">
+        <div className="right-panel two-thirds">
           <TabView />
           <SvgContainer />
         </div>
