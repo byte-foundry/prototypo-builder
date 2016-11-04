@@ -33,7 +33,16 @@ body {
 }
 
 .right-panel {
-  height: 100vh;
+  margin: 0;
+}
+.SvgContainer {
+  overflow-y: hidden;
+  width: 100%;
+  height: calc(100% - 46px);
+}
+.SvgContainer svg {
+  height: 100%;
+  width: 100%;
 }
 
 * {

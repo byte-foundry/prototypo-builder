@@ -5,6 +5,7 @@ import React from 'react';
 import TextRoot from './../containers/text/TextRoot';
 import SvgContainer from './../containers/svg/SvgContainer';
 import DebugInfos from '../containers/ui/DebugInfos';
+import TabView from './../containers/ui/TabView';
 
 class AppComponent extends React.Component {
   render() {
@@ -15,6 +16,7 @@ class AppComponent extends React.Component {
           <DebugInfos />
         </div>
         <div className="right-panel">
+          <TabView />
           <SvgContainer />
         </div>
       </div>

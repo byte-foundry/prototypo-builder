@@ -538,15 +538,13 @@ class SvgContainer extends PureComponent {
     const svgContainerStyles = {
       position: 'relative',
       display:'block',
-      width: '100%',
-      height: '100%',
     }
     if (this.props.ui.uiState === CAMERA_MODE) {
       svgContainerStyles.cursor = 'move';
     }
 
     return (
-      <div style={{position: 'relative', display:'block', height: '100%'}}>
+      <div style={{position: 'relative', display:'block'}} className="SvgContainer">
         {image}
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
           onMouseMove={this.handleMove.bind(this)}

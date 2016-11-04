@@ -1,0 +1,57 @@
+.TabView {
+  $background: #3a3a3a;
+  $tab-active-color: #24d390;
+  height: 46px;
+  width: 100%;
+  background: #3a3a3a;
+
+  .tabs {
+    z-index: 10;
+    float: none;
+    list-style: none;
+    position: relative;
+    display: block;
+    margin: 0;
+    text-align: left;
+
+    li {
+      float: left;
+      position: relative;
+      display: block;
+
+      input[type="radio"] {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      input[type="radio"]:checked + label {
+        top: 0;
+        padding-top: 11px;
+        background: $tab-active-color;
+      }
+
+      label {
+        position: relative;
+        display: block;
+        padding: 8px 12px;
+        margin: 5px 0 0 5px;
+        border-radius: 2px 2px 0 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 0 2px darken($tab-active-color, 10);
+        text-transform: uppercase;
+        background: mix($tab-active-color, #d3d3d3, 30%);
+        cursor: pointer;
+        position: relative;
+        top: 3px;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          background: mix($tab-active-color, #d3d3d3, 60%);
+        }
+      }
+    }
+  }
+}

@@ -1,31 +1,43 @@
 .toolbar {
-  position:absolute;
-  top:0;
-  left:0;
-  list-style-type:none;
-  margin:0;
-  padding:0;
-  z-index:2;
-  &-item {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+
+  .toolbar-item {
     width: 20px;
     height: 20px;
     padding: 5px;
     box-sizing: content-box;
     border: solid 1px #595959;
-    cursor:pointer;
+    cursor: pointer;
+    float: left;
 
-    &:hover, &.is-active {
+    &:first-of-type {
+      border-radius: 5px 0 0 5px;
+    }
+
+    &:last-of-type {
+      border-radius: 0 5px 5px 0;
+    }
+
+    &.is-active,
+    &:hover {
       background: #29d390;
     }
   }
 }
 
 .floating-prop {
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:#3a3a3a;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #3a3a3a;
   color: #fefefe;
-  padding:10px;
-  z-index:3;
+  padding: 10px;
+  z-index: 3;
 }
