@@ -21,12 +21,12 @@ class ControlOptions extends PureComponent {
     return (
       <ul className="tg-list">
         <li className="tg-list-item">
-          <h4>Contour mode</h4>
+          <p>Contour mode</p>
           <input id="contourMode" type="checkbox" className="tgl tgl-skewed" onChange={this.setContourMode.bind(this)}/>
           <label data-tg-off="catmull" data-tg-on="simple" htmlFor="contourMode" className="tgl-btn mode"></label>
         </li>
         <li className="tg-list-item">
-          <h4>Show interpolated tangents</h4>
+          <p>Show interpolated tangents</p>
           <input id="showInterpolatedTangents" type="checkbox" className="tgl tgl-skewed" onChange={this.setInterpolatedTangentMode.bind(this)}/>
           <label data-tg-off="no" data-tg-on="yes" htmlFor="showInterpolatedTangents" className="tgl-btn tangents"></label>
         </li>

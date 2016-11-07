@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-require('styles/ui/DebugInfos.scss');
+import ContourOptions from '../ui/ContourOptions';
 
-class DebugInfos extends PureComponent {
+require('styles/ui/Settings.scss');
+
+class Settings extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -20,11 +22,11 @@ class DebugInfos extends PureComponent {
 
   render() {
     return (
-      <div className={`debug-container ${this.state.isToogled ? 'expand' : 'shrink'}`} onClick={this.handleDebugClick}>
-        <div className="debug-mask"></div>
-        <i className="icon">?</i>
-        <ul className="unstyled">
-          <li>Debug infos</li>
+      <div className={`settings-container ${this.state.isToogled ? 'expand' : 'shrink'}`}>
+        <div className="settings-mask" onClick={this.handleDebugClick}></div>
+        <div className="icon" onClick={this.handleDebugClick}><img src="/images/cog.svg"/> <span>Settings</span></div>
+        <h4>Debug infos</h4>
+        <ul className="unstyled debuginfos">
           <li>UI state: {this.props.ui.uiState}</li>
           <li>Path hovered: {this.props.ui.hovered.path} - {this.props.ui.hovered.parentPath}</li>
           <li>Node hovered: {this.props.ui.hovered.point} - {this.props.ui.hovered.parent}</li>
@@ -32,6 +34,9 @@ class DebugInfos extends PureComponent {
           <li>Node selected: {this.props.ui.selected.point} - {this.props.ui.selected.parent}</li>
           <li>Contour selected: {this.props.ui.selected.contour}</li>
         </ul>
+        <hr/>
+        <h4>Contour options</h4>
+        <ContourOptions />
       </div>
     );
   }
@@ -43,4 +48,4 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, () => {
   return {};
-})(DebugInfos);
+})(Settings);

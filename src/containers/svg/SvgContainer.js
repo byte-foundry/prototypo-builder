@@ -2,7 +2,6 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SvgRoot from './SvgRoot';
 import UiToolbar from '../ui/UiToolbar';
-import ContourOptions from '../ui/ContourOptions';
 
 import {
   getNode,
@@ -562,7 +561,6 @@ class SvgContainer extends PureComponent {
           </g>
         </svg>
         <UiToolbar />
-        <ContourOptions />
       </div>
     );
   }

@@ -4,7 +4,7 @@ require('styles/App.css');
 import React from 'react';
 import TextRoot from './../containers/text/TextRoot';
 import SvgContainer from './../containers/svg/SvgContainer';
-import DebugInfos from '../containers/ui/DebugInfos';
+import Settings from '../containers/ui/Settings';
 import TabView from './../containers/ui/TabView';
 
 class AppComponent extends React.Component {
@@ -13,7 +13,7 @@ class AppComponent extends React.Component {
       <div className="grid app">
         <div className="left-panel one-third">
           <TextRoot id={'root'} />
-          <DebugInfos />
+          <Settings />
         </div>
         <div className="right-panel two-thirds">
           <TabView />
