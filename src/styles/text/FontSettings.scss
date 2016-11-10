@@ -1,0 +1,21 @@
+.fontSettings {
+  position: relative;
+  height: 100vh;
+  .exportButton {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    width: 40%;
+    height: 60px;
+    transform: translateX(-50%);
+    background-color: #24d390;
+    border-radius: 5px;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+    padding: 0;
+    user-select: none;
+    cursor: pointer;
+  }
+}

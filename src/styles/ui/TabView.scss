@@ -4,6 +4,7 @@
   height: 46px;
   width: 100%;
   background: #3a3a3a;
+  border-bottom: 2px solid black;
 
   .tabs {
     z-index: 10;
@@ -35,7 +36,7 @@
         position: relative;
         display: block;
         padding: 8px 12px;
-        margin: 5px 0 0 5px;
+        margin: 5px 0 0 10px;
         border-radius: 2px 2px 0 0;
         font-size: 1.5rem;
         font-weight: 700;

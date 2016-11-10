@@ -44,4 +44,5 @@ export default {
   updateY: require('../actions/points/updateY.js'),
   setContourMode: require('../actions/ui/setContourMode.js'),
   setInterpolatedTangentsMode: require('../actions/ui/setInterpolatedTangentsMode.js'),
+  setActiveTab: require('../actions/ui/setActiveTab.js'),
 };

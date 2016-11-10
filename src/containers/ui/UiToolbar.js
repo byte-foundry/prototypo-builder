@@ -24,22 +24,6 @@ class UiToolbar extends PureComponent {
     this.props.actions.setPathSelected(undefined, undefined);
   }
 
-  saveNodes() {
-    const json = JSON.stringify({
-      nodes: this.props.nodes,
-      formulas: this.props.formulas,
-    });
-
-    const blob = new Blob([json], {type: 'octet/stream'});
-    const url = window.URL.createObjectURL(blob);
-
-    const a = this.refs.downloadLink;
-    a.href = url;
-    a.download = 'prototypo-json-save.json';
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }
-
   render() {
     const selectClasses = classnames({
       'toolbar-item': true,
@@ -59,10 +43,6 @@ class UiToolbar extends PureComponent {
         <li className={drawClasses} onClick={this.setDrawMode.bind(this)}>
           <img src="/images/pen-icon.png"/>
         </li>
-        <li className="toolbar-item" onClick={this.saveNodes.bind(this)}>
-          <img src="/images/save-icon.png"/>
-        </li>
-        <a ref="downloadLink" style={{display: 'none'}}></a>
       </ul>
     );
   }
