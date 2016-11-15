@@ -122,7 +122,7 @@ class SvgContour extends PureComponent {
                 pathString += ` C${curve.c1.x},${curve.c1.y} ${curve.c2.x},${curve.c2.y} ${curve.c3.x},${curve.c3.y}`;
               });
             }
-            paths.push(<path d={pathString} key={`curve-${i}`}/>);
+            paths.push( <path d={pathString} key={`curve-${i}`}/>);
           });
 
           return paths;
@@ -231,7 +231,7 @@ class SvgContour extends PureComponent {
                 );
               }
               if (contourMode === 'simple' && c3tangents.in && c0tangents.in) {
-                result = result.concat(this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.in, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j));
+                result = result.concat(this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.out, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j));
               }
             }
           });
