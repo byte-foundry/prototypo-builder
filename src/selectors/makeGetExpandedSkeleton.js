@@ -97,7 +97,7 @@ export function expandPath( nodes, pathId, actions, expanded ) {
     let nodeId;
 
     if ( i === 0 ) {
-      nodeId = createOncurve().nodeId;
+      nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
       expandedRight.push( nodeId );
       updateCoords( nodeId, leftCoords );
     }
@@ -117,11 +117,11 @@ export function expandPath( nodes, pathId, actions, expanded ) {
     updateCoords( nodeId, rightCoords );
     // }
 
-    nodeId = createOncurve().nodeId;
+    nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
     expandedLeft.push( nodeId );
     updateCoords( nodeId, leftCoords );
 
-    nodeId = createOncurve().nodeId;
+    nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
     expandedRight.push( nodeId );
     updateCoords( nodeId, rightCoords );
 

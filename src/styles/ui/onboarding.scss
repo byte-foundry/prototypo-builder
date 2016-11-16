@@ -1,0 +1,62 @@
+$grey-dark: #3a3a3a;
+$green: #24d390;
+$white: white;
+
+.onboarding {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100vh;
+  background: $green;
+  color: $white;
+  font-size: 1.9rem;
+
+  &.hidden {
+    display: none;
+  }
+
+  .container {
+    width: 60vh;
+    margin: 20vh auto 0;
+
+    h1,
+    h2 {
+      text-align: center;
+    }
+
+    hr {
+      width: 50%;
+      margin: 3vh auto;
+      background: $white;
+    }
+
+    .form-elem {
+      text-align: center;
+      margin: 2vh;
+
+      label {
+        margin-right: 10px;
+      }
+
+      input {
+        padding: 10px;
+      }
+    }
+
+    .submit {
+      font-size: 3rem;
+      width: 60%;
+      margin: 5vh auto;
+      text-align: center;
+      background: darken($green, 10%);
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: darken($green, 5%);
+      }
+    }
+  }
+}

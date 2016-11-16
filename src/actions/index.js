@@ -45,4 +45,5 @@ export default {
   setContourMode: require('../actions/ui/setContourMode.js'),
   setInterpolatedTangentsMode: require('../actions/ui/setInterpolatedTangentsMode.js'),
   setActiveTab: require('../actions/ui/setActiveTab.js'),
+  setBaseExpand: require('../actions/ui/setBaseExpand.js'),
 };

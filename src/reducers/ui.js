@@ -16,7 +16,12 @@ import {
   SET_CONTOUR_MODE,
   SET_INTERPOLATED_TANGENTS_MODE,
   SET_ACTIVE_TAB,
+  SET_BASE_EXPAND,
 } from '../actions/const';
+
+import {
+  DEFAULT_EXPAND,
+} from '~/const';
 
 const initialState = {
   uiState: NO_PATH_SELECTED,
@@ -25,6 +30,7 @@ const initialState = {
   contourMode: 'catmull',
   showInterpolatedTangents: false,
   activeTab: {type: 'all', glyph: undefined},
+  baseExpand: DEFAULT_EXPAND,
 };
 
 module.exports = function(state = initialState, action) {
@@ -81,6 +87,12 @@ module.exports = function(state = initialState, action) {
       return {
         ...state,
         activeTab: {type: action.tab.type, glyph: action.tab.glyph},
+      }
+    }
+    case SET_BASE_EXPAND: {
+      return {
+        ...state,
+        baseExpand: action.value,
       }
     }
     default: {

@@ -139,7 +139,7 @@ class SvgContainer extends PureComponent {
       this.props.actions.addOffcurve(pathId, offcurve1Id);
     }
 
-    const oncurveId = this.props.actions.createOncurve().nodeId;
+    const oncurveId = this.props.actions.createOncurve(this.props.ui.baseExpand).nodeId;
     this.props.actions.updateProp(oncurveId, 'x', coord.x);
     this.props.actions.updateProp(oncurveId, 'y', coord.y);
     this.props.actions.addOncurve(pathId, oncurveId);

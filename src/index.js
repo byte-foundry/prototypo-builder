@@ -4,6 +4,10 @@ import { Provider } from 'react-redux';
 import configureStore from './stores';
 import App from './containers/App';
 
+import {
+  DEFAULT_EXPAND,
+} from '~/const';
+
 const store = configureStore({
   nodes: {
     // root must always be named root
@@ -43,6 +47,7 @@ const store = configureStore({
     contourMode: 'catmull',
     showInterpolatedTangents: false,
     activeTab: {type: 'all', glyph: undefined},
+    baseExpand: DEFAULT_EXPAND,
   },
 });
 

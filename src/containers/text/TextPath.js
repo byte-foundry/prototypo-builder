@@ -34,7 +34,7 @@ class TextGlyph extends PureComponent {
     } = this.props.actions;
     const offcurve1Id = createOffcurve().nodeId;
     const offcurve2Id = createOffcurve().nodeId;
-    const oncurveId = createOncurve().nodeId;
+    const oncurveId = createOncurve(this.props.ui.baseExpand).nodeId;
     addOffcurve(id, offcurve1Id);
     addOffcurve(id, offcurve2Id);
     addOncurve(id, oncurveId);
