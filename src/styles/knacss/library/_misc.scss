@@ -1,5 +1,5 @@
 /* ----------------------------- */
-/* ==misc rules                  */
+/* ==Misc (skip links, hyphens)  */
 /* ----------------------------- */
 
 /* styling skip links */
@@ -23,8 +23,8 @@
   }
 }
 
-// hyphens on small screens
-@media (max-width: $small-screen) {
+// hyphens on tiny screens
+@media (max-width: $tiny) {
   /* you shall not pass */
   div,
   textarea,
@@ -39,10 +39,17 @@
   }
 }
 
-// use .no-wrapping to disallow hyphens on small screens
-@media (max-width: $small-screen) {
+// use .no-wrapping to disallow hyphens on tiny screens
+@media (max-width: $tiny) {
   .no-wrapping {
     word-wrap: normal;
     hyphens: manual;
+  }
+}
+
+// SVG width IE fix
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  img[src$=".svg"] {
+    width: 100%;
   }
 }

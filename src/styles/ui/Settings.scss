@@ -1,0 +1,174 @@
+$settings-container-width: 300px;
+$settings-container-height: 470px;
+$settings-container-shrunk-width: 50px;
+$settings-container-shrunk-height: 50px;
+
+.settings-container {
+  box-shadow: 0 1px 4px transparent;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  margin: 20px auto 0;
+  padding-left: 10px;
+  overflow: hidden;
+  width: $settings-container-shrunk-width;
+  height: $settings-container-shrunk-height;
+  cursor: pointer;
+  color: #fefefe;
+  border-bottom-left-radius: 150px;
+  border-top-left-radius: 150px;
+  border-top-right-radius: 150px;
+  border-bottom-right-radius: 150px;
+  transition: all 0.5s ease-in-out;
+  z-index: 900;
+
+  background-color: transparent;
+  .icon span {
+    opacity: 0;
+  }
+  .icon img {
+    opacity: 1;
+  }
+
+  h4 {
+    margin: 5px 0;
+  }
+  hr {
+    margin: 5px 0;
+    margin-left: -10px;
+  }
+
+  &.expand {
+    animation: expandWidth 0.3s 1 forwards, expandHeight 0.6s 1 forwards;
+    border-radius: 0;
+    background-color: #494949;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+    .icon img {
+      opacity: 0;
+    }
+    .icon span {
+      opacity: 1;
+    }
+  }
+
+  &.shrink {
+    transition: all 0.6s ease-in-out;
+    animation: shrinkWidth 0.6s 1 forwards, shrinkHeight 0.3s 1 forwards;
+    background-color: transparent;
+    .icon span {
+      opacity: 0;
+    }
+    .icon img {
+      opacity: 1;
+    }
+  }
+
+  .icon {
+    position: absolute;
+    width: $settings-container-width;
+    height: $settings-container-height;
+    top: 10px;
+    left: 10px;
+    margin: 0 auto;
+    font-size: 20px;
+    transition: all 0.3s ease-in-out;
+    img {
+      width: 20px;
+      height: auto;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    span {
+      margin-left: -25px;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+  }
+
+  .settings-mask {
+    height: $settings-container-shrunk-height;
+    width: $settings-container-shrunk-width;
+    border-radius: 50%;
+    z-index: 920;
+  }
+
+  .debuginfos {
+    height: 200px;
+  }
+}
+@keyframes expandWidth {
+  from {
+    width: $settings-container-shrunk-width;
+  }
+
+  to {
+    width: $settings-container-width;
+  }
+}
+@-webkit-keyframes expandWidth {
+  from {
+    width: $settings-container-shrunk-width;
+  }
+
+  to {
+    width: $settings-container-width;
+  }
+}
+@keyframes expandHeight {
+  0%,
+  50% {
+    height: $settings-container-shrunk-height;
+  }
+
+  100% {
+    height: $settings-container-height;
+  }
+}
+@-webkit-keyframes expandHeight {
+  0%,
+  50% {
+    height: $settings-container-shrunk-height;
+  }
+
+  100% {
+    height: $settings-container-height;
+  }
+}
+@keyframes shrinkWidth {
+  0%,
+  50% {
+    width: $settings-container-width;
+  }
+
+  100% {
+    width: $settings-container-shrunk-width;
+  }
+}
+@-webkit-keyframes shrinkWidth {
+  0%,
+  50% {
+    width: $settings-container-width;
+  }
+
+  100% {
+    width: $settings-container-shrunk-width;
+  }
+}
+@keyframes shrinkHeight {
+  from {
+    height: $settings-container-height;
+  }
+
+  to {
+    height: $settings-container-shrunk-height;
+  }
+}
+@-webkit-keyframes shrinkHeight {
+  from {
+    height: $settings-container-height;
+  }
+
+  to {
+    height: $settings-container-shrunk-height;
+  }
+}

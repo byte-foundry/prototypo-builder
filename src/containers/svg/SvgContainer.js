@@ -2,7 +2,6 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SvgRoot from './SvgRoot';
 import UiToolbar from '../ui/UiToolbar';
-import ContourOptions from '../ui/ContourOptions';
 
 import {
   getNode,
@@ -538,15 +537,13 @@ class SvgContainer extends PureComponent {
     const svgContainerStyles = {
       position: 'relative',
       display:'block',
-      width: '100%',
-      height: '100%',
     }
     if (this.props.ui.uiState === CAMERA_MODE) {
       svgContainerStyles.cursor = 'move';
     }
 
     return (
-      <div style={{position: 'relative', display:'block', height: '100%'}}>
+      <div style={{position: 'relative', display:'block'}} className="SvgContainer">
         {image}
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
           onMouseMove={this.handleMove.bind(this)}
@@ -564,7 +561,6 @@ class SvgContainer extends PureComponent {
           </g>
         </svg>
         <UiToolbar />
-        <ContourOptions />
       </div>
     );
   }

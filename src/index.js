@@ -39,8 +39,11 @@ const store = configureStore({
       glyph: 'glyph_initial',
       contour: 'contour_initial',
     },
+    formulas: {},
+    contourMode: 'catmull',
+    showInterpolatedTangents: false,
+    activeTab: {type: 'all', glyph: undefined},
   },
-  formulas: {},
 });
 
 render(

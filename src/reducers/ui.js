@@ -15,6 +15,7 @@ import {
   DELETE_TMP_FORMULA,
   SET_CONTOUR_MODE,
   SET_INTERPOLATED_TANGENTS_MODE,
+  SET_ACTIVE_TAB,
 } from '../actions/const';
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   hovered: {},
   contourMode: 'catmull',
   showInterpolatedTangents: false,
+  activeTab: {type: 'all', glyph: undefined},
 };
 
 module.exports = function(state = initialState, action) {
@@ -73,6 +75,12 @@ module.exports = function(state = initialState, action) {
       return {
         ...state,
         showInterpolatedTangents: action.mode,
+      }
+    }
+    case SET_ACTIVE_TAB: {
+      return {
+        ...state,
+        activeTab: {type: action.tab.type, glyph: action.tab.glyph},
       }
     }
     default: {

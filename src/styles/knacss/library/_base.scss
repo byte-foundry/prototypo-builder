@@ -1,5 +1,5 @@
 /* ----------------------------- */
-/* == soft reset                 */
+/* ==Base (basic styles)         */
 /* ----------------------------- */
 
 /* switching to border-box model for all elements */
@@ -11,6 +11,29 @@ html {
   box-sizing: inherit;
 }
 
+html {
+  /* set base font-size to equiv "10px", which is adapted to rem unit */
+  font-size: 62.5%;
+  /* IE9-IE11 math fixing. See http://bit.ly/1g4X0bX */
+  /* thanks to @guardian, @victorbritopro and @eQRoeil */
+  font-size: calc(1em * 0.625);
+}
+
+body {
+  font-size: $base-font-size;
+  background-color: $alpha-color;
+  color: $base-color;
+  font-family: $font-stack-common;
+  line-height: $line-height;
+}
+
+a {
+  color: $zeta-color;
+  &:hover, &:focus, &:active {
+    color: $base-color;
+  }
+}
+
 ul,
 ol {
   padding-left: 2em;
@@ -20,45 +43,10 @@ img {
   vertical-align: middle;
 }
 
-/* height auto only for non SVG images */
-img:not([src$=".svg"]) {
-  height: auto;
-}
-
 blockquote,
 figure {
   margin-left: 0;
   margin-right: 0;
-}
-
-/* ----------------------------- */
-/* == typography                 */
-/* ----------------------------- */
-
-html {
-
-  /* set base font-size to equiv "10px", which is adapted to rem unit */
-  font-size: 62.5%;
-
-  /* IE9-IE11 math fixing. See http://bit.ly/1g4X0bX */
-  /* thanks to @guardian, @victorbritopro and @eQRoeil */
-  font-size: calc(1em * 0.625);
-}
-
-body {
-  font-size: $base-font-size;
-
-  background-color: $base-background;
-  color: $base-color;
-  font-family: $font-stack-common;
-  line-height: $line-height;
-}
-
-a {
-  color: $base-color-link;
-  &:hover, &:focus, &:active {
-    color: $base-color-link-hover;
-  }
 }
 
 /* font-sizing for content */
@@ -148,10 +136,6 @@ var {
   font-style: italic;
 }
 
-/* ----------------------------- */
-/* == browsers consistency       */
-/* ----------------------------- */
-
 /* avoid top margins on first content element */
 p,
 .#{$kna-namespace}p-like,
@@ -200,7 +184,6 @@ svg {
   max-width: 100%;
 }
 
-/* margin-bottom on tables */
-table {
-  margin-bottom: $medium-value;
+img {
+  height: auto;
 }
