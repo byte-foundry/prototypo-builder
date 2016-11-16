@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import actions from '~/actions';
 
 import ContourOptions from '../ui/ContourOptions';
 
 require('styles/ui/Settings.scss');
+require('styles/ui/ContourOptions.scss');
 
 class Settings extends PureComponent {
 
@@ -18,6 +21,10 @@ class Settings extends PureComponent {
   handleDebugClick(e) {
     e.preventDefault();
     this.setState({isToogled: !this.state.isToogled});
+  }
+
+  toggleFill(event) {
+    this.props.actions.updateProp('contour_initial', 'isClosed', event.target.checked);
   }
 
   render() {
@@ -37,6 +44,15 @@ class Settings extends PureComponent {
         <hr/>
         <h4>Contour options</h4>
         <ContourOptions />
+        <hr/>
+        <h4>Fill options</h4>
+        <ul className="tg-list">
+          <li className="tg-list-item">
+            <p>Toggle fill</p>
+            <input id="fillMode" type="checkbox" className="tgl tgl-skewed" onChange={this.toggleFill.bind(this)}/>
+            <label data-tg-off="off" data-tg-on="on" htmlFor="fillMode" className="tgl-btn fill"></label>
+          </li>
+        </ul>
       </div>
     );
   }
@@ -45,7 +61,9 @@ class Settings extends PureComponent {
 function mapStateToProps(state) {
   return {ui: state.ui};
 }
+function mapDispatchToProps(dispatch) {
+  const actionMap = { actions: bindActionCreators(actions, dispatch) };
+  return actionMap;
+}
 
-export default connect(mapStateToProps, () => {
-  return {};
-})(Settings);
+export default connect (mapStateToProps, mapDispatchToProps)(Settings);

@@ -240,7 +240,7 @@ class SvgContour extends PureComponent {
             <polyline key={`inContour-${pathId}`}
             id={`inContour-${pathId}`}
             points={inContour + ' ' + outContour}
-            stroke="rgb(255,20,90)"
+            stroke={nodes[id].isClosed ? 'transparent' : 'rgb(255,20,90)'}
             fill={nodes[id].isClosed ? 'black' : 'transparent'}
             strokeWidth="2"
             fillRule="nonzero"
