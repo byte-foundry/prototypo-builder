@@ -440,18 +440,21 @@ export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
   }
   let tangentOutlineOn = getCurvePoints(tangentPointsOn, 0.5,25,false);
   let tangentOutlineOff = getCurvePoints(tangentPointsOff, 0.5,25,false);
-  let points = '';
-  points = points.concat(`${tangentOutlineOn[0]},${tangentOutlineOn[1]} `);
-  for (let i = 2; i < tangentOutlineOn.length - 2; i+=2) {
-    points = points.concat(`${tangentOutlineOn[i]},${tangentOutlineOn[i+1]} `);
+  let inContour = '', outContour = '';
+  //inContour = inContour.concat(`${tangentOutlineOn[0]},${tangentOutlineOn[1]} `);
+  for (let i = 0; i < tangentOutlineOn.length; i+=2) {
+    inContour = inContour.concat(`${tangentOutlineOn[i]},${tangentOutlineOn[i+1]} `);
   }
-  points = points.concat(`${tangentOutlineOn[tangentOutlineOn.length - 2]},${tangentOutlineOn[tangentOutlineOn.length-1]} `);
-  points = points.concat(`${tangentOutlineOn[tangentOutlineOff.length - 2]},${tangentOutlineOn[tangentOutlineOff.length-1]} `);
-  for (let i = tangentOutlineOff.length - 1; i > 1; i-=2) {
-    points = points.concat(`${tangentOutlineOff[i-1]}, ${tangentOutlineOff[i]} `);
+  //inContour = inContour.concat(`${tangentOutlineOn[tangentOutlineOn.length - 2]},${tangentOutlineOn[tangentOutlineOn.length-1]} `);
+  //outContour = outContour.concat(`${tangentOutlineOn[tangentOutlineOff.length - 2]},${tangentOutlineOn[tangentOutlineOff.length-1]} `);
+  for (let i = tangentOutlineOff.length - 1; i > 0; i-=2) {
+    outContour = outContour.concat(`${tangentOutlineOff[i-1]}, ${tangentOutlineOff[i]} `);
   }
-  points = points.concat(`${tangentOutlineOff[0]},${tangentOutlineOff[1]} `);
-  return points;
+  //outContour = outContour.concat(`${tangentOutlineOff[0]},${tangentOutlineOff[1]} `);
+  return {
+    inContour: inContour,
+    outContour: outContour,
+  };
 });
 
 // Find the intersection of two rays.

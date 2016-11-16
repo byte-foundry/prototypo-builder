@@ -149,16 +149,8 @@ class SvgContour extends PureComponent {
     }
     return result;
   }
-  drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j) {
-    return(
-      <polyline key={`tanOutline-${pathId}${j}${0}`}
-      id={`tanOutline-${pathId}${j}${0}`}
-      points={getCurveOutline(c0,c1,c2,c3,steps)}
-      stroke="rgb(255,20,90)"
-      fill="transparent"
-      strokeWidth="2"
-      />
-    );
+  drawCatmullOutline(c0, c1, c2, c3, steps) {
+    return getCurveOutline(c0,c1,c2,c3,steps);
   }
   drawSimpleOutline(c0,c1,c2,c3, c0tanIn, c3tanIn, c0tanOut, c3tanOut, beta1, beta2, pathId, j) {
     let result = [];
@@ -214,6 +206,7 @@ class SvgContour extends PureComponent {
         })
         .map((pathId) => {
           let result = [];
+          let inContour = '', outContour = '';
           // draw tangents
           let j = 0, steps = 10,
           beta1 = 0.55, beta2 = 0.65;
@@ -224,9 +217,8 @@ class SvgContour extends PureComponent {
               }
               j++;
               if (contourMode === 'catmull') {
-                result.push(
-                  this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j)
-                );
+                inContour += this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j).inContour;
+                outContour = this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j).outContour + outContour;
               }
               if (c1._isGhost) {
                 c1.x = c1._ghost.x;
@@ -239,20 +231,39 @@ class SvgContour extends PureComponent {
               const c0tangents = getTangentPoints(c0, c1);
               const c3tangents = getTangentPoints(c3, c2);
               if (contourMode === 'simple' && c3tangents.in && c0tangents.in) {
-                result = result.concat(this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.out, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j));
+                inContour += this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.out, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j);
               }
             }
           });
+        if (contourMode === 'catmull') {
+          result.push(
+            <polyline key={`inContour-${pathId}`}
+            id={`inContour-${pathId}`}
+            points={inContour + ' ' + outContour}
+            stroke="rgb(255,20,90)"
+            fill={nodes[id].isClosed ? 'black' : 'transparent'}
+            strokeWidth="2"
+            fillRule="nonzero"
+            />
+          );
+        }
+        else if (contourMode === 'simple') {
+          result.push(
+            <path key={`outBezier-${pathId}${j}`}
+              id={`outBezier-${pathId}${j}`}
+              d={inContour}
+              stroke="#00ff00" strokeWidth="2" fill="transparent"
+              />
+          );
+        }
         return result;
         })
       );
   }
 
   render() {
-    const { nodes, id } = this.props;
     const classes = classnames({
       contour: true,
-      'is-closed': nodes[id].isClosed,
     });
     return (
       <g>

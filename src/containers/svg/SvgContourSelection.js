@@ -99,8 +99,8 @@ class SvgContourSelection extends PureComponent {
               />
             );
           }
-
-          if (i === length - 1
+          // Draw the path indicator
+          /*if (i === length - 1
             && !this.props.nodes[pathId].isClosed
             && this.props.ui.selected.path === pathId
             && this.props.ui.uiState === PATH_SELECTED) {
@@ -112,7 +112,7 @@ class SvgContourSelection extends PureComponent {
                   M${point.x} ${point.y}
                   C${outControl.x},${outControl.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y} ${this.props.ui.mouse.x},${this.props.ui.mouse.y}`
                 }/>);
-          }
+          }*/
         });
         if (this.props.ui.uiState !== SELECTION_MODE) {
           const bbox = getPathBbox(pathId, nodes);
