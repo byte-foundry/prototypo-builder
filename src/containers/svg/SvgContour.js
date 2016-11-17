@@ -153,7 +153,7 @@ class SvgContour extends PureComponent {
     return getCurveOutline(c0,c1,c2,c3,steps);
   }
   drawSimpleOutline(c0,c1,c2,c3, c0tanIn, c3tanIn, c0tanOut, c3tanOut, beta1, beta2, pathId, j) {
-    let result = [];
+    let inContour = '', outContour = '';
     const c0c1Inray = {point: c0tanIn, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))}
     const c2c3Inray = {point: c3tanIn, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))}
     const intersectIn = {}, c0tanInCurve = {}, c3tanInCurve = {};
@@ -162,17 +162,11 @@ class SvgContour extends PureComponent {
     c0tanInCurve.y = c0tanIn.y + (intersectIn.y - c0tanIn.y) * beta1;
     c3tanInCurve.x = c3tanIn.x + (intersectIn.x - c3tanIn.x) * beta1;
     c3tanInCurve.y = c3tanIn.y + (intersectIn.y - c3tanIn.y) * beta1;
-    result.push(
-      <path key={`inBezier-${pathId}${j}`}
-        id={`inBezier-${pathId}${j}`}
-        d={`M ${c0tanIn.x},${c0tanIn.y}
+    inContour+= `
             C ${c0tanInCurve.x},${c0tanInCurve.y}
               ${c3tanInCurve.x},${c3tanInCurve.y}
               ${c3tanIn.x},${c3tanIn.y}
-          `}
-        stroke="#00ff00" strokeWidth="2" fill="transparent"
-        />
-    );
+          `;
     const c0c1Outray = {point: c0tanOut, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))}
     const c2c3Outray = {point: c3tanOut, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))}
     const intersectOut = {}, c0tanOutCurve = {}, c3tanOutCurve = {};
@@ -181,18 +175,15 @@ class SvgContour extends PureComponent {
     c0tanOutCurve.y = c0tanOut.y + (intersectOut.y - c0tanOut.y) * beta2;
     c3tanOutCurve.x = c3tanOut.x + (intersectOut.x - c3tanOut.x) * beta2;
     c3tanOutCurve.y = c3tanOut.y + (intersectOut.y - c3tanOut.y) * beta2;
-    result.push(
-      <path key={`outBezier-${pathId}${j}`}
-        id={`outBezier-${pathId}${j}`}
-        d={`M ${c0tanOut.x},${c0tanOut.y}
+    outContour +=`
             C ${c0tanOutCurve.x},${c0tanOutCurve.y}
               ${c3tanOutCurve.x},${c3tanOutCurve.y}
               ${c3tanOut.x},${c3tanOut.y}
-          `}
-        stroke="#00ff00" strokeWidth="2" fill="transparent"
-        />
-    );
-    return result;
+          `;
+    return {
+      inContour: inContour,
+      outContour: outContour,
+    };
   }
   renderOutline() {
     const { nodes, id, ui } = this.props;
@@ -211,14 +202,17 @@ class SvgContour extends PureComponent {
           let j = 0, steps = 10,
           beta1 = 0.55, beta2 = 0.65;
           forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
+            console.log(pathId);
+            console.log(nodes);
             if (c2 && c3) {
               if (drawInterpolatedTangents) {
                 result.push(this.drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j));
               }
               j++;
               if (contourMode === 'catmull') {
-                inContour += this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j).inContour;
-                outContour = this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j).outContour + outContour;
+                let catmullContour = this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j);
+                inContour += catmullContour.inContour;
+                outContour = catmullContour.outContour + outContour;
               }
               if (c1._isGhost) {
                 c1.x = c1._ghost.x;
@@ -231,14 +225,20 @@ class SvgContour extends PureComponent {
               const c0tangents = getTangentPoints(c0, c1);
               const c3tangents = getTangentPoints(c3, c2);
               if (contourMode === 'simple' && c3tangents.in && c0tangents.in) {
-                inContour += this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.out, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j);
+                if (j === 1) {
+                  inContour += `M ${c0tangents.in.x},${c0tangents.in.y}`;
+                  outContour += `M ${c0tangents.out.x},${c0tangents.out.y}`;
+                }
+                let simpleContour = this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.out, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j);
+                inContour += simpleContour.inContour;
+                outContour += simpleContour.outContour;
               }
             }
           });
         if (contourMode === 'catmull') {
           result.push(
-            <polyline key={`inContour-${pathId}`}
-            id={`inContour-${pathId}`}
+            <polyline key={`contour-${pathId}`}
+            id={`contour-${pathId}`}
             points={inContour + ' ' + outContour}
             stroke={nodes[id].isClosed ? 'transparent' : 'rgb(255,20,90)'}
             fill={nodes[id].isClosed ? 'black' : 'transparent'}
@@ -249,10 +249,13 @@ class SvgContour extends PureComponent {
         }
         else if (contourMode === 'simple') {
           result.push(
-            <path key={`outBezier-${pathId}${j}`}
-              id={`outBezier-${pathId}${j}`}
-              d={inContour}
-              stroke="#00ff00" strokeWidth="2" fill="transparent"
+            <path key={`contour-${pathId}`}
+              id={`contour-${pathId}`}
+              d={inContour + ' ' + outContour}
+              stroke={nodes[id].isClosed ? 'transparent' : '#00ff00'}
+              strokeWidth="2"
+              fill={nodes[id].isClosed ? 'black' : 'transparent'}
+              fillRule="evenodd"
               />
           );
         }
