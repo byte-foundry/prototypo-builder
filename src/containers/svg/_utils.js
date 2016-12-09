@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
+import Bezier from 'bezier-js/fp';
 
 import { mapCurve, forEachCurve } from '~/_utils/path';
 import { getNodeType } from '~/_utils/graph';
@@ -88,18 +89,18 @@ export function getSvgCoordsFromClientCoords( clientCoord, elem ) {
   const svgPoint = svg.createSVGPoint();
   svgPoint.x = clientCoord.x;
   svgPoint.y = clientCoord.y;
-  //create global space coords
+  // create global space coords
   const globalPoint = svgPoint.matrixTransform(svg.getScreenCTM().inverse());
 
-  //create local space coords for the element being manipulated, returns identity if elem = svg
+  // create local space coords for the element being manipulated, returns identity if elem = svg
   const local = globalPoint.matrixTransform(svg.getScreenCTM().inverse().multiply(target.getScreenCTM()));
   return local;
 }
 
 
-//A lot of the code here is from pomax bezier.js library except it is not using
-//retention. And so doesn't need the creation of bezier object.
-//The license of bezier.js is MIT and so is this
+// A lot of the code here is from pomax bezier.js library except it is not using
+// retention. And so doesn't need the creation of bezier object.
+// The license of bezier.js is MIT and so is this
 
 export const NULL_VEC = {x: 0, y: 0};
 
@@ -114,7 +115,7 @@ export function getNearPath(coord, contour, nodes, error) {
     if (node.type === 'path') {
       forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
         if (!result && c2 && c3) {
-          const on = isOnCurve(c0, c1, c2, c3, coord, error);
+          const on = Bezier.crosses([c0, c1, c2, c3], coord, 30);
           if (on) {
             result = node.id;
           }
