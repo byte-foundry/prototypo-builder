@@ -1,6 +1,6 @@
 import { createSelectorCreator } from 'reselect';
-import { forEachNode } from './../_utils/path';
-import nodesReducer from './../reducers/nodes';
+import * as Parametric from '~/_utils/Parametric';
+import nodesReducer from '~/reducers/nodes';
 
 import {
   createPath,
@@ -55,101 +55,16 @@ export function memoizeNodeAndChildren(func, lastNodes = null, lastResultMap = {
   };
 }
 
-// the last argument helps with testing
-export function expandPath( nodes, pathId, actions, expanded ) {
-  const expandedLeft = [];
-  const expandedRight = [];
-  const {
-    createPath,
-    createOncurve,
-    createOffcurve,
-    addChild,
-    updateCoords,
-  } = actions;
-  const expandedPathId = createPath().nodeId;
-
-  forEachNode(pathId, nodes, (node, cIn, cOut, i) => {
-    const angle = node.angle || 0;
-    const width = node.width || 10;
-    const distrib = node.distrib || 0;
-
-    const shift = {
-      x: Math.cos(angle / 360 * 2 * Math.PI) * width,
-      y: Math.sin(angle / 360 * 2 * Math.PI) * width,
-    }
-
-    const leftCoords = {
-      x: node.x + shift.x * (distrib - 1),
-      y: node.y + shift.y * (distrib - 1),
-    };
-    const rightCoords = {
-      x: node.x + shift.x * distrib,
-      y: node.y + shift.y * distrib,
-    };
-    const outCurveVec = {
-      x: cOut.x - node.x,
-      y: cOut.y - node.y,
-    };
-    const inCurveVec = {
-      x: cIn.x - node.x,
-      y: cIn.y - node.y,
-    };
-    let nodeId;
-
-    if ( i === 0 ) {
-      nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
-      expandedRight.push( nodeId );
-      updateCoords( nodeId, leftCoords );
-    }
-
-    // if ( cIn ) {
-    nodeId = createOffcurve().nodeId;
-    if ( i === 0 ) {
-      expandedRight.push( nodeId );
-    }
-    else {
-      expandedLeft.push( nodeId );
-    }
-    updateCoords( nodeId, leftCoords );
-
-    nodeId = createOffcurve().nodeId;
-    expandedRight.push( nodeId );
-    updateCoords( nodeId, rightCoords );
-    // }
-
-    nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
-    expandedLeft.push( nodeId );
-    updateCoords( nodeId, leftCoords );
-
-    nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
-    expandedRight.push( nodeId );
-    updateCoords( nodeId, rightCoords );
-
-    // if ( cOut ) {
-    nodeId = createOffcurve().nodeId;
-    expandedLeft.push( nodeId );
-    updateCoords( nodeId, leftCoords );
-
-    nodeId = createOffcurve().nodeId;
-    expandedRight.push( nodeId );
-    updateCoords( nodeId, rightCoords );
-    // }
-  });
-
-  expandedLeft.concat(expandedRight.reverse())
-    .forEach((pointId) => {
-      addChild(expandedPathId, pointId, expanded.nodes[pointId].type);
-    });
-
-  return expandedPathId;
-}
-
 // This selector makes sure the children of the node haven't ben modified either
 export const createNodeAndChildrenSelector = createSelectorCreator(
   memoizeNodeAndChildren
 );
 
 export function makeGetExpandedSkeleton(expanded) {
+  // We try to keep our state 'normalized': all info that CAN be calculated from
+  // other parts of the state MUST NOT be stored in the state. This is the case
+  // for expanded node. So we will only store them in a temporary graph
+  // (`expanded`), not in the state.
   const actions = {};
   Object.keys(actionCreators).forEach((actionName) => {
     actions[actionName] = (...args) => {
@@ -160,9 +75,9 @@ export function makeGetExpandedSkeleton(expanded) {
   });
 
   return createNodeAndChildrenSelector(
-    [ getNodes, getPathId],
+    [ getNodes, getPathId ],
     (nodes, pathId) => {
-      return expandPath(nodes, pathId, actions, expanded);
+      return Parametric.expandPath(nodes, pathId, actions, expanded);
     }
   );
 }

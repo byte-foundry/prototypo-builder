@@ -1,9 +1,7 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import {
-  getUpdater,
-} from '~/_utils/parametric';
+import * as Parametric from '~/_utils/Parametric';
 
 import {
   mapDispatchToProps,
@@ -32,7 +30,7 @@ class Formula extends PureComponent {
     const { name, actions } = this.props;
     const { updateTmpFormula } = actions;
     const { formulaInput } = this.refs;
-    const updater = getUpdater(formulaInput.value.trim());
+    const updater = Parametric.getUpdater(formulaInput.value.trim());
 
     formulaInput.className = updater.isInvalid ?
       'text-node__property-formula--invalid':
@@ -48,7 +46,7 @@ class Formula extends PureComponent {
 
     // <Enter>
     if ( e.keyCode === 13 ) {
-      const updater = getUpdater(formulaInput.value);
+      const updater = Parametric.getUpdater(formulaInput.value);
 
       if ( !updater.isInvalid ) {
         handleFormulaUpdate(name, formulaInput.value.trim());

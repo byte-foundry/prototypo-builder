@@ -4,7 +4,7 @@ import {
   mapCurve,
   mapNode,
   getNode,
-} from '../../src/_utils/path';
+} from '../../src/_utils/Path';
 
 describe('path', () => {
   describe('forEachCurve', () => {

@@ -2,23 +2,13 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import {
-  forEachCurve,
-} from '~/_utils/path';
-
-import {
-  getParentGlyphId,
-} from '~/_utils/graph';
-
-import {
-  getCalculatedParams,
-  getCalculatedGlyph,
-} from '~/_utils/parametric';
-
+import * as Path from '~/_utils/Path';
+import * as Graph from '~/_utils/Graph';
+import * as Parametric from '~/_utils/Parametric';
 import {
   lerp,
   rotateVector,
-} from '~/_utils/math';
+} from '~/_utils/2d';
 
 import {
   renderPathData,
@@ -65,7 +55,7 @@ class SvgContour extends PureComponent {
         .map((pathId) => {
 
           const paths = [];
-          forEachCurve(pathId, nodes, (c0, c1, c2, c3, i) => {
+          Path.forEachCurve(pathId, nodes, (c0, c1, c2, c3, i) => {
             let pathString = '';
             if (c2 && c3) {
               if (equalVec(c0, c1)) {
@@ -201,7 +191,7 @@ class SvgContour extends PureComponent {
           // draw tangents
           let j = 0, steps = 10,
           beta1 = 0.55, beta2 = 0.65;
-          forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
+          Path.forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
             console.log(pathId);
             console.log(nodes);
             if (c2 && c3) {
@@ -284,10 +274,10 @@ SvgContour.propTypes = {
 
 function mapStateToProps(state, props) {
   return {
-    nodes: getCalculatedGlyph(
+    nodes: Parametric.getCalculatedGlyph(
       state,
-      getCalculatedParams(state.nodes.font_initial.params),
-      getParentGlyphId(state.nodes, props.id)
+      Parametric.getCalculatedParams(state.nodes.font_initial.params),
+      Graph.getParentGlyphId(state.nodes, props.id)
     ),
     ui: state.ui,
   };

@@ -7,7 +7,7 @@ import {
   getNodeType,
   getNodePath,
   getSegmentIds,
-} from '../../src/_utils/graph';
+} from '../../src/_utils/Graph';
 
 describe('graph', () => {
   describe('getAllDescendants', () => {

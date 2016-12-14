@@ -2,7 +2,7 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import NodeProperties from './NodeProperties';
 
-import { getNodeType } from '~/_utils/graph';
+import * as Graph from '~/_utils/Graph';
 
 import {
   renderTextChild,
@@ -24,7 +24,7 @@ class TextRoot extends PureComponent {
     let nodeSelected = false;
     if (this.props.ui.selected.nodeOptions) {
       const id = this.props.ui.selected.nodeOptions;
-      const type = getNodeType(id);
+      const type = Graph.getNodeType(id);
       nodeSelected = (
         <div className="unstyled">
           <p>{id}</p>

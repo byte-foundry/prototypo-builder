@@ -1,8 +1,10 @@
-require('styles/svg/Selection.scss');
-
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { forEachNode } from '../../_utils/path';
+
+import * as Graph from '~/_utils/Graph';
+import * as Parametric from '~/_utils/Parametric';
+import * as Path from '~/_utils/Path';
+
 import SvgSelector from './SvgSelector';
 import SvgNodeControls from './SvgNodeControls';
 
@@ -12,20 +14,11 @@ import {
 } from '~/const';
 
 import {
-  getParentGlyphId,
-} from '~/_utils/graph';
-
-import {
-  getCalculatedParams,
-  getCalculatedGlyph,
-} from '~/_utils/parametric';
-
-import {
   mapDispatchToProps,
   getPathBbox,
 } from './_utils';
 
-
+require('styles/svg/Selection.scss');
 
 class SvgContourSelection extends PureComponent {
   constructor(props) {
@@ -42,7 +35,7 @@ class SvgContourSelection extends PureComponent {
     childIds.forEach((pathId) => {
       const path = nodes[pathId];
       if (this.props.ui.selected.path === pathId || this.props.ui.hovered.path === pathId || this.props.ui.uiState === SELECTION_MODE) {
-        forEachNode(pathId, nodes, (point, inControl, outControl, i, length) => {
+        Path.forEachNode(pathId, nodes, (point, inControl, outControl, i, length) => {
           //Draw on curve point
           if (i === length - 1 && nodes[pathId].isClosed) {
             return;
@@ -141,10 +134,10 @@ SvgContourSelection.propTypes = {
 
 function mapStateToProps(state, props) {
   return {
-    nodes: getCalculatedGlyph(
+    nodes: Parametric.getCalculatedGlyph(
       state,
-      getCalculatedParams(state.nodes.font_initial.params),
-      getParentGlyphId(state.nodes, props.id)
+      Parametric.getCalculatedParams(state.nodes.font_initial.params),
+      Graph.getParentGlyphId(state.nodes, props.id)
     ),
     ui: state.ui,
   };

@@ -2,7 +2,7 @@ import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
 // import createCurve from '../../src/actions/paths/createCurve';
-import actions from '~/actions';
+import * as actions from '~/actions';
 const {
   addCurve,
 } = actions;

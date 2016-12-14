@@ -1,6 +1,6 @@
 import deepFreeze from 'deep-freeze';
 
-import actions from '~/actions';
+import * as actions from '~/actions';
 const {
   updateProp,
   addChild,

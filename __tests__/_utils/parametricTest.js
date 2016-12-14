@@ -7,7 +7,7 @@ import {
   getCalculatedParams,
   getSolvingOrder,
   getCalculatedGlyph,
-} from '../../src/_utils/parametric';
+} from '../../src/_utils/Parametric';
 
 describe('containers/_utils', () => {
   describe('getUpdater', () => {

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import actions from '~/actions';
+import * as actions from '~/actions';
 
 import {
   DEFAULT_EXPAND,

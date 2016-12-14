@@ -1,8 +1,5 @@
-require('styles/text/TextNode.scss');
-
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 
 import {
   mapStateToProps,
@@ -10,6 +7,8 @@ import {
 } from './_utils';
 
 import Foldable from './Foldable';
+
+require('styles/text/TextNode.scss');
 
 class TextOffcurve extends PureComponent {
   render() {

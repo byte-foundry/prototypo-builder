@@ -6,12 +6,7 @@ import {
   ONCURVE_SMOOTH,
   SELECTION_MODE,
 } from '~/const';
-
-import {
-  getNode,
-  getPreviousNode,
-  getNextNode,
-} from '~/_utils/path';
+import * as Path from '~/_utils/Path';
 
 import {
   mapDispatchToProps,
@@ -31,9 +26,9 @@ class SvgSelector extends PureComponent {
   componentWillUpdate() {
     let handlePoint = this.props.point;
     if (this.props.source && equalVec(this.props.source, handlePoint) && !handlePoint._isGhost) {
-      const [point, pointIn, pointOut] = getNode(this.props.parent, this.props.source.id, this.props.nodes);
+      const [point, pointIn, pointOut] = Path.getNode(this.props.parent, this.props.source.id, this.props.nodes);
       if (this.props.type === 'in') {
-        const [target, unused, targetOut] = getPreviousNode(this.props.parent, this.props.source.id, this.props.nodes);
+        const [target, unused, targetOut] = Path.getPreviousNode(this.props.parent, this.props.source.id, this.props.nodes);
 
         if (target) {
           // TODO: ghost handles are calculated and should be removed from the state
@@ -50,7 +45,7 @@ class SvgSelector extends PureComponent {
         }
       }
       else if (this.props.type === 'out') {
-        const [target, targetIn] = getNextNode(this.props.parent, this.props.source.id, this.props.nodes);
+        const [target, targetIn] = Path.getNextNode(this.props.parent, this.props.source.id, this.props.nodes);
         if (target) {
           const derivative = getDerivative(point, pointOut, targetIn, target, 1 / 3);
           const normalizedD = normalizeVec(derivative);

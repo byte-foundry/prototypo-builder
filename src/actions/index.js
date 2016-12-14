@@ -1,49 +1,47 @@
 // all available actions should be manually listed here
-export default {
-  _deleteNode: require('../actions/nodes/_deleteNode.js'),
-  addChild: require('../actions/nodes/addChild.js'),
-  addChildren: require('../actions/nodes/addChildren.js'),
-  addContour: require('../actions/contours/addContour.js'),
-  addCurve: require('../actions/paths/addCurve.js'),
-  addFont: require('../actions/fonts/addFont.js'),
-  addGlyph: require('../actions/glyphs/addGlyph.js'),
-  addOffcurve: require('../actions/offcurves/addOffcurve.js'),
-  addOncurve: require('../actions/oncurves/addOncurve.js'),
-  addParam: require('../actions/params/addParam.js'),
-  addPath: require('../actions/paths/addPath.js'),
-  createContour: require('../actions/contours/createContour.js'),
-  createCurve: require('../actions/paths/createCurve.js'),
-  createFont: require('../actions/fonts/createFont.js'),
-  createGlyph: require('../actions/glyphs/createGlyph.js'),
-  createNode: require('../actions/nodes/createNode.js'),
-  createOffcurve: require('../actions/offcurves/createOffcurve.js'),
-  createOncurve: require('../actions/oncurves/createOncurve.js'),
-  createPath: require('../actions/paths/createPath.js'),
-  deleteFormula: require('../actions/formulas/deleteFormula.js'),
-  deleteNode: require('../actions/nodes/deleteNode.js'),
-  deleteParam: require('../actions/params/deleteParam.js'),
-  deleteTmpFormula: require('../actions/ui/deleteTmpFormula.js'),
-  loadImageData: require('../actions/ui/loadImageData.js'),
-  loadNodes: require('../actions/nodes/loadNodes.js'),
-  moveNode: require('../actions/nodes/moveNode.js'),
-  removeChild: require('../actions/nodes/removeChild.js'),
-  setContourSelected: require('../actions/ui/setContourSelected.js'),
-  setCoords: require('../actions/mouse/setCoords.js'),
-  setMouseState: require('../actions/mouse/setMouseState.js'),
-  setNodeHovered: require('../actions/ui/setNodeHovered.js'),
-  setNodeOptionsSelected: require('../actions/ui/setNodeOptionsSelected.js'),
-  setNodeSelected: require('../actions/ui/setNodeSelected.js'),
-  setPathHovered: require('../actions/ui/setPathHovered.js'),
-  setPathSelected: require('../actions/ui/setPathSelected.js'),
-  updateCoords: require('../actions/points/updateCoords.js'),
-  updateFormula: require('../actions/formulas/updateFormula.js'),
-  updateParam: require('../actions/params/updateParam.js'),
-  updateProp: require('../actions/props/updateProp.js'),
-  updateTmpFormula: require('../actions/ui/updateTmpFormula.js'),
-  updateX: require('../actions/points/updateX.js'),
-  updateY: require('../actions/points/updateY.js'),
-  setContourMode: require('../actions/ui/setContourMode.js'),
-  setInterpolatedTangentsMode: require('../actions/ui/setInterpolatedTangentsMode.js'),
-  setActiveTab: require('../actions/ui/setActiveTab.js'),
-  setBaseExpand: require('../actions/ui/setBaseExpand.js'),
-};
+export const _deleteNode = require('../actions/nodes/_deleteNode.js');
+export const addChild = require('../actions/nodes/addChild.js');
+export const addChildren = require('../actions/nodes/addChildren.js');
+export const addContour = require('../actions/contours/addContour.js');
+export const addCurve = require('../actions/paths/addCurve.js');
+export const addFont = require('../actions/fonts/addFont.js');
+export const addGlyph = require('../actions/glyphs/addGlyph.js');
+export const addOffcurve = require('../actions/offcurves/addOffcurve.js');
+export const addOncurve = require('../actions/oncurves/addOncurve.js');
+export const addParam = require('../actions/params/addParam.js');
+export const addPath = require('../actions/paths/addPath.js');
+export const createContour = require('../actions/contours/createContour.js');
+export const createCurve = require('../actions/paths/createCurve.js');
+export const createFont = require('../actions/fonts/createFont.js');
+export const createGlyph = require('../actions/glyphs/createGlyph.js');
+export const createNode = require('../actions/nodes/createNode.js');
+export const createOffcurve = require('../actions/offcurves/createOffcurve.js');
+export const createOncurve = require('../actions/oncurves/createOncurve.js');
+export const createPath = require('../actions/paths/createPath.js');
+export const deleteFormula = require('../actions/formulas/deleteFormula.js');
+export const deleteNode = require('../actions/nodes/deleteNode.js');
+export const deleteParam = require('../actions/params/deleteParam.js');
+export const deleteTmpFormula = require('../actions/ui/deleteTmpFormula.js');
+export const loadImageData = require('../actions/ui/loadImageData.js');
+export const loadNodes = require('../actions/nodes/loadNodes.js');
+export const moveNode = require('../actions/nodes/moveNode.js');
+export const removeChild = require('../actions/nodes/removeChild.js');
+export const setContourSelected = require('../actions/ui/setContourSelected.js');
+export const setCoords = require('../actions/mouse/setCoords.js');
+export const setMouseState = require('../actions/mouse/setMouseState.js');
+export const setNodeHovered = require('../actions/ui/setNodeHovered.js');
+export const setNodeOptionsSelected = require('../actions/ui/setNodeOptionsSelected.js');
+export const setNodeSelected = require('../actions/ui/setNodeSelected.js');
+export const setPathHovered = require('../actions/ui/setPathHovered.js');
+export const setPathSelected = require('../actions/ui/setPathSelected.js');
+export const updateCoords = require('../actions/points/updateCoords.js');
+export const updateFormula = require('../actions/formulas/updateFormula.js');
+export const updateParam = require('../actions/params/updateParam.js');
+export const updateProp = require('../actions/props/updateProp.js');
+export const updateTmpFormula = require('../actions/ui/updateTmpFormula.js');
+export const updateX = require('../actions/points/updateX.js');
+export const updateY = require('../actions/points/updateY.js');
+export const setContourMode = require('../actions/ui/setContourMode.js');
+export const setInterpolatedTangentsMode = require('../actions/ui/setInterpolatedTangentsMode.js');
+export const setActiveTab = require('../actions/ui/setActiveTab.js');
+export const setBaseExpand = require('../actions/ui/setBaseExpand.js');

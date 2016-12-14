@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import {
-  getUpdater,
-} from '~/containers/_utils';
+import * as Parametric from '~/_utils/Parametric';
 
 const typeMap = {
   number: 'text',
@@ -45,7 +43,7 @@ class NodePropertyComponent extends PureComponent {
     const { formulaInput } = this.refs;
     const { updateTmpFormula } = this.props.actions;
     const { id, name } = this.props;
-    const updater = getUpdater(formulaInput.value.trim());
+    const updater = Parametric.getUpdater(formulaInput.value.trim());
 
     updateTmpFormula(`${id}.${name}`, formulaInput.value);
 
@@ -61,7 +59,7 @@ class NodePropertyComponent extends PureComponent {
 
     // <Enter>
     if ( e.keyCode === 13 ) {
-      const updater = getUpdater(formulaInput.value);
+      const updater = Parametric.getUpdater(formulaInput.value);
 
       if ( !updater.isInvalid ) {
         updateFormulaAlt(id, name, formulaInput.value.trim());

@@ -3,18 +3,16 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import Bezier from 'bezier-js/fp';
 
-import { mapCurve, forEachCurve } from '~/_utils/path';
-import { getNodeType } from '~/_utils/graph';
-import { lerp as mlerp, rotateVector, getAngleBetween2Lines, rotatePoint } from '~/_utils/math';
+import * as Path from '~/_utils/Path';
+import * as Graph from '~/_utils/Graph';
+import Memoize from '~/_utils/Memoize';
+import { lerp as mlerp, rotateVector, getAngleBetween2Lines, rotatePoint } from '~/_utils/2d';
+import * as actions from '~/actions';
 
 import SvgContour from './SvgContour';
 import SvgFont from './SvgFont';
 import SvgGlyph from './SvgGlyph';
 import SvgContourSelection from './SvgContourSelection';
-
-import actions from '~/actions';
-
-import memoize from '~/_utils/memoize';
 
 const componentMap = {
   contour: SvgContour,
@@ -28,7 +26,7 @@ const selectionComponentMap = {
 
 export function renderSvgChild(childId) {
   const { id } = this.props;
-  const childType = getNodeType(childId);
+  const childType = Graph.getNodeType(childId);
   const SvgNode = componentMap[childType];
 
   return [
@@ -38,7 +36,7 @@ export function renderSvgChild(childId) {
 
 export function renderSelectionAreas(childId) {
   const { id } = this.props;
-  const childType = getNodeType(childId);
+  const childType = Graph.getNodeType(childId);
   const SvgNode = selectionComponentMap[childType];
 
   return [
@@ -53,7 +51,7 @@ export function renderPathData(pathId) {
     return '';
   }
 
-  return mapCurve(pathId, nodes, (start, c1, c2, end, i, length) => {
+  return Path.mapCurve(pathId, nodes, (start, c1, c2, end, i, length) => {
     let sPoint = '';
 
     if ( i === 0 ) {
@@ -113,7 +111,7 @@ export function getNearPath(coord, contour, nodes, error) {
   nodes[contour].childIds.forEach((key) => {
     const node = nodes[key];
     if (node.type === 'path') {
-      forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
+      Path.forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
         if (!result && c2 && c3) {
           const on = Bezier.crosses([c0, c1, c2, c3], coord, 30);
           if (on) {
@@ -345,7 +343,7 @@ export function getPathBbox(pathId, nodes) {
     maxY: -Infinity,
   };
 
-  forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
+  Path.forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
     if (c2 && c3) {
       const bbox = getBbox(c0, c1, c2, c3);
 
@@ -407,7 +405,7 @@ export function getDerivativeControlPoints(c0, c1, c2, c3) {
   return points;
 }
 
-export const getCurveOutline = memoize((c0, c1, c2, c3, steps) => {
+export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   let n, c;
   let tangentPointsOn = [], tangentPointsOff = [];
   //get the first offcurve tangent

@@ -6,7 +6,7 @@
   "main": "",
   "scripts": {
     "start": "node server.js --env=dev",
-    "test": "jest --coverage",
+    "test": "jest --coverage --no-cache",
     "test:watch": "jest --watch",
     "posttest": "npm run lint",
     "serve": "node server.js --env=dev",
@@ -73,21 +73,20 @@
     "surge": "^0.18.0",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.0",
-    "webpack-dev-server": "^1.12.0"
+    "webpack-dev-server": "^1.12.0",
+    "core-js": "^2.0.0"
   },
   "dependencies": {
     "bezier-js": "github:louisremi/bezierjs#feat/FP-version",
     "classnames": "^2.2.4",
-    "core-js": "^2.0.0",
     "deptree": "^0.1.0",
-    "lodash": "^4.11.1",
     "memoize-immutable": "^2.0.0",
     "normalize.css": "^4.0.0",
     "ramda": "^0.22.1",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
-    "react-redux": "^4.4.4",
-    "redux": "^3.4.0",
+    "react-redux": "^5.0.0",
+    "redux": "^3.6.0",
     "reselect": "^2.5.1"
   }
 }

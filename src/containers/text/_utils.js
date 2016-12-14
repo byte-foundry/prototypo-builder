@@ -1,9 +1,9 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 
-import actions from '~/actions';
-import fontModel from '~/_utils/fontModel';
-import { getNodeType } from '~/_utils/graph';
+import * as actions from '~/actions';
+import * as FontModel from '~/_utils/FontModel';
+import * as Graph from '~/_utils/Graph';
 
 import TextContour from './TextContour';
 import TextFont from './TextFont';
@@ -23,7 +23,7 @@ const componentMap = {
 
 export function renderTextChild(childId) {
   const { id } = this.props;
-  const childType = getNodeType(childId);
+  const childType = Graph.getNodeType(childId);
   const TextNode = componentMap[childType];
 
   return (
@@ -51,7 +51,7 @@ export function mapStateToProps(state, ownProps) {
 export function validateChildTypes(props, propName, componentName, prop, _model) {
   // for some reason _model receives null instead of undefined,
   // so default arguments cannot be used here
-  const model = _model || fontModel;
+  const model = _model || FontModel;
   const componentType = (
     componentName.replace(/^.*?([A-Z][a-z]+?)(Component)?$/, function($0, $1) {
       return $1.toLowerCase();

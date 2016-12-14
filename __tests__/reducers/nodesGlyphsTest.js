@@ -1,7 +1,7 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
-import actions from '~/actions';
+import * as actions from '~/actions';
 const {
   createGlyph,
   addGlyph,

@@ -7,7 +7,9 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Main from '../components/Main';
+
+import Main from '~/components/Main';
+
 /* Populated by react-webpack-redux:reducer */
 class App extends PureComponent {
   render() {

@@ -1,4 +1,4 @@
-import { lerp, rotateVector } from '../../src/_utils/math';
+import { lerp, rotateVector } from '../../src/_utils/2d';
 
 describe('math', () => {
   describe('lerp', () => {

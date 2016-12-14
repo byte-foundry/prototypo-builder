@@ -1,9 +1,8 @@
 import React, { PureComponent} from 'react';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import actions from '~/actions';
+import * as actions from '~/actions';
 
 require('styles/text/FontSettings.scss');
 
