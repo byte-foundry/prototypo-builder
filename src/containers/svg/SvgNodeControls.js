@@ -14,13 +14,13 @@ class SvgNodeControls extends PureComponent {
 
   renderChildren() {
     const { point, inControl, pathId, i} = this.props;
-    let controls = getNodeControls(point, inControl);
+    let { expand, distribution, angle } = getNodeControls(point, inControl);
     let result = [];
     result.push(
       <circle
         key={`${pathId}inTangent${i}`}
-        cx={controls.expand.in.x}
-        cy={controls.expand.in.y}
+        cx={expand.in.x}
+        cy={expand.in.y}
         r='5'
         fill="orange"
         stroke="orange"/>
@@ -28,8 +28,8 @@ class SvgNodeControls extends PureComponent {
     result.push(
       <circle
         key={`${pathId}outTangent${i}`}
-        cx={controls.expand.out.x}
-        cy={controls.expand.out.y}
+        cx={expand.out.x}
+        cy={expand.out.y}
         r='5'
         fill="orange"
         stroke="orange"/>
@@ -38,10 +38,10 @@ class SvgNodeControls extends PureComponent {
       <path
         key={`${pathId}distributionControl${i}`}
         d={`
-            M ${controls.distribution.first.x},${controls.distribution.first.y}
-            L ${controls.distribution.second.x},${controls.distribution.second.y}
-            L ${controls.distribution.third.x},${controls.distribution.third.y}
-            L ${controls.distribution.fourth.x},${controls.distribution.fourth.y}
+            M ${distribution.first.x},${distribution.first.y}
+            L ${distribution.second.x},${distribution.second.y}
+            L ${distribution.third.x},${distribution.third.y}
+            L ${distribution.fourth.x},${distribution.fourth.y}
           `}
           fill="green"
       />
@@ -50,10 +50,10 @@ class SvgNodeControls extends PureComponent {
       <path
         key={`${pathId}angleControl${i}`}
         d={`
-          M ${controls.angle.first.x},${controls.angle.first.y}
-          C ${controls.angle.second.x},${controls.angle.second.y}
-            ${controls.angle.third.x},${controls.angle.third.y}
-            ${controls.angle.fourth.x},${controls.angle.fourth.y}
+          M ${angle.first.x},${angle.first.y}
+          C ${angle.second.x},${angle.second.y}
+            ${angle.third.x},${angle.third.y}
+            ${angle.fourth.x},${angle.fourth.y}
           `}
           stroke="green"
           fill="transparent"

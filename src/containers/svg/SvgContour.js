@@ -192,8 +192,6 @@ class SvgContour extends PureComponent {
           let j = 0, steps = 10,
           beta1 = 0.55, beta2 = 0.65;
           Path.forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
-            console.log(pathId);
-            console.log(nodes);
             if (c2 && c3) {
               if (drawInterpolatedTangents) {
                 result.push(this.drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j));

@@ -4,7 +4,7 @@ import R from 'ramda';
 
 import * as Path from '~/_utils/Path';
 import * as Graph from '~/_utils/Graph.js';
-import * as LogError from '~/_utils/LogError';
+import LogError from '~/_utils/LogError';
 import {
   ADD_CHILD,
   ADD_CHILDREN,

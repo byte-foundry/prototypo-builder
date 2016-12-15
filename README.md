@@ -28,7 +28,7 @@ After much debate, we have decided not to enforce a strict limit of 80 character
 
 #### Destructuring assignment
 
-Destructuring assignment is good! It helps a lot keeping your LOCs under 80 chars and improves readability. Keeping properties and methods namespaced often results in optimal readability, though.
+Destructuring assignment is good! It helps a lot keeping your LOCs under 80 chars and improves readability. However, keeping properties and methods namespaced often results in optimal readability.
 
 ```js
 /* Bad */
@@ -37,7 +37,7 @@ this.props.actions.updateProp(oncurveId, 'y', coord.y);
 this.props.actions.addOncurve(pathId, oncurveId);
 
 /* Avoid */
-const { updateProp, addOncurve } = this.props;
+const { updateProp, addOncurve } = this.props.actions;
 
 updateProp(oncurveId, 'x', coord.x);
 updateProp(oncurveId, 'y', coord.y);

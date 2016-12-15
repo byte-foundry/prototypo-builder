@@ -1,7 +1,7 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import * as FontModel from '~/_utils/FontModel';
+import FontModel from '~/_utils/FontModel';
 import * as Graph from '~/_utils/Graph';
 
 import {
