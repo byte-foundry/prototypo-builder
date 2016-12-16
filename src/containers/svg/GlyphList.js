@@ -12,14 +12,14 @@ class GlyphList extends PureComponent {
     super(props);
     this.state = {
       allGlyphFolded: false,
-    }
+    };
   }
   toggleAllGlyphView(){
     if (this.state.allGlyphFolded) {
-      this.setState({allGlyphFolded: false})
+      this.setState({allGlyphFolded: false});
     }
     else {
-      this.setState({allGlyphFolded: true})
+      this.setState({allGlyphFolded: true});
     }
   }
   openGlyph(glyph){
@@ -30,7 +30,7 @@ class GlyphList extends PureComponent {
     let last = '~'.charCodeAt(0)+1;
     let glyphs = [];
     for (var i = first; i < last; i++) {
-      glyphs.push(String.fromCharCode(i))
+      glyphs.push(String.fromCharCode(i));
     }
     glyphs = glyphs.filter(entry => entry.trim() !== '');
     glyphs = glyphs.filter(entry => entry.trim() !== ' ');

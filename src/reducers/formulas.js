@@ -1,13 +1,13 @@
 import R from 'ramda';
 
-const initialState = {};
-
 import {
   UPDATE_FORMULA,
   DELETE_FORMULA,
-} from './../actions/const';
+} from '~/actions/const';
 
-module.exports = function(state = initialState, action) {
+const initialState = {};
+
+export default function(state = initialState, action) {
   switch(action.type) {
     case UPDATE_FORMULA:
       return action.formula.trim() === '' ? {
@@ -40,7 +40,7 @@ module.exports = function(state = initialState, action) {
       else if ( !action.propPath ) {
         let foundMatchingProp = false;
         /*eslint no-useless-escape: "warn"*/
-        const rInNode = new RegExp(`^${action.nodeId}(\.|$)`);
+        const rInNode = new RegExp(`^${action.nodeId}(.|$)`);
 
         for ( let glyphId in state ) {
           const filteredFormulas = {};
@@ -58,7 +58,7 @@ module.exports = function(state = initialState, action) {
             return {
               ...state,
               [glyphId]: filteredFormulas,
-            }
+            };
           }
         }
       }
@@ -68,5 +68,4 @@ module.exports = function(state = initialState, action) {
     default:
       return state;
   }
-
 }

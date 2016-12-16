@@ -15,7 +15,7 @@ class Settings extends PureComponent {
     this.handleDebugClick = this.handleDebugClick.bind(this);
     this.state = {
       isToogled: false,
-    }
+    };
   }
 
   handleDebugClick(e) {

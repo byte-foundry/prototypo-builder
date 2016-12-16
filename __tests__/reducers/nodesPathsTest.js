@@ -2,10 +2,7 @@ import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
 // import createCurve from '../../src/actions/paths/createCurve';
-import * as actions from '~/actions';
-const {
-  addCurve,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: nodes (curves)', () => {
   it('should handle ADD_CURVE action', () => {
@@ -31,7 +28,7 @@ describe('reducer: nodes (curves)', () => {
         childIds: [],
       },
     };
-    const action = addCurve('node-0', ['node-1', 'node-2', 'node-3']);
+    const action = actions.addCurve('node-0', ['node-1', 'node-2', 'node-3']);
     const stateAfter = {
       'node-0': {
         id: 'node-0',

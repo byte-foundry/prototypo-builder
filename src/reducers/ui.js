@@ -1,11 +1,14 @@
 import R from 'ramda';
 
 import {
+  NO_PATH_SELECTED,
+  DEFAULT_EXPAND,
+} from '~/const';
+import {
   LOAD_IMAGE_DATA,
   SET_COORDS,
   SET_MOUSE_STATE,
   SET_PATH_SELECTED,
-  NO_PATH_SELECTED,
   SET_NODE_SELECTED,
   SET_NODE_HOVERED,
   SET_NODE_OPTIONS_SELECTED,
@@ -17,11 +20,7 @@ import {
   SET_INTERPOLATED_TANGENTS_MODE,
   SET_ACTIVE_TAB,
   SET_BASE_EXPAND,
-} from '../actions/const';
-
-import {
-  DEFAULT_EXPAND,
-} from '~/const';
+} from '~/actions/const';
 
 const initialState = {
   uiState: NO_PATH_SELECTED,
@@ -33,7 +32,7 @@ const initialState = {
   baseExpand: DEFAULT_EXPAND,
 };
 
-module.exports = function(state = initialState, action) {
+export default function(state = initialState, action) {
   switch(action.type) {
     case SET_COORDS: {
       return { ...state, mouse: { ...state.mouse, x: action.x, y: action.y } };
@@ -75,25 +74,25 @@ module.exports = function(state = initialState, action) {
       return {
         ...state,
         contourMode: (action.mode === 'simple' ? 'simple' : 'catmull'),
-      }
+      };
     }
     case SET_INTERPOLATED_TANGENTS_MODE: {
       return {
         ...state,
         showInterpolatedTangents: action.mode,
-      }
+      };
     }
     case SET_ACTIVE_TAB: {
       return {
         ...state,
         activeTab: {type: action.tab.type, glyph: action.tab.glyph},
-      }
+      };
     }
     case SET_BASE_EXPAND: {
       return {
         ...state,
         baseExpand: action.value,
-      }
+      };
     }
     default: {
       return state;

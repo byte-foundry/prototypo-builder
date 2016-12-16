@@ -13,7 +13,7 @@ export const getUpdater = Memoize(( _strFormula ) => {
   const strFormula = _strFormula.trim();
   const usedParams = strFormula.match(/(\$[a-z0-9_]+)/ig) || [];
   /*eslint no-useless-escape: "warn"*/
-  const usedRefs = (strFormula.match(/glyph\.[a-z0-9_\.]+/ig) || []).map((id) => {
+  const usedRefs = (strFormula.match(/glyph\.[a-z0-9_.]+/ig) || []).map((id) => {
     return id.replace('glyph.', '');
   });
 
@@ -51,15 +51,15 @@ const buildArgsMemoized = Memoize(buildArgs);
 // recursively parse formulas
 // Note that this function is aware of the context of the formula.
 // So when the propName is 'on', it's able to append all segment ids to the refs.
-// TODO: I can't remember what the nodes argument is for. For memoization purpose?
 export const getUpdaters = Memoize((nodes, formulas) => {
   return R.mapObjIndexed((formula, propName) => {
     const updater = getUpdater(formula);
 
+    // TODO: finish implementing 'on' support.
     if ( propName === 'on' ) {
       return {
         ...updater,
-        refs: [...updater.refs, ...Graph.getSegmentIds()],
+        refs: [...updater.refs, ...Graph.getSegmentIds(/* ... */)],
       };
     }
 
@@ -178,6 +178,7 @@ export const getCalculatedGlyph = Memoize((state, parentParams, glyphId) => {
 });
 
 // the last argument helps with testing
+// TODO: test!
 export function expandPath( nodes, pathId, actions, expanded ) {
   const expandedLeft = [];
   const expandedRight = [];
@@ -198,7 +199,7 @@ export function expandPath( nodes, pathId, actions, expanded ) {
     const shift = {
       x: Math.cos(angle / 360 * 2 * Math.PI) * width,
       y: Math.sin(angle / 360 * 2 * Math.PI) * width,
-    }
+    };
 
     const leftCoords = {
       x: node.x + shift.x * (distrib - 1),

@@ -28,7 +28,7 @@ class SvgExpandedSkeleton extends PureComponent {
 
 SvgExpandedSkeleton.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 function makeMapStateToProps() {
   const expanded = { nodes: {} };
@@ -39,7 +39,7 @@ function makeMapStateToProps() {
       expanded,
       expandedSkeletonId: getExpandedSkeleton( state, props ),
     };
-  }
+  };
   return mapStateToProps;
 }
 

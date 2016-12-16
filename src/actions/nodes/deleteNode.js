@@ -1,8 +1,8 @@
 import { BATCH_ACTIONS } from '~/actions/const';
-import { _deleteNode, deleteFormula } from '~/actions/';
+import { _deleteNode, deleteFormula } from '~/actions';
 
 
-module.exports = function(nodeId) {
+export default function(nodeId) {
   return {
     type: BATCH_ACTIONS,
     actions: [
@@ -10,4 +10,4 @@ module.exports = function(nodeId) {
       deleteFormula(nodeId),
     ],
   };
-};
+}

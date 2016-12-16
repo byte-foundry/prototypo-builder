@@ -51,6 +51,6 @@ class TextRoot extends PureComponent {
 TextRoot.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextRoot);

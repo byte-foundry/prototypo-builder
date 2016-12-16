@@ -1,5 +1,5 @@
 import {SET_COORDS} from '../const';
 
-module.exports = function(x, y) {
+export default function(x, y) {
   return { type: SET_COORDS, x, y };
 }

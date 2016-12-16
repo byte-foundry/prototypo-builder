@@ -7,12 +7,12 @@ import {
   mapDispatchToProps,
 } from './_utils';
 
+import Formula from './Formula';
+
 const typeMap = {
   number: 'text',
   boolean: 'checkbox',
-}
-
-import Formula from './Formula';
+};
 
 require('styles/text/NodeProperty.scss');
 
@@ -89,7 +89,7 @@ function mapStateToProps(state, ownProps) {
       Parametric.getCalculatedParams(state.nodes.font_initial.params),
       ownProps.glyphId
     )[ownProps.nodeId][ownProps.name],
-  }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NodeProperties);

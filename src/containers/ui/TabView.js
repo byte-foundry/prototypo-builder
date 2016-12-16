@@ -11,7 +11,7 @@ class TabView extends PureComponent {
     this.state = {
       activeType: props.ui.activeTab.type || 'all',
       activeGlyph: props.ui.activeTab.glyph || undefined,
-    }
+    };
   }
 
   componentWillReceiveProps(newProps){

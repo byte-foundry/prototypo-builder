@@ -1,16 +1,12 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
-import * as actions from '~/actions';
-const {
-  createFont,
-  addFont,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: nodes (fonts)', () => {
   it('should handle CREATE_FONT action', () => {
     const stateBefore = {};
-    const action = createFont();
+    const action = actions.createFont();
     const stateAfter = {
       [action.nodeId]: {
         id: action.nodeId,
@@ -39,7 +35,7 @@ describe('reducer: nodes (fonts)', () => {
         childIds: [],
       },
     };
-    const action = addFont('node-0', 'node-1');
+    const action = actions.addFont('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',

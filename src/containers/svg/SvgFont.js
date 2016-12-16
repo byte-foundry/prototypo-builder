@@ -20,6 +20,6 @@ class SvgFont extends PureComponent {
 
 SvgFont.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgFont);

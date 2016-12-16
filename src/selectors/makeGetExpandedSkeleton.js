@@ -1,27 +1,8 @@
 import { createSelectorCreator } from 'reselect';
+
 import * as Parametric from '~/_utils/Parametric';
 import nodesReducer from '~/reducers/nodes';
-
-import {
-  createPath,
-  createCurve,
-  createOncurve,
-  createOffcurve,
-  addChild,
-  addCurve,
-  addOncurve,
-  updateCoords,
-} from '~/actions';
-const actionCreators = {
-  createPath,
-  createCurve,
-  createOncurve,
-  createOffcurve,
-  addChild,
-  addCurve,
-  addOncurve,
-  updateCoords,
-};
+import * as actions from '~/actions';
 
 // This returns the list of all oncurves and offcurves in the path
 export function getNodes( state ) {
@@ -63,12 +44,12 @@ export const createNodeAndChildrenSelector = createSelectorCreator(
 export function makeGetExpandedSkeleton(expanded) {
   // We try to keep our state 'normalized': all info that CAN be calculated from
   // other parts of the state MUST NOT be stored in the state. This is the case
-  // for expanded node. So we will only store them in a temporary graph
+  // for expanded node. So we will only store them in a virtual graph
   // (`expanded`), not in the state.
-  const actions = {};
-  Object.keys(actionCreators).forEach((actionName) => {
-    actions[actionName] = (...args) => {
-      const action = actionCreators[actionName]( ...args );
+  const virtualActions = {};
+  Object.keys(actions).forEach((actionName) => {
+    virtualActions[actionName] = (...args) => {
+      const action = actions[actionName]( ...args );
       expanded.nodes = nodesReducer( expanded.nodes, action );
       return action;
     };
@@ -77,7 +58,7 @@ export function makeGetExpandedSkeleton(expanded) {
   return createNodeAndChildrenSelector(
     [ getNodes, getPathId ],
     (nodes, pathId) => {
-      return Parametric.expandPath(nodes, pathId, actions, expanded);
+      return Parametric.expandPath(nodes, pathId, virtualActions, expanded);
     }
   );
 }

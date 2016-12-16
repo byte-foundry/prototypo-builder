@@ -1,5 +1,3 @@
-require('styles/text/TextNode.scss');
-
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -12,6 +10,8 @@ import {
 } from './_utils';
 
 import Foldable from './Foldable';
+
+require('styles/text/TextNode.scss');
 
 class TextOncurve extends PureComponent {
   constructor(props) {
@@ -44,6 +44,6 @@ class TextOncurve extends PureComponent {
 
 TextOncurve.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextOncurve);

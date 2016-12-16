@@ -23,6 +23,6 @@ class TextOffcurve extends PureComponent {
 
 TextOffcurve.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextOffcurve);

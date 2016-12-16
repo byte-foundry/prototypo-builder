@@ -1,32 +1,21 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import Bezier from 'bezier-js/fp';
 
+import * as Utils from '~/_utils/';
 import * as Path from '~/_utils/Path';
 import * as Graph from '~/_utils/Graph';
 import * as Parametric from '~/_utils/Parametric';
-import {
-  lerp,
-  rotateVector,
-} from '~/_utils/2d';
+import * as TwoD from '~/_utils/2D';
+import * as Vector from '~/_utils/Vector';
 
 import {
   renderPathData,
   mapDispatchToProps,
-  equalVec,
-  addVec,
-  subtractVec,
-  multiplyVecByN,
-  normalizeVec,
-  dotProduct,
-  outline,
-  bezierOffset,
-  getCurveOutline,
-  rayRayIntersection,
-  getTangentPoints,
 } from './_utils';
 
-class SvgContour extends PureComponent {
+class SvgContour extends React.PureComponent {
   constructor(props) {
     super(props);
     this.renderPathData = renderPathData.bind(this);
@@ -55,58 +44,62 @@ class SvgContour extends PureComponent {
         .map((pathId) => {
 
           const paths = [];
-          Path.forEachCurve(pathId, nodes, (c0, c1, c2, c3, i) => {
+          Path.forEachCurve(pathId, nodes, (c0, _c1, _c2, c3, i) => {
             let pathString = '';
+            let c1 = _c1;
+            let c2 = _c2;
+
             if (c2 && c3) {
-              if (equalVec(c0, c1)) {
-                const relC1 = subtractVec(c1._ghost, c0);
+              if (Vector.isEqual(c0, c1)) {
+                const relC1 = Vector.subtract(c1._ghost, c0);
                 relC1.x += 0.1;
                 relC1.y += 0.1;
-                c1 = addVec(c0, multiplyVecByN(relC1, 0.1));
+                c1 = Vector.add(c0, Vector.multiply(relC1, 0.1));
               }
-              if (equalVec(c2, c3)) {
-                const relC2 = subtractVec(c2._ghost, c3);
+              if (Vector.isEqual(c2, c3)) {
+                const relC2 = Vector.subtract(c2._ghost, c3);
                 relC2.x += 0.1;
                 relC2.y += 0.1;
-                c2 = addVec(c3, multiplyVecByN(relC2, 0.1));
+                c2 = Vector.add(c3, Vector.multiply(relC2, 0.1));
               }
-              const curves = outline(c0, c1, c2, c3,
-                                     (c0.expand || 20) * (c0.distrib || 0.5),
-                                     (c0.expand || 20) * (1 - (c0.distrib || 0.5)),
-                                     (c3.expand || 20) * (c3.distrib || 0.5),
-                                     (c3.expand || 20) * (1 - (c3.distrib || 0.5))
-                                    );
+              const curves = Bezier.outline(
+                c0, c1, c2, c3,
+                (c0.expand || 20) * (c0.distrib || 0.5),
+                (c0.expand || 20) * (1 - (c0.distrib || 0.5)),
+                (c3.expand || 20) * (c3.distrib || 0.5),
+                (c3.expand || 20) * (1 - (c3.distrib || 0.5))
+              );
               curves.forEach((curve, i) => {
                 if (pathString.length === 0) {
                   pathString += `M${curve.c0.x} ${curve.c0.y}`;
                 }
 
                 if (c0.isSmoothSkeleton && i === 1) {
-                  const unitC1Vec = normalizeVec(subtractVec(c1, c0));
-                  const newCurveC1 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c1, curve.c0), unitC1Vec));
+                  const unitC1Vec = Vector.normalize(Vector.subtract(c1, c0));
+                  const newCurveC1 = Vector.multiply(unitC1Vec, Vector.dot(Vector.subtract(curve.c1, curve.c0), unitC1Vec));
 
-                  curve.c1 = addVec(curve.c0, newCurveC1);
+                  curve.c1 = Vector.add(curve.c0, newCurveC1);
                 }
 
                 if (c0.isSmoothSkeleton && i === curves.length - 1) {
-                  const unitC1Vec = normalizeVec(subtractVec(c1, c0));
-                  const newCurveC2 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c2, curve.c3), unitC1Vec));
+                  const unitC1Vec = Vector.normalize(Vector.subtract(c1, c0));
+                  const newCurveC2 = Vector.multiply(unitC1Vec, Vector.dot(Vector.subtract(curve.c2, curve.c3), unitC1Vec));
 
-                  curve.c2 = addVec(curve.c3, newCurveC2);
+                  curve.c2 = Vector.add(curve.c3, newCurveC2);
                 }
 
                 if (c3.isSmoothSkeleton && i === curves.length / 2 + 1) {
-                  const unitC1Vec = normalizeVec(subtractVec(c2, c3));
-                  const newCurveC1 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c1, curve.c0), unitC1Vec));
+                  const unitC1Vec = Vector.normalize(Vector.subtract(c2, c3));
+                  const newCurveC1 = Vector.multiply(unitC1Vec, Vector.dot(Vector.subtract(curve.c1, curve.c0), unitC1Vec));
 
-                  curve.c1 = addVec(curve.c0, newCurveC1);
+                  curve.c1 = Vector.add(curve.c0, newCurveC1);
                 }
 
                 if (c3.isSmoothSkeleton && i === curves.length / 2 - 1) {
-                  const unitC1Vec = normalizeVec(subtractVec(c2, c3));
-                  const newCurveC2 = multiplyVecByN(unitC1Vec, dotProduct(subtractVec(curve.c2, curve.c3), unitC1Vec));
+                  const unitC1Vec = Vector.normalize(Vector.subtract(c2, c3));
+                  const newCurveC2 = Vector.multiply(unitC1Vec, Vector.dot(Vector.subtract(curve.c2, curve.c3), unitC1Vec));
 
-                  curve.c2 = addVec(curve.c3, newCurveC2);
+                  curve.c2 = Vector.add(curve.c3, newCurveC2);
                 }
 
                 pathString += ` C${curve.c1.x},${curve.c1.y} ${curve.c2.x},${curve.c2.y} ${curve.c3.x},${curve.c3.y}`;
@@ -122,16 +115,21 @@ class SvgContour extends PureComponent {
   drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j) {
     let n, c, result = [];
     for (let i = 1; i < steps; i++) {
-      ({ n, c } = bezierOffset(c0, c1, c2, c3, i/steps, lerp(c0.expand, c3.expand, i/steps)));
+      ({ n, c } = Bezier.offset([c0, c1, c2, c3], i/steps, Utils.lerp1d(c0.expand, c3.expand, i/steps)));
       if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
-        n = rotateVector(n.x, n.y, lerp(c0.angle%360, c3.angle%360, i/steps));
+        let t = i/steps;
+        let angleLerp = Utils.lerp1d(c0.angle % 360, c3.angle % 360, t);
+        let distribLerp = Utils.lerp1d(c0.distrib, c3.distrib, t);
+        let expandLerp = Utils.lerp1d(c0.expand, c3.expand, t);
+
+        n = TwoD.rotate(n, angleLerp);
         result.push (
           <path key={`tan-${pathId}${j}${i}`}
             id={`tan-${pathId}${j}${i}`}
-            d={`M${c.x + n.x * (lerp(c0.distrib, c3.distrib, i/steps) * lerp(c0.expand, c3.expand, i/steps))}
-                 ${c.y + n.y * (lerp(c0.distrib, c3.distrib, i/steps) * lerp(c0.expand, c3.expand, i/steps))}
-            L${c.x - n.x * ((1 - lerp(c0.distrib, c3.distrib, i/steps)) * lerp(c0.expand, c3.expand, i/steps))}
-             ${c.y - n.y * ((1 - lerp(c0.distrib, c3.distrib, i/steps)) * lerp(c0.expand, c3.expand, i/steps))}`}
+            d={`M${c.x + n.x * (distribLerp * expandLerp)}
+                 ${c.y + n.y * (distribLerp * expandLerp)}
+            L${c.x - n.x * ((1 - distribLerp) * expandLerp)}
+             ${c.y - n.y * ((1 - distribLerp) * expandLerp)}`}
             stroke="#ff00ff"
             />
         );
@@ -140,14 +138,14 @@ class SvgContour extends PureComponent {
     return result;
   }
   drawCatmullOutline(c0, c1, c2, c3, steps) {
-    return getCurveOutline(c0,c1,c2,c3,steps);
+    return Utils.getCurveOutline(c0,c1,c2,c3,steps);
   }
-  drawSimpleOutline(c0,c1,c2,c3, c0tanIn, c3tanIn, c0tanOut, c3tanOut, beta1, beta2, pathId, j) {
+  drawSimpleOutline(c0,c1,c2,c3, c0tanIn, c3tanIn, c0tanOut, c3tanOut, beta1, beta2) {
     let inContour = '', outContour = '';
-    const c0c1Inray = {point: c0tanIn, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))}
-    const c2c3Inray = {point: c3tanIn, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))}
+    const c0c1Inray = {point: c0tanIn, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))};
+    const c2c3Inray = {point: c3tanIn, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))};
     const intersectIn = {}, c0tanInCurve = {}, c3tanInCurve = {};
-    [intersectIn.x, intersectIn.y] = rayRayIntersection(c0c1Inray.point, c0c1Inray.angle, c2c3Inray.point, c2c3Inray.angle);
+    [intersectIn.x, intersectIn.y] = TwoD.rri(c0c1Inray.point, c0c1Inray.angle, c2c3Inray.point, c2c3Inray.angle);
     c0tanInCurve.x = c0tanIn.x + (intersectIn.x - c0tanIn.x) * beta1;
     c0tanInCurve.y = c0tanIn.y + (intersectIn.y - c0tanIn.y) * beta1;
     c3tanInCurve.x = c3tanIn.x + (intersectIn.x - c3tanIn.x) * beta1;
@@ -157,10 +155,10 @@ class SvgContour extends PureComponent {
               ${c3tanInCurve.x},${c3tanInCurve.y}
               ${c3tanIn.x},${c3tanIn.y}
           `;
-    const c0c1Outray = {point: c0tanOut, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))}
-    const c2c3Outray = {point: c3tanOut, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))}
+    const c0c1Outray = {point: c0tanOut, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))};
+    const c2c3Outray = {point: c3tanOut, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))};
     const intersectOut = {}, c0tanOutCurve = {}, c3tanOutCurve = {};
-    [intersectOut.x, intersectOut.y] = rayRayIntersection(c0c1Outray.point, c0c1Outray.angle, c2c3Outray.point, c2c3Outray.angle);
+    [intersectOut.x, intersectOut.y] = TwoD.rri(c0c1Outray.point, c0c1Outray.angle, c2c3Outray.point, c2c3Outray.angle);
     c0tanOutCurve.x = c0tanOut.x + (intersectOut.x - c0tanOut.x) * beta2;
     c0tanOutCurve.y = c0tanOut.y + (intersectOut.y - c0tanOut.y) * beta2;
     c3tanOutCurve.x = c3tanOut.x + (intersectOut.x - c3tanOut.x) * beta2;
@@ -210,8 +208,8 @@ class SvgContour extends PureComponent {
                 c2.x = c2._ghost.x;
                 c2.y = c2._ghost.y;
               }
-              const c0tangents = getTangentPoints(c0, c1);
-              const c3tangents = getTangentPoints(c3, c2);
+              const c0tangents = Utils.getTangentPoints(c0, c1);
+              const c3tangents = Utils.getTangentPoints(c3, c2);
               if (contourMode === 'simple' && c3tangents.in && c0tangents.in) {
                 if (j === 1) {
                   inContour += `M ${c0tangents.in.x},${c0tangents.in.y}`;
@@ -267,8 +265,8 @@ class SvgContour extends PureComponent {
 }
 
 SvgContour.propTypes = {
-  actions: PropTypes.object.isRequired,
-}
+  actions: React.PropTypes.object.isRequired,
+};
 
 function mapStateToProps(state, props) {
   return {

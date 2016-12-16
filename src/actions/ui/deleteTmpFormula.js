@@ -1,5 +1,5 @@
 import {DELETE_TMP_FORMULA} from './../const';
 
-module.exports = function() {
+export default function() {
   return { type: DELETE_TMP_FORMULA };
-};
+}

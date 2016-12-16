@@ -6,7 +6,7 @@ describe('logError', () => {
     const logger = function(error) {
       nbErrors++;
       expect(error).toBeInstanceOf(Error);
-    }
+    };
 
     logError(new Error(), logger);
     logError(true, logger);

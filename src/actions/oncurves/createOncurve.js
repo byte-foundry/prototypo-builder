@@ -2,7 +2,7 @@ import {getNodeId} from '~/actions/_utils';
 import { CREATE_ONCURVE } from '~/actions/const';
 import { ONCURVE_SMOOTH, DEFAULT_DISTRIB, DEFAULT_ANGLE, DEFAULT_EXPAND } from '~/const';
 
-module.exports = function(expand) {
+export default function(expand) {
   const nodeType = 'oncurve';
   return {
     type: CREATE_ONCURVE,
@@ -15,4 +15,4 @@ module.exports = function(expand) {
       angle: DEFAULT_ANGLE,
     },
   };
-};
+}

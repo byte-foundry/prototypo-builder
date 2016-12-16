@@ -204,13 +204,13 @@ class TextFont extends PureComponent {
 TextFont.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes,
-}
+};
 
 function mapStateToProps(state, ownProps) {
   return {
     ...state.nodes[ownProps.id],
     calculatedParams: Parametric.getCalculatedParams(state.nodes[ownProps.id].params),
-  }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextFont);

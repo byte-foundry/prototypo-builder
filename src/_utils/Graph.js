@@ -40,7 +40,7 @@ export const getNodeType = ( node ) => {
   const nodeId = typeof node === 'string' ? node : node.id;
 
   return nodeId.split('_')[0];
-}
+};
 
 export const getNodePath = Memoize((nodes, nodeId) => {
   const path = [];

@@ -1,22 +1,15 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import Bezier from 'bezier-js/fp';
 
 import * as Graph from '~/_utils/Graph';
 import * as Parametric from '~/_utils/Parametric';
 import * as Path from '~/_utils/Path';
+import { SELECTION_MODE } from '~/const';
 
+import { mapDispatchToProps } from './_utils';
 import SvgSelector from './SvgSelector';
 import SvgNodeControls from './SvgNodeControls';
-
-import {
-  PATH_SELECTED,
-  SELECTION_MODE,
-} from '~/const';
-
-import {
-  mapDispatchToProps,
-  getPathBbox,
-} from './_utils';
 
 require('styles/svg/Selection.scss');
 
@@ -108,11 +101,11 @@ class SvgContourSelection extends PureComponent {
           }*/
         });
         if (this.props.ui.uiState !== SELECTION_MODE) {
-          const bbox = getPathBbox(pathId, nodes);
+          const bbox = Bezier.bbox(pathId, nodes);
           //Draw path bounding box
           result.push(
-            <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
-          )
+            <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.x.min} ${bbox.y.min} L${bbox.x.max} ${bbox.y.min} L${bbox.x.max} ${bbox.y.max} L${bbox.x.min} ${bbox.y.max} L${bbox.x.min} ${bbox.y.min}`}/>
+          );
         }
       }
     });
@@ -130,7 +123,7 @@ class SvgContourSelection extends PureComponent {
 
 SvgContourSelection.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 function mapStateToProps(state, props) {
   return {

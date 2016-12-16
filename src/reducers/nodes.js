@@ -1,5 +1,3 @@
-const config = require('config').default;
-
 import R from 'ramda';
 
 import * as Path from '~/_utils/Path';
@@ -44,6 +42,8 @@ import {
   validateAddParam,
 } from './_nodesValidateActions';
 
+const config = require('config').default;
+
 /* Define your initial state here.
  *
  * If you change the type from object to something else, do not forget to update
@@ -60,14 +60,14 @@ function createNode(action) {
     type: nodeType,
     childIds: [],
     ...props,
-  }
+  };
 }
 
 function initParams(node) {
   return {
     ...node,
     params: {},
-  }
+  };
 }
 
 function childIds(state, action) {
@@ -126,7 +126,7 @@ function node(state = initialNode, action) {
       return {
         ...state,
         params: R.dissoc(action.name, state.params),
-      }
+      };
     case UPDATE_PARAM:
       return {
         ...state,
@@ -166,7 +166,7 @@ function deepPositionUpdate(node, nodes, x=0, y=0, result) {
       ...node,
       x: node.x + x,
       y: node.y + y,
-    }
+    };
   }
   else {
     node.childIds.forEach((childId) => {
@@ -236,19 +236,19 @@ export default function(state = initialState, action) {
           resultNode[nextIn.id] = { ...nextIn, _isGhost: false};
         }
 
-        const [prevOn, prevIn, prevOut] = Path.getPreviousNode(parentId, nodeId, state);
+        const [prevOn, prevIn, prevOut] = Path.getPrevNode(parentId, nodeId, state);
         if (prevOut) {
           resultNode[prevOut.id] = { ...prevOut, _isGhost: false};
         }
         return {...state, ...resultNode};
       }
       else if ( type === 'offcurve') {
-        const nodesToMove = Path.getCorrespondingHandles(parentId, nodeId, state);
+        const nodesToMove = Path.getNode(parentId, nodeId, state);
         const result = {...state,
           [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy},
         };
-        if (nodesToMove[2].state === ONCURVE_SMOOTH) {
-          const oppositeNode = nodeId === nodesToMove[1].id ? nodesToMove[0] : nodesToMove[1];
+        if (nodesToMove[0].state === ONCURVE_SMOOTH) {
+          const oppositeNode = nodeId === nodesToMove[2].id ? nodesToMove[1] : nodesToMove[2];
           if (oppositeNode) {
             result[oppositeNode.id] = {...state[oppositeNode.id], x: oppositeNode.x - action.dx, y: oppositeNode.y - action.dy, _isGhost: false};
           }

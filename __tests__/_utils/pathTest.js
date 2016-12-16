@@ -11,7 +11,7 @@ describe('path', () => {
     let curves;
     const callback = function() {
       curves.push( [... arguments] );
-    }
+    };
 
     beforeEach(() => {
       curves = [];
@@ -116,7 +116,7 @@ describe('path', () => {
         { id: 'node-7' },
         1,
         2,
-      ]
+      ];
 
       forEachCurve('node-0', state, callback);
 
@@ -132,7 +132,7 @@ describe('path', () => {
   describe('mapCurve', () => {
     const callback = function() {
       return [...arguments, arguments[arguments.length - 2] * 10 + 1];
-    }
+    };
 
     it('should return the mapped curves', (done) => {
       const state = {
@@ -198,7 +198,7 @@ describe('path', () => {
       let nodes;
       const callback = function() {
         nodes.push( [... arguments] );
-      }
+      };
 
       beforeEach(() => {
         nodes = [];
@@ -340,7 +340,7 @@ describe('path', () => {
       let nodes;
       const callback = function() {
         nodes.push( [... arguments] );
-      }
+      };
 
       beforeEach(() => {
         nodes = [];
@@ -485,7 +485,7 @@ describe('path', () => {
   describe('mapNode', () => {
     const callback = function() {
       return [...arguments, arguments[arguments.length - 2] * 10 + 1];
-    }
+    };
 
     it('should return mapped Nodes', (done) => {
       const state = {
@@ -552,6 +552,8 @@ describe('path', () => {
       done();
     });
   });
+
+
 
   describe('getNode', () => {
     it('should get me the correct node', (done) => {
@@ -623,16 +625,60 @@ describe('path', () => {
         {
           id: 'node-2',
         },
+        {
+          id: 'node-7',
+        },
       ];
 
+      // get node by oncurve
       const result0 = getNode('node-0', 'node-1', state);
       const result1 = getNode('node-0', 'node-4', state);
       const result2 = getNode('node-0', 'node-7', state);
+      // get node by offcurve
+      const result3 = getNode('node-0', 'node-2', state);
+      const result4 = getNode('node-0', 'node-3', state);
 
       expect(result0).toEqual(expected0);
       expect(result1).toEqual(expected1);
       expect(result2).toEqual(expected2);
+      expect(result3).toEqual(expected0);
+      expect(result4).toEqual(expected1);
       done();
+    });
+  });
+
+  describe('getPrevNode', () => {
+    it('should return the previous node', () => {
+      // TODO: write the tests!
+      expect(false).toEqual(true);
+    });
+  });
+
+  describe('getNextNode', () => {
+    it('should return the next node', () => {
+      // TODO: write the tests!
+      expect(false).toEqual(true);
+    });
+  });
+
+  describe('bbox', () => {
+    it('should return the bbox of a path', () => {
+      // TODO: write the tests!
+      expect(false).toEqual(true);
+    });
+  });
+
+  describe('findClosestPath', () => {
+    it('should return the path closest to a point', () => {
+      // TODO: write the tests!
+      expect(false).toEqual(true);
+    });
+  });
+
+  describe('findClosestNode', () => {
+    it('should return the node closest to a path', () => {
+      // TODO: write the tests!
+      expect(false).toEqual(true);
     });
   });
 });

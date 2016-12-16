@@ -1,10 +1,9 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import {
-  mapDispatchToProps,
-  getNodeControls,
-} from './_utils';
+import * as Utils from '~/_utils/';
+
+import { mapDispatchToProps } from './_utils';
 
 class SvgNodeControls extends PureComponent {
   constructor(props) {
@@ -14,7 +13,7 @@ class SvgNodeControls extends PureComponent {
 
   renderChildren() {
     const { point, inControl, pathId, i} = this.props;
-    let { expand, distribution, angle } = getNodeControls(point, inControl);
+    let { expand, distribution, angle } = Utils.getNodeControls(point, inControl);
     let result = [];
     result.push(
       <circle
@@ -73,7 +72,7 @@ class SvgNodeControls extends PureComponent {
 
 SvgNodeControls.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 function mapStateToProps(state) {
   return { mode: state.ui.uiState, hovered: state.ui.hovered.point};

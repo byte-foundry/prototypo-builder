@@ -1,16 +1,12 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
-import * as actions from '~/actions';
-const {
-  createContour,
-  addContour,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: nodes (contours)', () => {
   it('should handle CREATE_CONTOUR action', () => {
     const stateBefore = {};
-    const action = createContour();
+    const action = actions.createContour();
     const stateAfter = {
       [action.nodeId]: {
         id: action.nodeId,
@@ -38,7 +34,7 @@ describe('reducer: nodes (contours)', () => {
         childIds: [],
       },
     };
-    const action = addContour('node-0', 'node-1');
+    const action = actions.addContour('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',

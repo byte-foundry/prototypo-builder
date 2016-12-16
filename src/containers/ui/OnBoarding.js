@@ -1,13 +1,9 @@
 import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 
 import * as actions from '~/actions';
-
-import {
-  DEFAULT_EXPAND,
-} from '~/const';
+import { DEFAULT_EXPAND } from '~/const';
 
 require('styles/ui/onboarding.scss');
 

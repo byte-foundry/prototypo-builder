@@ -1,14 +1,7 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
-import * as actions from '~/actions';
-
-const {
-  createNode,
-  _deleteNode,
-  addChild,
-  removeChild,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: nodes', () => {
 
@@ -18,7 +11,7 @@ describe('reducer: nodes', () => {
 
   it('should handle CREATE_NODE action', () => {
     const stateBefore = {};
-    const action = createNode('abc');
+    const action = actions.createNode('abc');
     const stateAfter = {
       [action.nodeId]: {
         id: action.nodeId,
@@ -56,7 +49,7 @@ describe('reducer: nodes', () => {
         childIds: [],
       },
     };
-    const action = _deleteNode('node-2');
+    const action = actions._deleteNode('node-2');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
@@ -72,7 +65,7 @@ describe('reducer: nodes', () => {
     deepFreeze(action);
 
     expect(reducer(stateBefore, action)).toEqual(stateAfter);
-  })
+  });
 
   it('should handle ADD_CHILD action', () => {
     const stateBefore = {
@@ -85,7 +78,7 @@ describe('reducer: nodes', () => {
         childIds: [],
       },
     };
-    const action = addChild('node-0', 'node-1');
+    const action = actions.addChild('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',
@@ -114,7 +107,7 @@ describe('reducer: nodes', () => {
         childIds: [],
       },
     };
-    const action = removeChild('node-0', 'node-1');
+    const action = actions.removeChild('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',

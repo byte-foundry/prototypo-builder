@@ -13,7 +13,7 @@ function enableBatching(reducer) {
     default:
       return reducer(state, action);
     }
-  }
+  };
 }
 
 export default function(initialState) {

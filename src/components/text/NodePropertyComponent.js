@@ -5,7 +5,7 @@ import * as Parametric from '~/_utils/Parametric';
 const typeMap = {
   number: 'text',
   boolean: 'checkbox',
-}
+};
 
 require('styles/text/NodeProperty.scss');
 

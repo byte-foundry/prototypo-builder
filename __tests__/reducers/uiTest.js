@@ -1,17 +1,12 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/ui';
-import * as actions from '~/actions';
-
-const {
-  updateTmpFormula,
-  deleteTmpFormula,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: ui', () => {
   it('should handle UPDATE_TMP_FORMULA action', (done) => {
     const stateBefore = {};
-    const action1 = updateTmpFormula('node_0.x', '2 * 3');
+    const action1 = actions.updateTmpFormula('node_0.x', '2 * 3');
     const stateAfter1 = {
       tmpFormula: { name: 'node_0.x', value: '2 * 3' },
     };
@@ -28,8 +23,8 @@ describe('reducer: ui', () => {
     const stateBefore = {
       tmpFormula: { name: 'node_0.x', value: '2 * 3' },
     };
-    const action1 = deleteTmpFormula();
-    const stateAfter1 = {}
+    const action1 = actions.deleteTmpFormula();
+    const stateAfter1 = {};
 
     deepFreeze(stateBefore);
     deepFreeze(action1);
