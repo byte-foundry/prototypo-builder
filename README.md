@@ -40,6 +40,7 @@ We've made the choice to represent paths as flat lists of oncurve and offcurve p
 
 Please install an ESLint and Editorconfig plugin for your code editor.
 Most coding rules are enforced by our eslint config. There are additional rules that must be respected.
+Note that Atom will report linting errors with root imports (e.g. `from '~/_utils'`). This is due to [a bug](https://github.com/olalonde/eslint-import-resolver-babel-root-import/issues/3) in that eslint plugin.
 
 #### 80 characters max per LOC
 

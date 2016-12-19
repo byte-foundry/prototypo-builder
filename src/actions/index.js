@@ -1,94 +1,96 @@
 // all available actions should be manually listed here
-import ___deleteNode from './nodes/_deleteNode';
-import _addChild from './nodes/addChild';
-import _addChildren from './nodes/addChildren';
-import _addContour from './contours/addContour';
-import _addCurve from './paths/addCurve';
-import _addFont from './fonts/addFont';
-import _addGlyph from './glyphs/addGlyph';
-import _addOffcurve from './offcurves/addOffcurve';
-import _addOncurve from './oncurves/addOncurve';
-import _addParam from './params/addParam';
-import _addPath from './paths/addPath';
-import _createContour from './contours/createContour';
-import _createCurve from './paths/createCurve';
-import _createFont from './fonts/createFont';
-import _createGlyph from './glyphs/createGlyph';
-import _createNode from './nodes/createNode';
-import _createOffcurve from './offcurves/createOffcurve';
-import _createOncurve from './oncurves/createOncurve';
-import _createPath from './paths/createPath';
-import _deleteFormula from './formulas/deleteFormula';
-import __deleteNode from './nodes/deleteNode';
-import _deleteParam from './params/deleteParam';
-import _deleteTmpFormula from './ui/deleteTmpFormula';
-import _loadImageData from './ui/loadImageData';
-import _loadNodes from './nodes/loadNodes';
-import _moveNode from './nodes/moveNode';
-import _removeChild from './nodes/removeChild';
-import _setContourSelected from './ui/setContourSelected';
-import _setCoords from './mouse/setCoords';
-import _setMouseState from './mouse/setMouseState';
-import _setNodeHovered from './ui/setNodeHovered';
-import _setNodeOptionsSelected from './ui/setNodeOptionsSelected';
-import _setNodeSelected from './ui/setNodeSelected';
-import _setPathHovered from './ui/setPathHovered';
-import _setPathSelected from './ui/setPathSelected';
-import _updateCoords from './points/updateCoords';
-import _updateFormula from './formulas/updateFormula';
-import _updateParam from './params/updateParam';
-import _updateProp from './props/updateProp';
-import _updateTmpFormula from './ui/updateTmpFormula';
-import _updateX from './points/updateX';
-import _updateY from './points/updateY';
-import _setContourMode from './ui/setContourMode';
-import _setInterpolatedTangentsMode from './ui/setInterpolatedTangentsMode';
-import _setActiveTab from './ui/setActiveTab';
-import _setBaseExpand from './ui/setBaseExpand';
+import _deleteNode from './nodes/_deleteNode';
+import addChild from './nodes/addChild';
+import addChildren from './nodes/addChildren';
+import addContour from './contours/addContour';
+import addCurve from './paths/addCurve';
+import addFont from './fonts/addFont';
+import addGlyph from './glyphs/addGlyph';
+import addOffcurve from './offcurves/addOffcurve';
+import addOncurve from './oncurves/addOncurve';
+import addParam from './params/addParam';
+import addPath from './paths/addPath';
+import createContour from './contours/createContour';
+import createCurve from './paths/createCurve';
+import createFont from './fonts/createFont';
+import createGlyph from './glyphs/createGlyph';
+import createNode from './nodes/createNode';
+import createOffcurve from './offcurves/createOffcurve';
+import createOncurve from './oncurves/createOncurve';
+import createPath from './paths/createPath';
+import deleteFormula from './formulas/deleteFormula';
+import deleteNode from './nodes/deleteNode';
+import deleteParam from './params/deleteParam';
+import deleteTmpFormula from './ui/deleteTmpFormula';
+import loadImageData from './ui/loadImageData';
+import loadNodes from './nodes/loadNodes';
+import moveNode from './nodes/moveNode';
+import removeChild from './nodes/removeChild';
+import setContourSelected from './ui/setContourSelected';
+import setCoords from './mouse/setCoords';
+import setMouseState from './mouse/setMouseState';
+import setNodeHovered from './ui/setNodeHovered';
+import setNodeOptionsSelected from './ui/setNodeOptionsSelected';
+import setNodeSelected from './ui/setNodeSelected';
+import setPathHovered from './ui/setPathHovered';
+import setPathSelected from './ui/setPathSelected';
+import updateCoords from './points/updateCoords';
+import updateFormula from './formulas/updateFormula';
+import updateParam from './params/updateParam';
+import updateProp from './props/updateProp';
+import updateTmpFormula from './ui/updateTmpFormula';
+import updateX from './points/updateX';
+import updateY from './points/updateY';
+import setContourMode from './ui/setContourMode';
+import setInterpolatedTangentsMode from './ui/setInterpolatedTangentsMode';
+import setActiveTab from './ui/setActiveTab';
+import setBaseExpand from './ui/setBaseExpand';
 
-export const _deleteNode = ___deleteNode;
-export const addChild = _addChild;
-export const addChildren = _addChildren;
-export const addContour = _addContour;
-export const addCurve = _addCurve;
-export const addFont = _addFont;
-export const addGlyph = _addGlyph;
-export const addOffcurve = _addOffcurve;
-export const addOncurve = _addOncurve;
-export const addParam = _addParam;
-export const addPath = _addPath;
-export const createContour = _createContour;
-export const createCurve = _createCurve;
-export const createFont = _createFont;
-export const createGlyph = _createGlyph;
-export const createNode = _createNode;
-export const createOffcurve = _createOffcurve;
-export const createOncurve = _createOncurve;
-export const createPath = _createPath;
-export const deleteFormula = _deleteFormula;
-export const deleteNode = __deleteNode;
-export const deleteParam = _deleteParam;
-export const deleteTmpFormula = _deleteTmpFormula;
-export const loadImageData = _loadImageData;
-export const loadNodes = _loadNodes;
-export const moveNode = _moveNode;
-export const removeChild = _removeChild;
-export const setContourSelected = _setContourSelected;
-export const setCoords = _setCoords;
-export const setMouseState = _setMouseState;
-export const setNodeHovered = _setNodeHovered;
-export const setNodeOptionsSelected = _setNodeOptionsSelected;
-export const setNodeSelected = _setNodeSelected;
-export const setPathHovered = _setPathHovered;
-export const setPathSelected = _setPathSelected;
-export const updateCoords = _updateCoords;
-export const updateFormula = _updateFormula;
-export const updateParam = _updateParam;
-export const updateProp = _updateProp;
-export const updateTmpFormula = _updateTmpFormula;
-export const updateX = _updateX;
-export const updateY = _updateY;
-export const setContourMode = _setContourMode;
-export const setInterpolatedTangentsMode = _setInterpolatedTangentsMode;
-export const setActiveTab = _setActiveTab;
-export const setBaseExpand = _setBaseExpand;
+export {
+  _deleteNode,
+  addChild,
+  addChildren,
+  addContour,
+  addCurve,
+  addFont,
+  addGlyph,
+  addOffcurve,
+  addOncurve,
+  addParam,
+  addPath,
+  createContour,
+  createCurve,
+  createFont,
+  createGlyph,
+  createNode,
+  createOffcurve,
+  createOncurve,
+  createPath,
+  deleteFormula,
+  deleteNode,
+  deleteParam,
+  deleteTmpFormula,
+  loadImageData,
+  loadNodes,
+  moveNode,
+  removeChild,
+  setContourSelected,
+  setCoords,
+  setMouseState,
+  setNodeHovered,
+  setNodeOptionsSelected,
+  setNodeSelected,
+  setPathHovered,
+  setPathSelected,
+  updateCoords,
+  updateFormula,
+  updateParam,
+  updateProp,
+  updateTmpFormula,
+  updateX,
+  updateY,
+  setContourMode,
+  setInterpolatedTangentsMode,
+  setActiveTab,
+  setBaseExpand,
+};

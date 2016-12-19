@@ -2,22 +2,24 @@
  * This file gathers methods for working with 2D objects (point, line)
  * TODO: write unit tests FFS!
  */
-import Bezier from 'bezier-js/fp';
-
-import Memoize from '~/_utils/Memoize';
 import * as Vector from '~/_utils/Vector';
 
 // Line-Line angle
-export function lla(l1p1, l1p2, l2p1, l2p2) {
-  let angle1 = Math.atan2(l1p1.y - l1p2.y, l1p1.x - l1p2.x);
-  let angle2 = Math.atan2(l2p1.y - l2p2.y, l2p1.x - l2p2.x);
-  return angle1 - angle2;
+export function lla(A, B, C, D) {
+  let dx1 = A.x - B.x;
+  let dy1 = A.y - B.y;
+  let dx2 = C.x - D.x;
+  let dy2 = C.y - D.y;
+  let cross = dx1*dy2 - dy1*dx2;
+  let dot = dx1*dx2 + dy1*dy2;
+
+  return Math.atan2(cross, dot);
 }
 
 // Ray-ray intersection. A ray is defined by a point and an angle
 export function rri( p1, _a1, p2, _a2 ) {
   // line equations
-  const a = Math. tan(_a1);
+  const a = Math.tan(_a1);
   const b = Math.tan(_a2);
   let c = p1.y - a * p1.x;
   let d = p2.y - b * p2.x;
@@ -63,30 +65,30 @@ export function rri( p1, _a1, p2, _a2 ) {
 
   // easiest case
   if ( x !== undefined && y !== undefined ) {
-    return new Float32Array([ x, y ]);
+    return [ x, y ];
   }
 
   // other cases that can be optimized
   if ( a1 === 0 ) {
-    return new Float32Array([ ( y - d ) / b, y ]);
+    return [ ( y - d ) / b, y ];
   }
   if ( a1 === piOver2 ) {
-    return new Float32Array([ x, b * x + d ]);
+    return [ x, b * x + d ];
   }
   if ( a2 === 0 ) {
-    return new Float32Array([ ( y - c ) / a, y ]);
+    return [ ( y - c ) / a, y ];
   }
   if ( a2 === piOver2 ) {
-    return new Float32Array([ x, a * x + c ]);
+    return [ x, a * x + c ];
   }
 
   // intersection from two line equations
   // algo: http://en.wikipedia.org/wiki/Line–line_intersection#Given_the_equations_of_the_lines
-  return new Float32Array([
+  return [
     x = (d - c) / (a - b),
     // this should work equally well with ax+c or bx+d
     a * x + c,
-  ]);
+  ];
 }
 
 export function rotate(p, angle) {

@@ -7,7 +7,7 @@ import Memoize from '~/_utils/Memoize';
 import * as TwoD from '~/_utils/2D';
 
 // linear interpolation between two values.
-export function lerp1d(v0, v1, t) {
+export function lerpValues(v0, v1, t) {
   return (1 - t) * v0 + t * v1;
 }
 
@@ -15,7 +15,6 @@ export function lerp1d(v0, v1, t) {
 export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   let n, c;
   let tangentPointsOn = [], tangentPointsOff = [];
-  let lerp1d =
 
   //get the first offcurve tangent
   ({ n, c } = Bezier.offset(c0, c1, c2, c3, 0, c0.expand));
@@ -28,13 +27,13 @@ export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   }
   //interpolate on the curve
   for (let i = 1; i < steps; i++) {
-    ({ n, c } = Bezier.offset(c0, c1, c2, c3, i/steps, lerp1d(c0.expand, c3.expand, i/steps)));
+    ({ n, c } = Bezier.offset(c0, c1, c2, c3, i/steps, lerpValues(c0.expand, c3.expand, i/steps)));
     if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
-      n = TwoD.rotate(n, lerp1d(c0.angle%360, c3.angle%360, i/steps));
-      tangentPointsOn.push(c.x + n.x * (lerp1d(c0.distrib, c3.distrib, i/steps) * lerp1d(c0.expand, c3.expand, i/steps)));
-      tangentPointsOn.push(c.y + n.y * (lerp1d(c0.distrib, c3.distrib, i/steps) * lerp1d(c0.expand, c3.expand, i/steps)));
-      tangentPointsOff.push(c.x - n.x * ((1 - lerp1d(c0.distrib, c3.distrib, i/steps)) * lerp1d(c0.expand, c3.expand, i/steps)));
-      tangentPointsOff.push(c.y - n.y * ((1 - lerp1d(c0.distrib, c3.distrib, i/steps)) * lerp1d(c0.expand, c3.expand, i/steps)));
+      n = TwoD.rotate(n, lerpValues(c0.angle%360, c3.angle%360, i/steps));
+      tangentPointsOn.push(c.x + n.x * (lerpValues(c0.distrib, c3.distrib, i/steps) * lerpValues(c0.expand, c3.expand, i/steps)));
+      tangentPointsOn.push(c.y + n.y * (lerpValues(c0.distrib, c3.distrib, i/steps) * lerpValues(c0.expand, c3.expand, i/steps)));
+      tangentPointsOff.push(c.x - n.x * ((1 - lerpValues(c0.distrib, c3.distrib, i/steps)) * lerpValues(c0.expand, c3.expand, i/steps)));
+      tangentPointsOff.push(c.y - n.y * ((1 - lerpValues(c0.distrib, c3.distrib, i/steps)) * lerpValues(c0.expand, c3.expand, i/steps)));
     }
   }
   //get the last offcurve tangent

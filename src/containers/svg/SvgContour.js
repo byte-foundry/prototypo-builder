@@ -115,12 +115,12 @@ class SvgContour extends React.PureComponent {
   drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j) {
     let n, c, result = [];
     for (let i = 1; i < steps; i++) {
-      ({ n, c } = Bezier.offset([c0, c1, c2, c3], i/steps, Utils.lerp1d(c0.expand, c3.expand, i/steps)));
+      ({ n, c } = Bezier.offset([c0, c1, c2, c3], i/steps, Utils.lerpValues(c0.expand, c3.expand, i/steps)));
       if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
         let t = i/steps;
-        let angleLerp = Utils.lerp1d(c0.angle % 360, c3.angle % 360, t);
-        let distribLerp = Utils.lerp1d(c0.distrib, c3.distrib, t);
-        let expandLerp = Utils.lerp1d(c0.expand, c3.expand, t);
+        let angleLerp = Utils.lerpValues(c0.angle % 360, c3.angle % 360, t);
+        let distribLerp = Utils.lerpValues(c0.distrib, c3.distrib, t);
+        let expandLerp = Utils.lerpValues(c0.expand, c3.expand, t);
 
         n = TwoD.rotate(n, angleLerp);
         result.push (
