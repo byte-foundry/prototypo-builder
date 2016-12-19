@@ -168,7 +168,7 @@ export function getPrevNode(pathId, oncurveId, nodes) {
 
   const newPos = currentPos - 3;
 
-  return getNode(pathId, nodes[oncurveId].childIds[newPos], nodes);
+  return getNode(pathId, nodes[pathId].childIds[newPos], nodes);
 }
 
 // Given a pathId and an oncurveId, return the next bezier node
@@ -181,7 +181,7 @@ export function getNextNode(pathId, oncurveId, nodes) {
 
   const newPos = currentPos + 3;
 
-  return getNode(pathId, nodes[oncurveId].childIds[newPos], nodes);
+  return getNode(pathId, nodes[pathId].childIds[newPos], nodes);
 }
 
 // Calculates the bbox of a path

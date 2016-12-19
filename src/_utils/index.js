@@ -17,7 +17,7 @@ export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   let tangentPointsOn = [], tangentPointsOff = [];
 
   //get the first offcurve tangent
-  ({ n, c } = Bezier.offset(c0, c1, c2, c3, 0, c0.expand));
+  ({ n, c } = Bezier.offset([c0, c1, c2, c3], 0, c0.expand));
   if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
     n = TwoD.rotate(n, c0.angle%360);
     tangentPointsOn.push(c.x + n.x * (c0.distrib * c0.expand));
@@ -27,7 +27,7 @@ export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   }
   //interpolate on the curve
   for (let i = 1; i < steps; i++) {
-    ({ n, c } = Bezier.offset(c0, c1, c2, c3, i/steps, lerpValues(c0.expand, c3.expand, i/steps)));
+    ({ n, c } = Bezier.offset([c0, c1, c2, c3], i/steps, lerpValues(c0.expand, c3.expand, i/steps)));
     if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
       n = TwoD.rotate(n, lerpValues(c0.angle%360, c3.angle%360, i/steps));
       tangentPointsOn.push(c.x + n.x * (lerpValues(c0.distrib, c3.distrib, i/steps) * lerpValues(c0.expand, c3.expand, i/steps)));
@@ -37,7 +37,7 @@ export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
     }
   }
   //get the last offcurve tangent
-  ({ n, c } = Bezier.offset(c0, c1, c2, c3, 1, c3.expand));
+  ({ n, c } = Bezier.offset([c0, c1, c2, c3], 1, c3.expand));
   if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
     n = TwoD.rotate(n, c3.angle%360);
     tangentPointsOn.push(c.x + n.x * (c3.distrib * c3.expand));

@@ -63,7 +63,7 @@ class SvgContour extends React.PureComponent {
                 c2 = Vector.add(c3, Vector.multiply(relC2, 0.1));
               }
               const curves = Bezier.outline(
-                c0, c1, c2, c3,
+                [c0, c1, c2, c3],
                 (c0.expand || 20) * (c0.distrib || 0.5),
                 (c0.expand || 20) * (1 - (c0.distrib || 0.5)),
                 (c3.expand || 20) * (c3.distrib || 0.5),

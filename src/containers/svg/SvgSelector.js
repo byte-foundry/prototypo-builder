@@ -26,7 +26,7 @@ class SvgSelector extends PureComponent {
 
         if (target) {
           // TODO: ghost handles are calculated and should be removed from the state
-          const derivative = Bezier.derivative(target, targetOut, pointIn, point, 2 / 3);
+          const derivative = Bezier.derivative([target, targetOut, pointIn, point], 2 / 3);
           const normalizedD = Vector.normalize(derivative);
           const ghostVec = Vector.multiply(normalizedD, -Vector.dist(target, point) / 3);
 
@@ -41,7 +41,7 @@ class SvgSelector extends PureComponent {
       else if (this.props.type === 'out') {
         const [target, targetIn] = Path.getNextNode(this.props.parent, this.props.source.id, this.props.nodes);
         if (target) {
-          const derivative = Bezier.derivative(point, pointOut, targetIn, target, 1 / 3);
+          const derivative = Bezier.derivative([point, pointOut, targetIn, target], 1 / 3);
           const normalizedD = Vector.normalize(derivative);
           const ghostVec = Vector.multiply(normalizedD, Vector.dist(target, point) / 3);
           const ghostHandlePoint = Vector.add(this.props.source, ghostVec);

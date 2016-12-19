@@ -1,6 +1,5 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Bezier from 'bezier-js/fp';
 
 import * as Graph from '~/_utils/Graph';
 import * as Parametric from '~/_utils/Parametric';
@@ -101,7 +100,7 @@ class SvgContourSelection extends PureComponent {
           }*/
         });
         if (this.props.ui.uiState !== SELECTION_MODE) {
-          const bbox = Bezier.bbox(pathId, nodes);
+          const bbox = Path.bbox(pathId, nodes);
           //Draw path bounding box
           result.push(
             <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.x.min} ${bbox.y.min} L${bbox.x.max} ${bbox.y.min} L${bbox.x.max} ${bbox.y.max} L${bbox.x.min} ${bbox.y.max} L${bbox.x.min} ${bbox.y.min}`}/>
