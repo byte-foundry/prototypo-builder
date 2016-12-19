@@ -1,6 +1,6 @@
-import memoize from './memoize';
+import Memoize from '~/_utils/Memoize';
 
-export const getAllDescendants = memoize((nodes, parentId, descendants = {}) => {
+export const getAllDescendants = Memoize((nodes, parentId, descendants = {}) => {
   return nodes[parentId].childIds.reduce((acc, childId) => {
     acc[childId] = nodes[childId];
     return getAllDescendants(nodes, childId, descendants);
@@ -40,9 +40,9 @@ export const getNodeType = ( node ) => {
   const nodeId = typeof node === 'string' ? node : node.id;
 
   return nodeId.split('_')[0];
-}
+};
 
-export const getNodePath = memoize((nodes, nodeId) => {
+export const getNodePath = Memoize((nodes, nodeId) => {
   const path = [];
   let currId = nodeId;
 
@@ -54,7 +54,7 @@ export const getNodePath = memoize((nodes, nodeId) => {
 });
 
 // TODO: ideally, methods in this file shouldn't be related to the font graph
-export const getParentGlyphId = memoize((nodes, nodeId) => {
+export const getParentGlyphId = Memoize((nodes, nodeId) => {
   let currId = nodeId;
 
   while ( currId !== 'root' && nodes[currId].type !== 'glyph' ) {
@@ -65,7 +65,7 @@ export const getParentGlyphId = memoize((nodes, nodeId) => {
 });
 
 // return all node ids in a path between startId and endId (included)
-export const getSegmentIds = memoize((nodes, startId, endId) => {
+export const getSegmentIds = Memoize((nodes, startId, endId) => {
   const parentId = getParentIdMemoized(nodes, startId);
   const siblingIds = nodes[parentId].childIds;
 
@@ -73,7 +73,7 @@ export const getSegmentIds = memoize((nodes, startId, endId) => {
 });
 
 // This 'private' getSegmentIds provides a finer and more efficient level of cache
-export const _getSegmentIds = memoize((siblingIds, startId, endId) => {
+export const _getSegmentIds = Memoize((siblingIds, startId, endId) => {
   const startIndex = siblingIds.indexOf(startId);
   const endIndex = siblingIds.indexOf(endId);
 

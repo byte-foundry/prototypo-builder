@@ -1,27 +1,16 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import Bezier from 'bezier-js/fp';
 
+import * as Path from '~/_utils/Path';
+import * as Vector from '~/_utils/Vector';
 import {
   ONCURVE_SMOOTH,
   SELECTION_MODE,
 } from '~/const';
 
-import {
-  getNode,
-  getPreviousNode,
-  getNextNode,
-} from '~/_utils/path';
-
-import {
-  mapDispatchToProps,
-  equalVec,
-  normalizeVec,
-  getDerivative,
-  multiplyVecByN,
-  addVec,
-  dist,
-} from './_utils';
+import { mapDispatchToProps } from './_utils';
 
 class SvgSelector extends PureComponent {
   constructor(props) {
@@ -30,18 +19,18 @@ class SvgSelector extends PureComponent {
 
   componentWillUpdate() {
     let handlePoint = this.props.point;
-    if (this.props.source && equalVec(this.props.source, handlePoint) && !handlePoint._isGhost) {
-      const [point, pointIn, pointOut] = getNode(this.props.parent, this.props.source.id, this.props.nodes);
+    if (this.props.source && Vector.isEqual(this.props.source, handlePoint) && !handlePoint._isGhost) {
+      const [point, pointIn, pointOut] = Path.getNode(this.props.parent, this.props.source.id, this.props.nodes);
       if (this.props.type === 'in') {
-        const [target, unused, targetOut] = getPreviousNode(this.props.parent, this.props.source.id, this.props.nodes);
+        const [target, unused, targetOut] = Path.getPrevNode(this.props.parent, this.props.source.id, this.props.nodes);
 
         if (target) {
           // TODO: ghost handles are calculated and should be removed from the state
-          const derivative = getDerivative(target, targetOut, pointIn, point, 2 / 3);
-          const normalizedD = normalizeVec(derivative);
-          const ghostVec = multiplyVecByN(normalizedD, -dist(target, point) / 3);
+          const derivative = Bezier.derivative([target, targetOut, pointIn, point], 2 / 3);
+          const normalizedD = Vector.normalize(derivative);
+          const ghostVec = Vector.multiply(normalizedD, -Vector.dist(target, point) / 3);
 
-          const ghostHandlePoint = addVec(this.props.source, ghostVec);
+          const ghostHandlePoint = Vector.add(this.props.source, ghostVec);
           this.props.actions.updateProp(this.props.point.id, '_ghost', {
             x: ghostHandlePoint.x,
             y: ghostHandlePoint.y,
@@ -50,12 +39,12 @@ class SvgSelector extends PureComponent {
         }
       }
       else if (this.props.type === 'out') {
-        const [target, targetIn] = getNextNode(this.props.parent, this.props.source.id, this.props.nodes);
+        const [target, targetIn] = Path.getNextNode(this.props.parent, this.props.source.id, this.props.nodes);
         if (target) {
-          const derivative = getDerivative(point, pointOut, targetIn, target, 1 / 3);
-          const normalizedD = normalizeVec(derivative);
-          const ghostVec = multiplyVecByN(normalizedD, dist(target, point) / 3);
-          const ghostHandlePoint = addVec(this.props.source, ghostVec);
+          const derivative = Bezier.derivative([point, pointOut, targetIn, target], 1 / 3);
+          const normalizedD = Vector.normalize(derivative);
+          const ghostVec = Vector.multiply(normalizedD, Vector.dist(target, point) / 3);
+          const ghostHandlePoint = Vector.add(this.props.source, ghostVec);
           this.props.actions.updateProp(this.props.point.id, '_ghost', {
             x: ghostHandlePoint.x,
             y: ghostHandlePoint.y,
@@ -77,7 +66,7 @@ class SvgSelector extends PureComponent {
             cx={this.props.point.x - 20}
             cy={this.props.point.y + 40}
             r='5'/>
-        </g>
+        </g>;
       }
       else {
         const path = `M${this.props.point.x - 30} ${this.props.point.y + 20}
@@ -89,7 +78,7 @@ class SvgSelector extends PureComponent {
             cx={this.props.point.x - 20}
             cy={this.props.point.y + 60}
             r='5'/>
-        </g>
+        </g>;
       }
     }
 
@@ -131,7 +120,7 @@ class SvgSelector extends PureComponent {
 
 SvgSelector.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 function mapStateToProps(state) {
   return { mode: state.ui.uiState, hovered: state.ui.hovered.point};

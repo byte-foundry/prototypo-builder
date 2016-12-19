@@ -1,21 +1,18 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import {
-  getCalculatedGlyph,
-  getCalculatedParams,
-} from '~/_utils/parametric';
+import * as Parametric from '~/_utils/Parametric';
 
 import {
   mapDispatchToProps,
 } from './_utils';
 
+import Formula from './Formula';
+
 const typeMap = {
   number: 'text',
   boolean: 'checkbox',
-}
-
-import Formula from './Formula';
+};
 
 require('styles/text/NodeProperty.scss');
 
@@ -87,12 +84,12 @@ function mapStateToProps(state, ownProps) {
   return {
     base: state.nodes[ownProps.nodeId][ownProps.name],
     formula: (state.formulas[ownProps.glyphId] || {})[formulaName],
-    result: getCalculatedGlyph(
+    result: Parametric.getCalculatedGlyph(
       state,
-      getCalculatedParams(state.nodes.font_initial.params),
+      Parametric.getCalculatedParams(state.nodes.font_initial.params),
       ownProps.glyphId
     )[ownProps.nodeId][ownProps.name],
-  }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NodeProperties);

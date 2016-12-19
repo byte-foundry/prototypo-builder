@@ -1,4 +1,4 @@
-import fontModel from '../../src/_utils/fontModel';
+import fontModel from '../../src/_utils/FontModel';
 
 describe('fontModel', () => {
   describe('propertyOrder', () => {

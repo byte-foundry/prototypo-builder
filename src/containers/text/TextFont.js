@@ -2,10 +2,7 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-import {
-  getUpdater,
-  getCalculatedParams,
-} from '~/_utils/parametric';
+import * as Parametric from '~/_utils/Parametric';
 
 import {
   renderTextChild,
@@ -14,10 +11,9 @@ import {
 } from './_utils';
 
 import Foldable from './Foldable';
+import Formula from './Formula';
 
 require('styles/text/TextProplist.scss');
-
-import Formula from './Formula';
 
 class TextFont extends PureComponent {
   constructor(props) {
@@ -54,7 +50,7 @@ class TextFont extends PureComponent {
 
   handleFormulaChange() {
     const { formulaValue } = this.refs;
-    const updater = getUpdater(formulaValue.value);
+    const updater = Parametric.getUpdater(formulaValue.value);
 
     formulaValue.className = updater.isInvalid ?
       'text-node__param-formula--invalid':
@@ -66,7 +62,7 @@ class TextFont extends PureComponent {
 
     const { id, actions } = this.props;
     const { addParam } = actions;
-    const updater = getUpdater( this.refs.formulaValue.value );
+    const updater = Parametric.getUpdater( this.refs.formulaValue.value );
 
     if ( updater.isInvalid ) {
       return;
@@ -208,13 +204,13 @@ class TextFont extends PureComponent {
 TextFont.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes,
-}
+};
 
 function mapStateToProps(state, ownProps) {
   return {
     ...state.nodes[ownProps.id],
-    calculatedParams: getCalculatedParams(state.nodes[ownProps.id].params),
-  }
+    calculatedParams: Parametric.getCalculatedParams(state.nodes[ownProps.id].params),
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextFont);

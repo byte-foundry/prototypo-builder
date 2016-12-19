@@ -1,9 +1,8 @@
-const config = require('config').default;
-
 import R from 'ramda';
 
-import logError from '~/_utils/logError';
-
+import * as Path from '~/_utils/Path';
+import * as Graph from '~/_utils/Graph.js';
+import LogError from '~/_utils/LogError';
 import {
   ADD_CHILD,
   ADD_CHILDREN,
@@ -32,7 +31,6 @@ import {
   UPDATE_X,
   UPDATE_Y,
 } from '~/actions/const';
-
 import {
   ONCURVE_SMOOTH,
 } from '~/const';
@@ -44,17 +42,7 @@ import {
   validateAddParam,
 } from './_nodesValidateActions';
 
-import {
-  getNode,
-  getNextNode,
-  getPreviousNode,
-  getCorrespondingHandles,
-} from '../_utils/path';
-
-import {
-  getAllDescendants,
-  getNodeType,
-} from '../_utils/graph';
+const config = require('config').default;
 
 /* Define your initial state here.
  *
@@ -72,18 +60,18 @@ function createNode(action) {
     type: nodeType,
     childIds: [],
     ...props,
-  }
+  };
 }
 
 function initParams(node) {
   return {
     ...node,
     params: {},
-  }
+  };
 }
 
 function childIds(state, action) {
-  switch(getNodeType(action.type)) {
+  switch(Graph.getNodeType(action.type)) {
     case 'ADD':
       return action.childIds ?
         [...state, ...action.childIds ] :
@@ -138,7 +126,7 @@ function node(state = initialNode, action) {
       return {
         ...state,
         params: R.dissoc(action.name, state.params),
-      }
+      };
     case UPDATE_PARAM:
       return {
         ...state,
@@ -178,7 +166,7 @@ function deepPositionUpdate(node, nodes, x=0, y=0, result) {
       ...node,
       x: node.x + x,
       y: node.y + y,
-    }
+    };
   }
   else {
     node.childIds.forEach((childId) => {
@@ -206,22 +194,22 @@ export default function(state = initialState, action) {
   // such as adding a font to a glyph or updating the coordinates of a non-point
   if ( config.appEnv === 'dev' ) {
     if ( /^ADD_/.test(type) && ( 'childId' in action || 'childIds' in action ) ) {
-      logError( validateAddChildren(state, action) );
-      logError( validateGraph(state, action) );
+      LogError( validateAddChildren(state, action) );
+      LogError( validateGraph(state, action) );
     }
 
     if ( /^UPDATE_/.test(type) && 'propNames' in action ) {
-      logError( validateUpdateProps(state, action) );
+      LogError( validateUpdateProps(state, action) );
     }
 
     if ( /^ADD_PARAM$/.test(type) ) {
-      logError( validateAddParam(state, action) );
+      LogError( validateAddParam(state, action) );
     }
   }
 
   switch (type) {
     case DELETE_NODE: {
-      const descendantIds = Object.keys(getAllDescendants(state, nodeId));
+      const descendantIds = Object.keys(Graph.getAllDescendants(state, nodeId));
       return deleteMany(state, [ nodeId, ...descendantIds ]);
     }
     // TODO: rename, cleanup and test this reducer (and move it elsewhere probably)
@@ -229,7 +217,7 @@ export default function(state = initialState, action) {
       const path = state[nodeId];
       const type = path.type;
       if ( type === 'oncurve') {
-        const nodesToMove = getNode(parentId, nodeId, state);
+        const nodesToMove = Path.getNode(parentId, nodeId, state);
         const resultNode = {};
         nodesToMove.forEach((node) => {
           if (node !== null) {
@@ -243,24 +231,24 @@ export default function(state = initialState, action) {
           }
         });
 
-        const [nextOn, nextIn] = getNextNode(parentId, nodeId, state);
+        const [nextOn, nextIn] = Path.getNextNode(parentId, nodeId, state);
         if (nextIn) {
           resultNode[nextIn.id] = { ...nextIn, _isGhost: false};
         }
 
-        const [prevOn, prevIn, prevOut] = getPreviousNode(parentId, nodeId, state);
+        const [prevOn, prevIn, prevOut] = Path.getPrevNode(parentId, nodeId, state);
         if (prevOut) {
           resultNode[prevOut.id] = { ...prevOut, _isGhost: false};
         }
         return {...state, ...resultNode};
       }
       else if ( type === 'offcurve') {
-        const nodesToMove = getCorrespondingHandles(parentId, nodeId, state);
+        const nodesToMove = Path.getNode(parentId, nodeId, state);
         const result = {...state,
           [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy},
         };
-        if (nodesToMove[2].state === ONCURVE_SMOOTH) {
-          const oppositeNode = nodeId === nodesToMove[1].id ? nodesToMove[0] : nodesToMove[1];
+        if (nodesToMove[0].state === ONCURVE_SMOOTH) {
+          const oppositeNode = nodeId === nodesToMove[2].id ? nodesToMove[1] : nodesToMove[2];
           if (oppositeNode) {
             result[oppositeNode.id] = {...state[oppositeNode.id], x: oppositeNode.x - action.dx, y: oppositeNode.y - action.dy, _isGhost: false};
           }

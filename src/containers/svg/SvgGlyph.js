@@ -24,6 +24,6 @@ class SvgGlyph extends PureComponent {
 
 SvgGlyph.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgGlyph);

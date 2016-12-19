@@ -4,7 +4,7 @@ import {
   createOncurve,
 } from '~/actions';
 
-module.exports = function() {
+export default function() {
   return {
     type: BATCH_ACTIONS,
     actions: [
@@ -13,4 +13,4 @@ module.exports = function() {
       createOncurve(),
     ],
   };
-};
+}

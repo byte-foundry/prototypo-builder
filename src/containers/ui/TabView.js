@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import actions from '~/actions';
+import * as actions from '~/actions';
 
 require('styles/ui/TabView.scss');
 
@@ -11,7 +11,7 @@ class TabView extends PureComponent {
     this.state = {
       activeType: props.ui.activeTab.type || 'all',
       activeGlyph: props.ui.activeTab.glyph || undefined,
-    }
+    };
   }
 
   componentWillReceiveProps(newProps){

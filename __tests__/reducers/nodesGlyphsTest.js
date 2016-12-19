@@ -1,16 +1,12 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
-import actions from '~/actions';
-const {
-  createGlyph,
-  addGlyph,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: nodes (glyphs)', () => {
   it('should handle CREATE_GLYPH action', () => {
     const stateBefore = {};
-    const action = createGlyph();
+    const action = actions.createGlyph();
     const stateAfter = {
       [action.nodeId]: {
         id: action.nodeId,
@@ -39,7 +35,7 @@ describe('reducer: nodes (glyphs)', () => {
         childIds: [],
       },
     };
-    const action = addGlyph('node-0', 'node-1');
+    const action = actions.addGlyph('node-0', 'node-1');
     const stateAfter = {
       'node-0': {
         id: 'node-0',

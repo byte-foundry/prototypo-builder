@@ -25,6 +25,6 @@ class SvgRoot extends PureComponent {
 
 SvgRoot.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgRoot);

@@ -1,5 +1,5 @@
 import {SET_NODE_OPTIONS_SELECTED} from './../const';
 
-module.exports = function(node) {
+export default function(node) {
   return { type: SET_NODE_OPTIONS_SELECTED, node };
-};
+}

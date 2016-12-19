@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import actions from '~/actions';
+import * as actions from '~/actions';
 
 import ContourOptions from '../ui/ContourOptions';
 
@@ -15,7 +15,7 @@ class Settings extends PureComponent {
     this.handleDebugClick = this.handleDebugClick.bind(this);
     this.state = {
       isToogled: false,
-    }
+    };
   }
 
   handleDebugClick(e) {

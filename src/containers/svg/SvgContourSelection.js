@@ -1,31 +1,16 @@
-require('styles/svg/Selection.scss');
-
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { forEachNode } from '../../_utils/path';
+
+import * as Graph from '~/_utils/Graph';
+import * as Parametric from '~/_utils/Parametric';
+import * as Path from '~/_utils/Path';
+import { SELECTION_MODE } from '~/const';
+
+import { mapDispatchToProps } from './_utils';
 import SvgSelector from './SvgSelector';
 import SvgNodeControls from './SvgNodeControls';
 
-import {
-  PATH_SELECTED,
-  SELECTION_MODE,
-} from '~/const';
-
-import {
-  getParentGlyphId,
-} from '~/_utils/graph';
-
-import {
-  getCalculatedParams,
-  getCalculatedGlyph,
-} from '~/_utils/parametric';
-
-import {
-  mapDispatchToProps,
-  getPathBbox,
-} from './_utils';
-
-
+require('styles/svg/Selection.scss');
 
 class SvgContourSelection extends PureComponent {
   constructor(props) {
@@ -42,7 +27,7 @@ class SvgContourSelection extends PureComponent {
     childIds.forEach((pathId) => {
       const path = nodes[pathId];
       if (this.props.ui.selected.path === pathId || this.props.ui.hovered.path === pathId || this.props.ui.uiState === SELECTION_MODE) {
-        forEachNode(pathId, nodes, (point, inControl, outControl, i, length) => {
+        Path.forEachNode(pathId, nodes, (point, inControl, outControl, i, length) => {
           //Draw on curve point
           if (i === length - 1 && nodes[pathId].isClosed) {
             return;
@@ -115,11 +100,11 @@ class SvgContourSelection extends PureComponent {
           }*/
         });
         if (this.props.ui.uiState !== SELECTION_MODE) {
-          const bbox = getPathBbox(pathId, nodes);
+          const bbox = Path.bbox(pathId, nodes);
           //Draw path bounding box
           result.push(
-            <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.minX} ${bbox.minY} L${bbox.maxX} ${bbox.minY} L${bbox.maxX} ${bbox.maxY} L${bbox.minX} ${bbox.maxY} L${bbox.minX} ${bbox.minY}`}/>
-          )
+            <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.x.min} ${bbox.y.min} L${bbox.x.max} ${bbox.y.min} L${bbox.x.max} ${bbox.y.max} L${bbox.x.min} ${bbox.y.max} L${bbox.x.min} ${bbox.y.min}`}/>
+          );
         }
       }
     });
@@ -137,14 +122,14 @@ class SvgContourSelection extends PureComponent {
 
 SvgContourSelection.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 function mapStateToProps(state, props) {
   return {
-    nodes: getCalculatedGlyph(
+    nodes: Parametric.getCalculatedGlyph(
       state,
-      getCalculatedParams(state.nodes.font_initial.params),
-      getParentGlyphId(state.nodes, props.id)
+      Parametric.getCalculatedParams(state.nodes.font_initial.params),
+      Graph.getParentGlyphId(state.nodes, props.id)
     ),
     ui: state.ui,
   };

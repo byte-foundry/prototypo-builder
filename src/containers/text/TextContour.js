@@ -83,6 +83,6 @@ class TextContour extends PureComponent {
 TextContour.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextContour);

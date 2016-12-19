@@ -1,13 +1,6 @@
 import deepFreeze from 'deep-freeze';
 
-import actions from '~/actions';
-const {
-  updateProp,
-  addChild,
-  addChildren,
-  addParam,
-} = actions;
-
+import * as actions from '../../src/actions';
 import {
   validateUpdateProps,
   validateAddChildren,
@@ -27,8 +20,8 @@ describe('reducers/_nodesValidateAction', () => {
       const model = {
         ab: { properties: { isVisible: true } },
       };
-      const actionAllowed = updateProp('node-0', 'isVisible', true);
-      const actionForbidden = updateProp('node-0', 'isSkeleton', true);
+      const actionAllowed = actions.updateProp('node-0', 'isVisible', true);
+      const actionForbidden = actions.updateProp('node-0', 'isSkeleton', true);
 
       deepFreeze(state);
       deepFreeze(model);
@@ -70,17 +63,17 @@ describe('reducers/_nodesValidateAction', () => {
         ef: { children: {} },
         gh: { children: {} },
       };
-      const actionAllowed = addChild('node-0', 'node-1');
-      const actionMultiAllowed = addChildren('node-0', ['node-1', 'node-2']);
-      const actionForbidden = addChild('node-1', 'node-0');
-      const actionMultiForbidden = addChildren('node-0', ['node-1', 'node-3']);
+      const actionAllowed = actions.addChild('node-0', 'node-1');
+      const actionMultiAllowed = actions.addChildren('node-0', ['node-1', 'node-2']);
+      const actionForbidden = actions.addChild('node-1', 'node-0');
+      const actionMultiForbidden = actions.addChildren('node-0', ['node-1', 'node-3']);
 
       deepFreeze(state);
       deepFreeze(model);
       deepFreeze(actionAllowed);
-      deepFreeze(actionMultiAllowed)
+      deepFreeze(actionMultiAllowed);
       deepFreeze(actionForbidden);
-      deepFreeze(actionMultiForbidden)
+      deepFreeze(actionMultiForbidden);
 
       expect(validateAddChildren( state, actionAllowed, model ))
         .not.toBeInstanceOf(Error);
@@ -118,16 +111,16 @@ describe('reducers/_nodesValidateAction', () => {
         },
       };
 
-      const actionAllowed = addChild('node-0', 'node-2');
-      const actionMultiAllowed = addChildren('node-0', ['node-2', 'node-3']);
-      const actionForbidden = addChild('node-2', 'node-1');
-      const actionMultiForbidden = addChildren('node-2', ['node-3', 'node-1']);
+      const actionAllowed = actions.addChild('node-0', 'node-2');
+      const actionMultiAllowed = actions.addChildren('node-0', ['node-2', 'node-3']);
+      const actionForbidden = actions.addChild('node-2', 'node-1');
+      const actionMultiForbidden = actions.addChildren('node-2', ['node-3', 'node-1']);
 
       deepFreeze(state);
       deepFreeze(actionAllowed);
-      deepFreeze(actionMultiAllowed)
+      deepFreeze(actionMultiAllowed);
       deepFreeze(actionForbidden);
-      deepFreeze(actionMultiForbidden)
+      deepFreeze(actionMultiForbidden);
 
       expect(validateGraph( state, actionAllowed ))
         .not.toBeInstanceOf(Error);
@@ -150,8 +143,8 @@ describe('reducers/_nodesValidateAction', () => {
         },
       };
 
-      const actionAllowed = addParam('node-0', '$allowed');
-      const actionForbidden = addParam('node-0', 'forbidden');
+      const actionAllowed = actions.addParam('node-0', '$allowed');
+      const actionForbidden = actions.addParam('node-0', 'forbidden');
 
       deepFreeze(state);
       deepFreeze(actionAllowed);
@@ -179,8 +172,8 @@ describe('reducers/_nodesValidateAction', () => {
     //     }
     //   };
     //
-    //   const actionAllowed = addParam('node-0', '$allowed');
-    //   const actionForbidden = addParam('node-0', '$forbidden');
+    //   const actionAllowed = actions.addParam('node-0', '$allowed');
+    //   const actionForbidden = actions.addParam('node-0', '$forbidden');
     //
     //   deepFreeze(state);
     //   deepFreeze(actionAllowed);

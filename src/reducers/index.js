@@ -22,7 +22,7 @@ const reducers = {
 };
 const combinedReducers = combineReducers(reducers);
 
-module.exports = function(state = {}, action) {
+export default function(state = {}, action) {
   switch ( action.type ) {
     // (temporary) special action that hydrates the complete state from a file
     case LOAD_NODES:
@@ -35,4 +35,4 @@ module.exports = function(state = {}, action) {
     default:
       return combinedReducers(state, action);
   }
-};
+}

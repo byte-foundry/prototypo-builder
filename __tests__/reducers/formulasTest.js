@@ -1,22 +1,18 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/formulas';
-import actions from '~/actions';
-const {
-  updateFormula,
-  deleteFormula,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: formulas', () => {
   it('should handle UPDATE_FORMULA action', (done) => {
     const stateBefore = {};
-    const action1 = updateFormula('glyph_0', 'node_1.x', '34');
+    const action1 = actions.updateFormula('glyph_0', 'node_1.x', '34');
     const stateAfter1 = {
       'glyph_0': {
         'node_1.x': '34',
       },
     };
-    const action2 = updateFormula('glyph_1', 'node_2.expand', '$thickness');
+    const action2 = actions.updateFormula('glyph_1', 'node_2.expand', '$thickness');
     const stateAfter2 = {
       'glyph_0': {
         'node_1.x': '34',
@@ -25,7 +21,7 @@ describe('reducer: formulas', () => {
         'node_2.expand': '$thickness',
       },
     };
-    const action3 = updateFormula('glyph_0', 'node_1.y', '56');
+    const action3 = actions.updateFormula('glyph_0', 'node_1.y', '56');
     const stateAfter3 = {
       'glyph_0': {
         'node_1.x': '34',
@@ -35,7 +31,7 @@ describe('reducer: formulas', () => {
         'node_2.expand': '$thickness',
       },
     };
-    const action4 = updateFormula('glyph_0', 'node_1.x', '');
+    const action4 = actions.updateFormula('glyph_0', 'node_1.x', '');
     const stateAfter4 = {
       'glyph_0': {
         'node_1.y': '56',
@@ -79,7 +75,7 @@ describe('reducer: formulas', () => {
           'node_2.expand': '$thickness',
         },
       };
-      const action1 = deleteFormula('glyph_0', 'node_1.y');
+      const action1 = actions.deleteFormula('glyph_0', 'node_1.y');
       const stateAfter1 = {
         'glyph_0': {
           'node_1.x': '34',
@@ -107,7 +103,7 @@ describe('reducer: formulas', () => {
           'node_2.expand': '$thickness',
         },
       };
-      const action1 = deleteFormula('glyph_0');
+      const action1 = actions.deleteFormula('glyph_0');
       const stateAfter1 = {
         'glyph_1': {
           'node_2.expand': '$thickness',
@@ -133,7 +129,7 @@ describe('reducer: formulas', () => {
           'node_2.expand': '$thickness',
         },
       };
-      const action1 = deleteFormula('node_1');
+      const action1 = actions.deleteFormula('node_1');
       const stateAfter1 = {
         'glyph_0': {
           'node_0.angle': '78',

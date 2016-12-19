@@ -1,8 +1,8 @@
-import fontModel from './../_utils/fontModel';
+import FontModel from './../_utils/FontModel';
 
 // Validate that the property we're trying to update is a known property for
 // that node type
-export function validateUpdateProps(state, action, model = fontModel) {
+export function validateUpdateProps(state, action, model = FontModel) {
   const { nodeId, propNames } = action;
   const nodeType = state[nodeId].type;
 
@@ -18,7 +18,7 @@ export function validateUpdateProps(state, action, model = fontModel) {
   return true;
 }
 
-export function validateAddChildren(state, action, model = fontModel) {
+export function validateAddChildren(state, action, model = FontModel) {
   const { nodeId } = action;
   const childIds = action.childIds || [action.childId];
   const parentType = state[nodeId].type;

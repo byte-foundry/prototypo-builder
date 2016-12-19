@@ -41,6 +41,6 @@ class TextGlyph extends PureComponent {
 TextGlyph.propTypes = {
   actions: PropTypes.object.isRequired,
   childTypes: validateChildTypes,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextGlyph);

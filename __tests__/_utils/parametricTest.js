@@ -7,7 +7,8 @@ import {
   getCalculatedParams,
   getSolvingOrder,
   getCalculatedGlyph,
-} from '../../src/_utils/parametric';
+  expandPath,
+} from '../../src/_utils/Parametric';
 
 describe('containers/_utils', () => {
   describe('getUpdater', () => {
@@ -62,7 +63,7 @@ describe('containers/_utils', () => {
       deepFreeze(params);
 
       expect(() => {
-        buildArgs(null, params, ['$zip'])
+        buildArgs(null, params, ['$zip']);
       }).toThrow(Error);
 
       done();
@@ -229,6 +230,67 @@ describe('containers/_utils', () => {
 
       expect(getCalculatedGlyph(stateBefore, { '$width': 78 }, 'glyph_initial'))
         .toEqual(expected);
+
+      done();
+    });
+  });
+
+  describe('expandPath', () => {
+    it('should return a closed path when expanding a non-closed path', (done) => {
+      const nodes = {
+        'node-0': {
+          id: 'node-0',
+          type: 'path',
+          isClosed: false,
+          childIds: ['node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'],
+        },
+        'node-1': {
+          id: 'node-1',
+          type: 'oncurve',
+          x: 0,
+          y: 0,
+        },
+        'node-2': {
+          id: 'node-2',
+          type: 'offcurve',
+          x: 0,
+          y: 0,
+        },
+        'node-3': {
+          id: 'node-3',
+          type: 'offcurve',
+          x: 0,
+          y: 0,
+        },
+        'node-4': {
+          id: 'node-4',
+          type: 'oncurve',
+          x: 0,
+          y: 0,
+        },
+        'node-5': {
+          id: 'node-5',
+          type: 'offcurve',
+          x: 0,
+          y: 0,
+        },
+        'node-6': {
+          id: 'node-6',
+          type: 'offcurve',
+          x: 0,
+          y: 0,
+        },
+        'node-7': {
+          id: 'node-7',
+          type: 'oncurve',
+          x: 0,
+          y: 0,
+        },
+      };
+
+      const calculatedNodes = {};
+
+      expect(false).toEqual(true);
 
       done();
     });

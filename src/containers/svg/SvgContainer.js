@@ -1,31 +1,10 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import SvgRoot from './SvgRoot';
-import UiToolbar from '../ui/UiToolbar';
 
-import {
-  getNode,
-  getCorrespondingHandles,
-} from '~/_utils/path';
-
-import {
-  getCalculatedParams,
-  getCalculatedGlyph,
-} from '~/_utils/parametric';
-
-import {
-  mapDispatchToProps,
-  getSvgCoordsFromClientCoords,
-  getNearPath,
-  getNearNode,
-  subtractVec,
-  multiplyVecByN,
-} from './_utils';
-
-import {
-  getAngleBetween2Lines,
-} from '~/_utils/math'
-
+import * as Path from '~/_utils/Path';
+import * as Parametric from '~/_utils/Parametric';
+import * as TwoD from '~/_utils/2D';
+import * as Vector from '~/_utils/Vector';
 import {
   NO_PATH_SELECTED,
   NODE_SELECTED,
@@ -41,6 +20,13 @@ import {
   CAMERA_MODE,
 } from '~/const';
 
+import UiToolbar from '../ui/UiToolbar';
+import {
+  mapDispatchToProps,
+  getSvgCoordsFromClientCoords,
+} from './_utils';
+import SvgRoot from './SvgRoot';
+
 class SvgContainer extends PureComponent {
   constructor(props) {
     super(props);
@@ -54,39 +40,34 @@ class SvgContainer extends PureComponent {
       },
       previousState : undefined,
       lastKey : undefined,
-    }
+    };
   }
 
   componentWillMount() {
-    const {
-      setNodeSelected,
-      setPathSelected,
-      setMouseState,
-      moveNode,
-    } = this.props.actions;
+    const { actions, ui, nodes } = this.props;
 
     window.addEventListener('keyup', (e) => {
       this.setState({...this.state, lastKey: false});
       switch (e.keyCode) {
         case 27: //escape
-          setNodeSelected();
-          setPathSelected();
-          setMouseState(NO_PATH_SELECTED);
+          actions.setNodeSelected();
+          actions.setPathSelected();
+          actions.setMouseState(NO_PATH_SELECTED);
           break;
         case 46: //del
-          if (this.props.ui.uiState === NODE_SELECTED || this.props.ui.uiState === NODE_SELECTED_AND_MOVE) {
-            const node = this.props.nodes[this.props.ui.selected.point];
+          if (ui.uiState === NODE_SELECTED || ui.uiState === NODE_SELECTED_AND_MOVE) {
+            const node = nodes[ui.selected.point];
             if (node.type === 'offcurve') {
-              const handles = getCorrespondingHandles(this.props.ui.selected.path, node.id, this.props.nodes);
-              const vect = subtractVec(handles[2], node);
-              moveNode(node.id, this.props.ui.selected.path, {dx: vect.x, dy: vect.y} );
-              setMouseState(PATH_SELECTED);
-              setNodeSelected();
+              const handles = Path.getNode(ui.selected.path, node.id, nodes);
+              const vect = Vector.subtract(handles[0], node);
+              actions.moveNode(node.id, ui.selected.path, {dx: vect.x, dy: vect.y} );
+              actions.setMouseState(PATH_SELECTED);
+              actions.setNodeSelected();
             }
           }
           break;
         case 32: //space
-          setMouseState(this.state.previousState);
+          actions.setMouseState(this.state.previousState);
           break;
         default:
           break;
@@ -104,10 +85,10 @@ class SvgContainer extends PureComponent {
 
       switch (e.keyCode) {
         case 32: //space
-          if (this.props.ui.uiState !== CAMERA_MODE) {
-            this.setState({...this.state, previousState: this.props.ui.uiState});
-            this.props.actions.setCoords(point.x, point.y);
-            setMouseState(CAMERA_MODE);
+          if (ui.uiState !== CAMERA_MODE) {
+            this.setState({...this.state, previousState: ui.uiState});
+            actions.setCoords(point.x, point.y);
+            actions.setMouseState(CAMERA_MODE);
           }
           break;
         default:
@@ -122,174 +103,179 @@ class SvgContainer extends PureComponent {
   }
 
   createNewAddToPathAndSelect( coord, pathId, opts = {}) {
-    if (!opts.first) {
-      const offcurve1Id = this.props.actions.createOffcurve().nodeId;
-      if (opts.closed) {
-        const path = this.props.nodes[pathId];
-        const offCurveRef = this.props.nodes[path.childIds[1]];
+    const { actions, ui, nodes } = this.props;
 
-        const offCurveCoord = subtractVec(multiplyVecByN(coord, 2), offCurveRef);
-        this.props.actions.updateProp(offcurve1Id, 'x', offCurveCoord.x);
-        this.props.actions.updateProp(offcurve1Id, 'y', offCurveCoord.y);
+    if (!opts.first) {
+      const offcurve1Id = actions.createOffcurve().nodeId;
+      if (opts.closed) {
+        const path = nodes[pathId];
+        const offCurveRef = nodes[path.childIds[1]];
+
+        const offCurveCoord = Vector.subtract(Vector.multiply(coord, 2), offCurveRef);
+        actions.updateProp(offcurve1Id, 'x', offCurveCoord.x);
+        actions.updateProp(offcurve1Id, 'y', offCurveCoord.y);
       }
       else {
-        this.props.actions.updateProp(offcurve1Id, 'x', coord.x);
-        this.props.actions.updateProp(offcurve1Id, 'y', coord.y);
+        actions.updateProp(offcurve1Id, 'x', coord.x);
+        actions.updateProp(offcurve1Id, 'y', coord.y);
       }
-      this.props.actions.addOffcurve(pathId, offcurve1Id);
+      actions.addOffcurve(pathId, offcurve1Id);
     }
 
-    const oncurveId = this.props.actions.createOncurve(this.props.ui.baseExpand).nodeId;
-    this.props.actions.updateProp(oncurveId, 'x', coord.x);
-    this.props.actions.updateProp(oncurveId, 'y', coord.y);
-    this.props.actions.addOncurve(pathId, oncurveId);
+    const oncurveId = actions.createOncurve(ui.baseExpand).nodeId;
+    actions.updateProp(oncurveId, 'x', coord.x);
+    actions.updateProp(oncurveId, 'y', coord.y);
+    actions.addOncurve(pathId, oncurveId);
 
     if (!opts.closed) {
-      const offcurve2Id = this.props.actions.createOffcurve().nodeId;
-      this.props.actions.updateProp(offcurve2Id, 'x', coord.x);
-      this.props.actions.updateProp(offcurve2Id, 'y', coord.y);
-      this.props.actions.addOffcurve(pathId, offcurve2Id);
-      this.props.actions.setNodeSelected(offcurve2Id, pathId);
-      this.props.actions.setNodeOptionsSelected(offcurve2Id);
+      const offcurve2Id = actions.createOffcurve().nodeId;
+      actions.updateProp(offcurve2Id, 'x', coord.x);
+      actions.updateProp(offcurve2Id, 'y', coord.y);
+      actions.addOffcurve(pathId, offcurve2Id);
+      actions.setNodeSelected(offcurve2Id, pathId);
+      actions.setNodeOptionsSelected(offcurve2Id);
     }
 
-    this.props.actions.setCoords(coord.x, coord.y);
-    this.props.actions.setPathSelected(pathId, this.props.ui.selected.contour);
-    this.props.actions.setMouseState(NODE_SELECTED);
+    actions.setCoords(coord.x, coord.y);
+    actions.setPathSelected(pathId, ui.selected.contour);
+    actions.setMouseState(NODE_SELECTED);
   }
 
   handleDown(e) {
+    const { actions, ui, nodes } = this.props;
     const point = getSvgCoordsFromClientCoords({
       x: e.clientX,
       y: e.clientY,
     }, this.refs.svg);
-    if (this.props.ui.uiState === NO_PATH_SELECTED) {
-      const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
+
+    if (ui.uiState === NO_PATH_SELECTED) {
+      const path = Path.findClosestPath(point, ui.selected.contour, nodes);
       if (path) {
-        this.props.actions.setPathSelected(path, this.props.ui.selected.contour);
-        this.props.actions.setNodeOptionsSelected(path);
-        this.props.actions.setCoords(point.x, point.y);
-        this.props.actions.setMouseState(PATH_SELECTED_AND_MOVE);
-        this.props.actions.setNodeOptionsSelected(path);
+        actions.setPathSelected(path, ui.selected.contour);
+        actions.setNodeOptionsSelected(path);
+        actions.setCoords(point.x, point.y);
+        actions.setMouseState(PATH_SELECTED_AND_MOVE);
+        actions.setNodeOptionsSelected(path);
       }
       else {
-        const pathId = this.props.actions.createPath().nodeId;
-        this.props.actions.addPath( this.props.ui.selected.contour, pathId);
+        const pathId = actions.createPath().nodeId;
+        actions.addPath( ui.selected.contour, pathId);
 
         this.createNewAddToPathAndSelect(point, pathId,{
           first: true,
         });
       }
     }
-    else if (this.props.ui.uiState === PATH_SELECTED) {
-      const node = getNearNode(point, this.props.ui.selected.path, this.props.nodes);
-      const path = this.props.nodes[this.props.ui.selected.path];
+    else if (ui.uiState === PATH_SELECTED) {
+      const node = Path.findClosestNode(point, ui.selected.path, nodes);
+      const path = nodes[ui.selected.path];
       if (node && node.type === 'node') {
-        this.props.actions.setCoords(point.x, point.y);
-        this.props.actions.setNodeSelected(node.point.id, this.props.ui.selected.path);
-        this.props.actions.setNodeOptionsSelected(node.point.id);
-        this.props.actions.setMouseState(NODE_SELECTED);
+        actions.setCoords(point.x, point.y);
+        actions.setNodeSelected(node.point.id, ui.selected.path);
+        actions.setNodeOptionsSelected(node.point.id);
+        actions.setMouseState(NODE_SELECTED);
       }
       else if (node) {
         // a control is selected
-        this.props.actions.setCoords(point.x, point.y);
-        this.props.actions.setNodeSelected(node.baseNode.id, this.props.ui.selected.path);
-        this.props.actions.setNodeOptionsSelected(node.baseNode.id);
+        actions.setCoords(point.x, point.y);
+        actions.setNodeSelected(node.baseNode.id, ui.selected.path);
+        actions.setNodeOptionsSelected(node.baseNode.id);
         switch (node.type) {
           case 'expandControl':
-            this.props.actions.setMouseState(CONTROL_EXPAND_SELECTED);
+            actions.setMouseState(CONTROL_EXPAND_SELECTED);
             break;
           case 'distribControl':
-            this.props.actions.setMouseState(CONTROL_DISTRIB_SELECTED);
+            actions.setMouseState(CONTROL_DISTRIB_SELECTED);
             break;
           case 'angleControl':
-            this.props.actions.setMouseState(CONTROL_ANGLE_SELECTED);
+            actions.setMouseState(CONTROL_ANGLE_SELECTED);
             break;
           default:
             break;
         }
       }
       else if (!path.isClosed){
-        this.createNewAddToPathAndSelect(point, this.props.ui.selected.path);
+        this.createNewAddToPathAndSelect(point, ui.selected.path);
       }
     }
-    else if (this.props.ui.uiState === SELECTION_MODE) {
-      this.props.actions.setNodeSelected();
-      this.props.actions.setPathSelected();
-      if (this.props.ui.hovered.point) {
-        this.props.actions.setNodeOptionsSelected(this.props.ui.hovered.point);
+    else if (ui.uiState === SELECTION_MODE) {
+      actions.setNodeSelected();
+      actions.setPathSelected();
+      if (ui.hovered.point) {
+        actions.setNodeOptionsSelected(ui.hovered.point);
       }
-      else if (this.props.ui.hovered.path) {
-        this.props.actions.setNodeOptionsSelected(this.props.ui.hovered.path);
+      else if (ui.hovered.path) {
+        actions.setNodeOptionsSelected(ui.hovered.path);
       }
     }
   }
 
   handleMove(e) {
+    const { actions, ui, nodes } = this.props;
     const point = getSvgCoordsFromClientCoords({
       x: e.clientX,
       y: e.clientY,
     }, this.refs.svg);
 
-    if (this.props.ui.uiState === NODE_SELECTED || this.props.ui.uiState === NODE_SELECTED_AND_MOVE) {
-      const pointToMove = this.props.nodes[this.props.ui.selected.point];
-      const parentPoint = this.props.nodes[this.props.ui.selected.parent];
+    if (ui.uiState === NODE_SELECTED || ui.uiState === NODE_SELECTED_AND_MOVE) {
+      const pointToMove = nodes[ui.selected.point];
+      const parentPoint = nodes[ui.selected.parent];
       if (pointToMove) {
         if (pointToMove._isGhost) {
-          const move = subtractVec(pointToMove._ghost, pointToMove);
-          this.props.actions.moveNode(pointToMove.id, parentPoint.id, {
+          const move = Vector.subtract(pointToMove._ghost, pointToMove);
+          actions.moveNode(pointToMove.id, parentPoint.id, {
             dx: move.x,
             dy: move.y,
           });
-          this.props.actions.updateProp(pointToMove.id, '_isGhost', false);
+          actions.updateProp(pointToMove.id, '_isGhost', false);
         }
         else {
           const move = {
-            dx: point.x - this.props.ui.mouse.x,
-            dy: point.y - this.props.ui.mouse.y,
-          }
-          this.props.actions.moveNode(pointToMove.id, parentPoint.id, move);
+            dx: point.x - ui.mouse.x,
+            dy: point.y - ui.mouse.y,
+          };
+          actions.moveNode(pointToMove.id, parentPoint.id, move);
 
-          if (this.props.ui.uiState === NODE_SELECTED) {
-            this.props.actions.setMouseState(NODE_SELECTED_AND_MOVE);
+          if (ui.uiState === NODE_SELECTED) {
+            actions.setMouseState(NODE_SELECTED_AND_MOVE);
           }
         }
       }
     }
-    if (this.props.ui.uiState === CONTROL_EXPAND_SELECTED
-        || this.props.ui.uiState === CONTROL_DISTRIB_SELECTED
-        || this.props.ui.uiState === CONTROL_ANGLE_SELECTED) {
+    if (ui.uiState === CONTROL_EXPAND_SELECTED
+        || ui.uiState === CONTROL_DISTRIB_SELECTED
+        || ui.uiState === CONTROL_ANGLE_SELECTED) {
 
-      const nodeKeys = Object.keys(this.props.nodes);
-      const pointIndexKey = nodeKeys.indexOf(this.props.ui.selected.point);
-      const pointToUpdate = this.props.nodes[this.props.ui.selected.point];
-      const pointOffCurve = this.props.nodes[nodeKeys[pointIndexKey - 1]];
+      const nodeKeys = Object.keys(nodes);
+      const pointIndexKey = nodeKeys.indexOf(ui.selected.point);
+      const pointToUpdate = nodes[ui.selected.point];
+      const pointOffCurve = nodes[nodeKeys[pointIndexKey - 1]];
 
       if (pointToUpdate) {
         const move = {
-          dx: point.x - this.props.ui.mouse.x,
-          dy: point.y - this.props.ui.mouse.y,
-        }
+          dx: point.x - ui.mouse.x,
+          dy: point.y - ui.mouse.y,
+        };
         if (!isNaN(move.dx) && !isNaN(move.dy)) {
-          if (this.props.ui.uiState === CONTROL_EXPAND_SELECTED) {
+          if (ui.uiState === CONTROL_EXPAND_SELECTED) {
             let newExpand = pointToUpdate.expand + move.dy/2;
             if (newExpand > 0) {
-              this.props.actions.updateProp(pointToUpdate.id, 'expand', newExpand);
+              actions.updateProp(pointToUpdate.id, 'expand', newExpand);
             }
           }
-          if (this.props.ui.uiState === CONTROL_DISTRIB_SELECTED) {
+          if (ui.uiState === CONTROL_DISTRIB_SELECTED) {
             let newDistrib = pointToUpdate.distrib - (move.dx/100);
             if (newDistrib < 1 && newDistrib > 0) {
-              this.props.actions.updateProp(pointToUpdate.id, 'distrib', newDistrib);
+              actions.updateProp(pointToUpdate.id, 'distrib', newDistrib);
             }
           }
-          if (this.props.ui.uiState === CONTROL_ANGLE_SELECTED) {
+          if (ui.uiState === CONTROL_ANGLE_SELECTED) {
             if (pointOffCurve) {
-              let angle = getAngleBetween2Lines (point, pointOffCurve, this.props.ui.mouse, pointOffCurve);
+              let angle = TwoD.lla(point, pointOffCurve, ui.mouse, pointOffCurve);
               angle = angle * (180/Math.PI);
               let newAngle = pointToUpdate.angle - angle;
               if (newAngle > 0 && newAngle < 360) {
-                this.props.actions.updateProp(pointToUpdate.id, 'angle', newAngle);
+                actions.updateProp(pointToUpdate.id, 'angle', newAngle);
               }
             }
           }
@@ -297,43 +283,43 @@ class SvgContainer extends PureComponent {
       }
     }
     else {
-      if (this.props.ui.uiState === PATH_SELECTED) {
-        const node = getNearNode(point, this.props.ui.selected.path, this.props.nodes);
+      if (ui.uiState === PATH_SELECTED) {
+        const node = Path.findClosestNode(point, ui.selected.path, nodes);
         if (node) {
           if (node.type === 'node') {
-            this.props.actions.setNodeHovered(node.point.id, this.props.ui.selected.path);
+            actions.setNodeHovered(node.point.id, ui.selected.path);
           }
           else {
-            this.props.actions.setNodeHovered(node.baseNode.id, this.props.ui.selected.path);
+            actions.setNodeHovered(node.baseNode.id, ui.selected.path);
           }
         }
         else {
-          this.props.actions.setNodeHovered(undefined, undefined);
+          actions.setNodeHovered(undefined, undefined);
         }
       }
-      else if (this.props.ui.uiState === PATH_SELECTED_AND_MOVE) {
+      else if (ui.uiState === PATH_SELECTED_AND_MOVE) {
           const move = {
-            dx: point.x - this.props.ui.mouse.x,
-            dy: point.y - this.props.ui.mouse.y,
-          }
-          this.props.actions.moveNode(this.props.ui.selected.path, this.props.ui.selected.contour, move);
+            dx: point.x - ui.mouse.x,
+            dy: point.y - ui.mouse.y,
+          };
+          actions.moveNode(ui.selected.path, ui.selected.contour, move);
       }
-      else if (this.props.ui.uiState === SELECTION_MODE) {
+      else if (ui.uiState === SELECTION_MODE) {
         let node = undefined;
         let path = undefined;
         let pathHovered = undefined;
         let contour = undefined;
-        Object.keys(this.props.nodes).forEach((key) => {
-          const currentNode = this.props.nodes[key];
+        Object.keys(nodes).forEach((key) => {
+          const currentNode = nodes[key];
           if (currentNode.type === 'path') {
-            const newNode = getNearNode(point, currentNode.id, this.props.nodes);
+            const newNode = Path.findClosestNode(point, currentNode.id, nodes);
             if (newNode && newNode.type === 'node') {
               node = newNode.point.id;
               path = currentNode.id;
             }
           }
           if (currentNode.type === 'contour') {
-            const newPath = getNearPath(point, currentNode.id, this.props.nodes);
+            const newPath = Path.findClosestPath(point, currentNode.id, nodes);
             if (newPath) {
               pathHovered = newPath;
               contour = currentNode;
@@ -341,24 +327,24 @@ class SvgContainer extends PureComponent {
           }
         });
         if (node) {
-          this.props.actions.setNodeHovered(node.id, path);
+          actions.setNodeHovered(node.id, path);
         }
         else {
-          this.props.actions.setNodeHovered(undefined, undefined);
+          actions.setNodeHovered(undefined, undefined);
         }
 
         if (pathHovered) {
-          this.props.actions.setPathHovered(pathHovered, contour);
+          actions.setPathHovered(pathHovered, contour);
         }
         else {
-          this.props.actions.setPathHovered(undefined, undefined);
+          actions.setPathHovered(undefined, undefined);
         }
       }
-      else if (this.props.ui.uiState === CAMERA_MODE){
+      else if (ui.uiState === CAMERA_MODE){
         const move = {
-          dx: point.x - this.props.ui.mouse.x,
-          dy: point.y - this.props.ui.mouse.y,
-        }
+          dx: point.x - ui.mouse.x,
+          dy: point.y - ui.mouse.y,
+        };
         if (!isNaN(move.dx) && !isNaN(move.dy)) {
           this.setState(function (previousState){
             return {
@@ -368,65 +354,67 @@ class SvgContainer extends PureComponent {
                 y : previousState.camera.y + move.dy,
                 zoom : previousState.camera.zoom,
               },
-            }
+            };
           });
         }
       }
       else {
-        const path = getNearPath(point, this.props.ui.selected.contour, this.props.nodes);
-        this.props.actions.setPathHovered(path, this.props.ui.selected.contour);
+        const path = Path.findClosestPath(point, ui.selected.contour, nodes);
+        actions.setPathHovered(path, ui.selected.contour);
       }
     }
-    this.props.actions.setCoords(point.x, point.y);
+    actions.setCoords(point.x, point.y);
   }
 
   handleUp() {
-    if (this.props.ui.uiState === NODE_SELECTED || this.props.ui.uiState === NODE_SELECTED_AND_MOVE) {
-      if (this.props.ui.uiState === NODE_SELECTED) {
-        const path = this.props.nodes[this.props.ui.selected.path];
-        if (path.childIds.indexOf(this.props.ui.selected.point) === 0 && !path.isClosed) {
-          const point = this.props.nodes[this.props.ui.selected.point];
-          this.createNewAddToPathAndSelect(point, this.props.ui.selected.path, {
+    const { actions, ui, nodes } = this.props;
+    if (ui.uiState === NODE_SELECTED || ui.uiState === NODE_SELECTED_AND_MOVE) {
+      if (ui.uiState === NODE_SELECTED) {
+        const path = nodes[ui.selected.path];
+        if (path.childIds.indexOf(ui.selected.point) === 0 && !path.isClosed) {
+          const point = nodes[ui.selected.point];
+          this.createNewAddToPathAndSelect(point, ui.selected.path, {
             closed: true,
           });
-          this.props.actions.updateProp(this.props.ui.selected.contour, 'isClosed', true);
-          this.props.actions.updateProp(this.props.ui.selected.path, 'isClosed', true);
+          actions.updateProp(ui.selected.contour, 'isClosed', true);
+          actions.updateProp(ui.selected.path, 'isClosed', true);
         }
       }
 
-      this.props.actions.setMouseState(PATH_SELECTED);
-      this.props.actions.setNodeSelected();
+      actions.setMouseState(PATH_SELECTED);
+      actions.setNodeSelected();
     }
-    if (this.props.ui.uiState === CONTROL_EXPAND_SELECTED
-        || this.props.ui.uiState === CONTROL_DISTRIB_SELECTED
-        || this.props.ui.uiState === CONTROL_ANGLE_SELECTED) {
-      this.props.actions.setMouseState(PATH_SELECTED);
-      this.props.actions.setNodeSelected();
+    if (ui.uiState === CONTROL_EXPAND_SELECTED
+        || ui.uiState === CONTROL_DISTRIB_SELECTED
+        || ui.uiState === CONTROL_ANGLE_SELECTED) {
+      actions.setMouseState(PATH_SELECTED);
+      actions.setNodeSelected();
     }
-    else if (this.props.ui.uiState === PATH_SELECTED_AND_MOVE) {
-      this.props.actions.setMouseState(PATH_SELECTED);
+    else if (ui.uiState === PATH_SELECTED_AND_MOVE) {
+      actions.setMouseState(PATH_SELECTED);
     }
   }
 
   handleDoubleClick(e) {
     e.preventDefault();
+    const { actions, ui, nodes } = this.props;
     const point = getSvgCoordsFromClientCoords({
       x: e.clientX,
       y: e.clientY,
     }, this.refs.svg);
 
 
-    if (this.props.ui.uiState === PATH_SELECTED || this.props.ui.uiState === NODE_SELECTED) {
-      const nodeId = getNearNode(point, this.props.ui.selected.path, this.props.nodes);
-      const node = this.props.nodes[nodeId.point.id];
+    if (ui.uiState === PATH_SELECTED || ui.uiState === NODE_SELECTED) {
+      const nodeId = Path.findClosestNode(point, ui.selected.path, nodes);
+      const node = nodes[nodeId.point.id];
       if (node) {
-        this.props.actions.updateProp(nodeId, 'state', node.state === ONCURVE_CORNER ? ONCURVE_SMOOTH : ONCURVE_CORNER);
+        actions.updateProp(nodeId, 'state', node.state === ONCURVE_CORNER ? ONCURVE_SMOOTH : ONCURVE_CORNER);
         if (node.state === ONCURVE_CORNER) {
-          const handles = getNode( this.props.ui.selected.path, nodeId.id, this.props.nodes);
-          const newPos = subtractVec(multiplyVecByN(node, 2), handles[2]);
+          const handles = Path.getNode( ui.selected.path, nodeId.id, nodes);
+          const newPos = Vector.subtract(Vector.multiply(node, 2), handles[2]);
 
-          this.props.actions.updateProp(handles[1].id, 'x', newPos.x);
-          this.props.actions.updateProp(handles[1].id, 'y', newPos.y);
+          actions.updateProp(handles[1].id, 'x', newPos.x);
+          actions.updateProp(handles[1].id, 'y', newPos.y);
         }
       }
     }
@@ -435,19 +423,20 @@ class SvgContainer extends PureComponent {
   handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
+    const { actions } = this.props;
     const reader = new FileReader();
     const extension = e.dataTransfer.files[0].name.split('.')[1];
     reader.onloadend = (data) => {
       if (extension !== 'json') {
         const dataUrl = data.target.result;
 
-        this.props.actions.loadImageData(dataUrl);
+        actions.loadImageData(dataUrl);
       }
       else {
         const state = JSON.parse(data.target.result);
-        this.props.actions.loadNodes(state.nodes, state.formulas);
+        actions.loadNodes(state.nodes, state.formulas);
       }
-    }
+    };
 
     if (extension !== 'json') {
       reader.readAsDataURL(e.dataTransfer.files[0]);
@@ -457,8 +446,9 @@ class SvgContainer extends PureComponent {
     }
   }
 
-  handleScroll(e){
-    if (this.props.ui.uiState === CAMERA_MODE){
+  handleScroll(e) {
+    const { ui } = this.props;
+    if (ui.uiState === CAMERA_MODE){
       e.persist();
       let newZoom = this.state.camera.zoom - e.deltaY/200;
       if (newZoom <= 0.5) {
@@ -475,7 +465,7 @@ class SvgContainer extends PureComponent {
             y : previousState.camera.y,
             zoom : newZoom,
           },
-        }
+        };
       });
     }
   }
@@ -530,15 +520,16 @@ class SvgContainer extends PureComponent {
   }
 
   render() {
+    const { ui } = this.props;
     const viewbox = this.generateViewBox();
-    const image = this.props.ui.image
-      ? <img className="background-image" src={this.props.ui.image} onDragStart={(e) => {e.preventDefault()}}/>
+    const image = ui.image
+      ? <img className="background-image" src={ui.image} onDragStart={(e) => {e.preventDefault();}}/>
       : false;
     const svgContainerStyles = {
       position: 'relative',
       display:'block',
-    }
-    if (this.props.ui.uiState === CAMERA_MODE) {
+    };
+    if (ui.uiState === CAMERA_MODE) {
       svgContainerStyles.cursor = 'move';
     }
 
@@ -550,7 +541,7 @@ class SvgContainer extends PureComponent {
           onMouseUp={this.handleUp.bind(this)}
           onDoubleClick={this.handleDoubleClick.bind(this)}
           onDrop={this.handleDrop.bind(this)}
-          onDragOver={(e) => {e.preventDefault()}}
+          onDragOver={(e) => {e.preventDefault();}}
           onWheel={this.handleScroll.bind(this)}
           viewBox={viewbox} onMouseDown={this.handleDown}
           ref={this.cacheSize}
@@ -568,9 +559,9 @@ class SvgContainer extends PureComponent {
 
 function mapStateToProps(state) {
   return {
-    nodes: getCalculatedGlyph(
+    nodes: Parametric.getCalculatedGlyph(
       state,
-      getCalculatedParams(state.nodes.font_initial.params),
+      Parametric.getCalculatedParams(state.nodes.font_initial.params),
       state.ui.selected.glyph
     ),
     ui: state.ui,
@@ -579,6 +570,6 @@ function mapStateToProps(state) {
 
 SvgContainer.propTypes = {
   actions: PropTypes.object.isRequired,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SvgContainer);

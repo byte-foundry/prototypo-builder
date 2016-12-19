@@ -1,11 +1,7 @@
 import deepFreeze from 'deep-freeze';
 
 import reducer from '~/reducers/nodes';
-import actions from '~/actions';
-const {
-  updateProp,
-  updateCoords,
-} = actions;
+import * as actions from '../../src/actions';
 
 describe('reducer: nodes (node props)', () => {
   it('should handle UPDATE_PROP action', (done) => {
@@ -16,7 +12,7 @@ describe('reducer: nodes (node props)', () => {
         childIds: [],
       },
     };
-    const action1 = updateProp('node-0', 'x', 123);
+    const action1 = actions.updateProp('node-0', 'x', 123);
     const stateAfter1 = {
       'node-0': {
         id: 'node-0',
@@ -25,7 +21,7 @@ describe('reducer: nodes (node props)', () => {
         x: 123,
       },
     };
-    const action2 = updateProp('node-0', 'x', 456);
+    const action2 = actions.updateProp('node-0', 'x', 456);
     const stateAfter2 = {
       'node-0': {
         id: 'node-0',
@@ -56,7 +52,7 @@ describe('reducer: nodes (node props)', () => {
         childIds: [],
       },
     };
-    const action1 = updateCoords('node-0', 12, 34);
+    const action1 = actions.updateCoords('node-0', 12, 34);
     const stateAfter1 = {
       'node-0': {
         id: 'node-0',
@@ -72,7 +68,7 @@ describe('reducer: nodes (node props)', () => {
 
     expect(reducer(stateBefore, action1)).toEqual(stateAfter1);
 
-    const action2 = updateCoords('node-0', [56, 78]);
+    const action2 = actions.updateCoords('node-0', [56, 78]);
     const stateAfter2 = {
       'node-0': {
         id: 'node-0',
@@ -87,7 +83,7 @@ describe('reducer: nodes (node props)', () => {
 
     expect(reducer(stateBefore, action2)).toEqual(stateAfter2);
 
-    const action3 = updateCoords('node-0', { x: 90, y: 13});
+    const action3 = actions.updateCoords('node-0', { x: 90, y: 13});
     const stateAfter3 = {
       'node-0': {
         id: 'node-0',

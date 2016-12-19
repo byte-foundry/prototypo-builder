@@ -1,4 +1,4 @@
-import logError from '../../src/_utils/logError';
+import logError from '../../src/_utils/LogError';
 
 describe('logError', () => {
   it('should pass errors to the provided logger function', (done) => {
@@ -6,7 +6,7 @@ describe('logError', () => {
     const logger = function(error) {
       nbErrors++;
       expect(error).toBeInstanceOf(Error);
-    }
+    };
 
     logError(new Error(), logger);
     logError(true, logger);

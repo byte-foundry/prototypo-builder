@@ -1,49 +1,96 @@
 // all available actions should be manually listed here
-export default {
-  _deleteNode: require('../actions/nodes/_deleteNode.js'),
-  addChild: require('../actions/nodes/addChild.js'),
-  addChildren: require('../actions/nodes/addChildren.js'),
-  addContour: require('../actions/contours/addContour.js'),
-  addCurve: require('../actions/paths/addCurve.js'),
-  addFont: require('../actions/fonts/addFont.js'),
-  addGlyph: require('../actions/glyphs/addGlyph.js'),
-  addOffcurve: require('../actions/offcurves/addOffcurve.js'),
-  addOncurve: require('../actions/oncurves/addOncurve.js'),
-  addParam: require('../actions/params/addParam.js'),
-  addPath: require('../actions/paths/addPath.js'),
-  createContour: require('../actions/contours/createContour.js'),
-  createCurve: require('../actions/paths/createCurve.js'),
-  createFont: require('../actions/fonts/createFont.js'),
-  createGlyph: require('../actions/glyphs/createGlyph.js'),
-  createNode: require('../actions/nodes/createNode.js'),
-  createOffcurve: require('../actions/offcurves/createOffcurve.js'),
-  createOncurve: require('../actions/oncurves/createOncurve.js'),
-  createPath: require('../actions/paths/createPath.js'),
-  deleteFormula: require('../actions/formulas/deleteFormula.js'),
-  deleteNode: require('../actions/nodes/deleteNode.js'),
-  deleteParam: require('../actions/params/deleteParam.js'),
-  deleteTmpFormula: require('../actions/ui/deleteTmpFormula.js'),
-  loadImageData: require('../actions/ui/loadImageData.js'),
-  loadNodes: require('../actions/nodes/loadNodes.js'),
-  moveNode: require('../actions/nodes/moveNode.js'),
-  removeChild: require('../actions/nodes/removeChild.js'),
-  setContourSelected: require('../actions/ui/setContourSelected.js'),
-  setCoords: require('../actions/mouse/setCoords.js'),
-  setMouseState: require('../actions/mouse/setMouseState.js'),
-  setNodeHovered: require('../actions/ui/setNodeHovered.js'),
-  setNodeOptionsSelected: require('../actions/ui/setNodeOptionsSelected.js'),
-  setNodeSelected: require('../actions/ui/setNodeSelected.js'),
-  setPathHovered: require('../actions/ui/setPathHovered.js'),
-  setPathSelected: require('../actions/ui/setPathSelected.js'),
-  updateCoords: require('../actions/points/updateCoords.js'),
-  updateFormula: require('../actions/formulas/updateFormula.js'),
-  updateParam: require('../actions/params/updateParam.js'),
-  updateProp: require('../actions/props/updateProp.js'),
-  updateTmpFormula: require('../actions/ui/updateTmpFormula.js'),
-  updateX: require('../actions/points/updateX.js'),
-  updateY: require('../actions/points/updateY.js'),
-  setContourMode: require('../actions/ui/setContourMode.js'),
-  setInterpolatedTangentsMode: require('../actions/ui/setInterpolatedTangentsMode.js'),
-  setActiveTab: require('../actions/ui/setActiveTab.js'),
-  setBaseExpand: require('../actions/ui/setBaseExpand.js'),
+import _deleteNode from './nodes/_deleteNode';
+import addChild from './nodes/addChild';
+import addChildren from './nodes/addChildren';
+import addContour from './contours/addContour';
+import addCurve from './paths/addCurve';
+import addFont from './fonts/addFont';
+import addGlyph from './glyphs/addGlyph';
+import addOffcurve from './offcurves/addOffcurve';
+import addOncurve from './oncurves/addOncurve';
+import addParam from './params/addParam';
+import addPath from './paths/addPath';
+import createContour from './contours/createContour';
+import createCurve from './paths/createCurve';
+import createFont from './fonts/createFont';
+import createGlyph from './glyphs/createGlyph';
+import createNode from './nodes/createNode';
+import createOffcurve from './offcurves/createOffcurve';
+import createOncurve from './oncurves/createOncurve';
+import createPath from './paths/createPath';
+import deleteFormula from './formulas/deleteFormula';
+import deleteNode from './nodes/deleteNode';
+import deleteParam from './params/deleteParam';
+import deleteTmpFormula from './ui/deleteTmpFormula';
+import loadImageData from './ui/loadImageData';
+import loadNodes from './nodes/loadNodes';
+import moveNode from './nodes/moveNode';
+import removeChild from './nodes/removeChild';
+import setContourSelected from './ui/setContourSelected';
+import setCoords from './mouse/setCoords';
+import setMouseState from './mouse/setMouseState';
+import setNodeHovered from './ui/setNodeHovered';
+import setNodeOptionsSelected from './ui/setNodeOptionsSelected';
+import setNodeSelected from './ui/setNodeSelected';
+import setPathHovered from './ui/setPathHovered';
+import setPathSelected from './ui/setPathSelected';
+import updateCoords from './points/updateCoords';
+import updateFormula from './formulas/updateFormula';
+import updateParam from './params/updateParam';
+import updateProp from './props/updateProp';
+import updateTmpFormula from './ui/updateTmpFormula';
+import updateX from './points/updateX';
+import updateY from './points/updateY';
+import setContourMode from './ui/setContourMode';
+import setInterpolatedTangentsMode from './ui/setInterpolatedTangentsMode';
+import setActiveTab from './ui/setActiveTab';
+import setBaseExpand from './ui/setBaseExpand';
+
+export {
+  _deleteNode,
+  addChild,
+  addChildren,
+  addContour,
+  addCurve,
+  addFont,
+  addGlyph,
+  addOffcurve,
+  addOncurve,
+  addParam,
+  addPath,
+  createContour,
+  createCurve,
+  createFont,
+  createGlyph,
+  createNode,
+  createOffcurve,
+  createOncurve,
+  createPath,
+  deleteFormula,
+  deleteNode,
+  deleteParam,
+  deleteTmpFormula,
+  loadImageData,
+  loadNodes,
+  moveNode,
+  removeChild,
+  setContourSelected,
+  setCoords,
+  setMouseState,
+  setNodeHovered,
+  setNodeOptionsSelected,
+  setNodeSelected,
+  setPathHovered,
+  setPathSelected,
+  updateCoords,
+  updateFormula,
+  updateParam,
+  updateProp,
+  updateTmpFormula,
+  updateX,
+  updateY,
+  setContourMode,
+  setInterpolatedTangentsMode,
+  setActiveTab,
+  setBaseExpand,
 };
