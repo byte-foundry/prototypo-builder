@@ -15,6 +15,7 @@ class SvgRoot extends PureComponent {
 
   render() {
     const { childIds } = this.props;
+
     return (
       <g>
         {childIds.map(this.renderSvgChild)}

@@ -1,11 +1,8 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '~/actions';
 import Virtual from '~/_utils/Virtual';
-import * as Graph from '~/_utils/Graph';
 import * as Parametric from '~/_utils/Parametric';
-
 
 import {
   renderPathData,
@@ -44,6 +41,7 @@ function makeMapStateToProps() {
         Parametric.expandPath(state.nodes, props.id, Virtual()),
     };
   };
+
   return mapStateToProps;
 }
 

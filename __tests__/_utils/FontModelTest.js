@@ -1,6 +1,6 @@
 import fontModel from '../../src/_utils/FontModel';
 
-describe('fontModel', () => {
+describe('FontModel', () => {
   describe('propertyOrder', () => {
     it('should include all keys of the `properties` prop', (done) => {
       Object.keys(fontModel).forEach((nodeType) => {

@@ -19,7 +19,8 @@ class Foldable extends PureComponent {
     e.preventDefault();
 
     const { id, parentId, switchProp } = this.props;
-    const { updateProp, setNodeSelected, setNodeOptionsSelected } = this.props.actions;
+    const { updateProp, setNodeSelected, setNodeOptionsSelected } =
+      this.props.actions;
 
     if (this.props[switchProp]) {
       setNodeSelected();
@@ -53,7 +54,11 @@ class Foldable extends PureComponent {
 
     return (
       <div className="text-node__foldable-wrapper">
-        <a id={id} className={`text-node__fold-button${nodeOptions === id ? '--highlighted' : ''}`} onClick={this.handleFoldClick}>
+        <a
+          id={id}
+          className={`text-node__fold-button${nodeOptions === id ? '--highlighted' : ''}`}
+          onClick={this.handleFoldClick}
+        >
           {this.renderArrow()} <small><i>{name || id}</i></small>
         </a>
         {this.props.children}

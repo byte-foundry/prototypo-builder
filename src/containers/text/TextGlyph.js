@@ -24,11 +24,13 @@ class TextGlyph extends PureComponent {
     } = this.props.actions;
 
     const pathId = createContour().nodeId;
+
     addContour(id, pathId);
   }
 
   render() {
     const { childIds } = this.props;
+
     return (
       <ul className="unstyled">
         {childIds.map(renderTextChild.bind(this))}

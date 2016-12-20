@@ -33,7 +33,7 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-console': 'warn',
     'no-alert': 'warn',
-    'no-unused-vars': 'warn',
+    'no-unused-vars': 'error',
     'no-trailing-spaces': ['error'],
     'consistent-return': 'error',
     'curly': 'error',
@@ -52,7 +52,10 @@ module.exports = {
     'no-useless-concat': 'error',
     'no-useless-escape': 'error',
     'semi': ['error', 'always'],
-
+    'one-var': ['error', 'never'],
+    // Do not disable max-len. If your code exceeds 90 chars, then there's no arguing that you are making it hard to read for other devs. See?
+    'max-len': ['warn', { code: 90, ignoreUrls: true }],
+    'newline-after-var': ['error', 'always'],
     'comma-dangle': ['error', 'always-multiline'],
     'quotes': [ 'error', 'single' ],
     'brace-style': [ 'error', 'stroustrup', { 'allowSingleLine': true } ],

@@ -19,7 +19,7 @@ describe('action: createNode', () => {
     expect(secondAction.nodeId).toMatch(/^node_[0-9A-Z&$]{6}$/);
   });
 
-  it('should return an action and use the provided nodeType arg as a prefix for the id', () => {
+  it('should return an action and use nodeType arg as a prefix for the id', () => {
     firstAction = createNode('root');
     secondAction = createNode('glyph');
 

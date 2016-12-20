@@ -1,33 +1,29 @@
 import deepFreeze from 'deep-freeze';
 
-import {
-  getUpdater,
-  buildArgs,
-  getUpdaters,
-  getCalculatedParams,
-  getSolvingOrder,
-  getCalculatedGlyph,
-  expandPath,
-} from '../../src/_utils/Parametric';
+import * as Parametric from '~/_utils/Parametric';
 
-describe('containers/_utils', () => {
+describe('Parametric', () => {
   describe('getUpdater', () => {
-    it('should return a formula with isInvalid === true when the formula can\'t be parsed', (done) => {
+    it('should return a formula with isInvalid === true', (done) => {
+      // ...when the formula can't be parsed
       const strFormula = '$width * ';
       const expected = {
         formula: strFormula,
         isInvalid: true,
       };
 
-      expect(getUpdater(strFormula)).toEqual(expected);
+      expect(Parametric.getUpdater(strFormula)).toEqual(expected);
 
       done();
     });
 
     it('should parse a vail formula and extract params and refs', (done) => {
-      const strFormula = '( $width * $height ) + ( glyph.oncurve_0.x - glyph.oncurve_1.x ) * 2';
+      const strFormula = `
+          ( $width * $height ) +
+          ( glyph.oncurve_0.x - glyph.oncurve_1.x ) * 2
+        `;
 
-      const result = getUpdater(strFormula);
+      const result = Parametric.getUpdater(strFormula);
 
       expect(result.isInvalid).toEqual(false);
       expect(result.fn).toBeInstanceOf(Function);
@@ -48,10 +44,10 @@ describe('containers/_utils', () => {
 
       deepFreeze(params);
 
-      expect(buildArgs(null, params, []))
+      expect(Parametric.buildArgs(null, params, []))
         .toEqual([null]);
 
-      expect(buildArgs(null, params, ['$expand', '$width']))
+      expect(Parametric.buildArgs(null, params, ['$expand', '$width']))
         .toEqual([ null, 56, 12 ]);
 
       done();
@@ -63,7 +59,7 @@ describe('containers/_utils', () => {
       deepFreeze(params);
 
       expect(() => {
-        buildArgs(null, params, ['$zip']);
+        Parametric.buildArgs(null, params, ['$zip']);
       }).toThrow(Error);
 
       done();
@@ -78,7 +74,7 @@ describe('containers/_utils', () => {
       };
 
       deepFreeze(formulas);
-      const updaters = getUpdaters([], formulas);
+      const updaters = Parametric.getUpdaters([], formulas);
 
       expect(updaters['node_0.x'].fn).toBeInstanceOf(Function);
       expect(updaters['node_1.y'].fn).toBeInstanceOf(Function);
@@ -100,7 +96,7 @@ describe('containers/_utils', () => {
       deepFreeze(stateBefore);
 
       const calculatedParams =
-        getCalculatedParams(stateBefore, parentParams, 'node-0');
+        Parametric.getCalculatedParams(stateBefore, parentParams, 'node-0');
 
       expect(calculatedParams.width).toEqual(12);
       expect(calculatedParams.expand).toEqual(34);
@@ -125,15 +121,15 @@ describe('containers/_utils', () => {
         'node_1.y',
       ];
 
-      expect(getSolvingOrder(glyphUpdaters)).toEqual(expected);
+      expect(Parametric.getSolvingOrder(glyphUpdaters)).toEqual(expected);
 
       done();
     });
   });
 
   describe('getCalculatedGlyph', () => {
-    it('should return a subset of the graph that includes all children of the glyph', (done) => {
-      // ... and all properties of these nodes should be 'calculated'
+    it('should return a subset of the graph with all glyph children', (done) => {
+      // ...and all properties of these nodes that should be 'calculated'
 
       const stateBefore = {
         nodes: {
@@ -228,8 +224,12 @@ describe('containers/_utils', () => {
 
       deepFreeze(stateBefore.nodes);
 
-      expect(getCalculatedGlyph(stateBefore, { '$width': 78 }, 'glyph_initial'))
-        .toEqual(expected);
+      const result = Parametric.getCalculatedGlyph(
+        stateBefore,
+        { '$width': 78 }, 'glyph_initial'
+      );
+
+      expect(result).toEqual(expected);
 
       done();
     });
@@ -237,58 +237,61 @@ describe('containers/_utils', () => {
 
   describe('expandPath', () => {
     it('should return a closed path when expanding a non-closed path', (done) => {
-      const nodes = {
-        'node-0': {
-          id: 'node-0',
-          type: 'path',
-          isClosed: false,
-          childIds: ['node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'],
-        },
-        'node-1': {
-          id: 'node-1',
-          type: 'oncurve',
-          x: 0,
-          y: 0,
-        },
-        'node-2': {
-          id: 'node-2',
-          type: 'offcurve',
-          x: 0,
-          y: 0,
-        },
-        'node-3': {
-          id: 'node-3',
-          type: 'offcurve',
-          x: 0,
-          y: 0,
-        },
-        'node-4': {
-          id: 'node-4',
-          type: 'oncurve',
-          x: 0,
-          y: 0,
-        },
-        'node-5': {
-          id: 'node-5',
-          type: 'offcurve',
-          x: 0,
-          y: 0,
-        },
-        'node-6': {
-          id: 'node-6',
-          type: 'offcurve',
-          x: 0,
-          y: 0,
-        },
-        'node-7': {
-          id: 'node-7',
-          type: 'oncurve',
-          x: 0,
-          y: 0,
-        },
-      };
-
-      const calculatedNodes = {};
+      // TODO: implement
+      // const nodes = {
+      //   'node-0': {
+      //     id: 'node-0',
+      //     type: 'path',
+      //     isClosed: false,
+      //     childIds: [
+      //       'node-1', 'node-2', 'node-3', 'node-4', 'node-5', 'node-6', 'node-7'
+      //     ],
+      //   },
+      //   'node-1': {
+      //     id: 'node-1',
+      //     type: 'oncurve',
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   'node-2': {
+      //     id: 'node-2',
+      //     type: 'offcurve',
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   'node-3': {
+      //     id: 'node-3',
+      //     type: 'offcurve',
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   'node-4': {
+      //     id: 'node-4',
+      //     type: 'oncurve',
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   'node-5': {
+      //     id: 'node-5',
+      //     type: 'offcurve',
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   'node-6': {
+      //     id: 'node-6',
+      //     type: 'offcurve',
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   'node-7': {
+      //     id: 'node-7',
+      //     type: 'oncurve',
+      //     x: 0,
+      //     y: 0,
+      //   },
+      // };
+      //
+      // const calculatedNodes = {};
 
       expect(false).toEqual(true);
 

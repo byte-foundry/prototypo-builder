@@ -1,5 +1,4 @@
 import Memoize from '~/_utils/Memoize';
-import nodesReducer from '~/reducers/nodes';
 
 // Returns a nodeId-indexed map of all descendants of a node
 export function getDescendants(nodes, parentId, descendants = {}) {
@@ -47,23 +46,10 @@ export function _getParentId(nodes, nodeId) {
   return null;
 }
 
-// Use this function if you want graph-related actions to affect a virtual state
-export function rewireActionCreators(state, actions) {
-  const virtualActions = {};
-  Object.keys(actions).forEach((actionName) => {
-    virtualActions[actionName] = (...args) => {
-      const action = actions[actionName]( ...args );
-      state.nodes = nodesReducer( state.nodes, action );
-      return action;
-    };
-  });
-
-  return virtualActions;
-}
-
 // a special kind of memoization that checks that the result of the function
 // still holds true, even if the 'nodes' argument has changed
 const _parentCache = {};
+
 export function getParentIdMemoized(nodes, nodeId, parentCache = _parentCache) {
   // check if the cached parent is still valid
   if (
@@ -98,7 +84,6 @@ export const getNodePath = Memoize((nodes, nodeId) => {
   return path;
 });
 
-// TODO: ideally, methods in this file shouldn't be related to the font graph
 export const getParentGlyphId = Memoize((nodes, nodeId) => {
   let currId = nodeId;
 
@@ -130,6 +115,7 @@ export const _getSegmentIds = Memoize((siblingIds, startId, endId) => {
   }
 
   const ids = [];
+
   if ( startIndex < endIndex ) {
     for ( let i = startIndex; i <= endIndex; i++ ) {
       ids.push(siblingIds[i]);

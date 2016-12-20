@@ -21,6 +21,7 @@ class TextRoot extends PureComponent {
     const url = window.URL.createObjectURL(blob);
 
     const a = this.refs.downloadLink;
+
     a.href = url;
     a.download = 'prototypo-json-save.json';
     a.click();
@@ -45,6 +46,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
+
   return actionMap;
 }
 

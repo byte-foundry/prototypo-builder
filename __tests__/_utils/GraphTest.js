@@ -6,10 +6,11 @@ import {
   getParentIdMemoized,
   getNodeType,
   getNodePath,
+  getParentGlyphId,
   getSegmentIds,
 } from '../../src/_utils/Graph';
 
-describe('graph', () => {
+describe('Graph', () => {
   describe('getDescendants', () => {
     it('should extract all descendants of a node from the graph', (done) => {
       const graph = {
@@ -55,7 +56,7 @@ describe('graph', () => {
     });
   });
 
-  describe('getParentId', () => {
+  describe('_getParentId', () => {
     it('should return the id of the parent node', (done) => {
       const nodes = {
         'root': {
@@ -133,6 +134,32 @@ describe('graph', () => {
     });
   });
 
+  describe('getParentGlyphId', () => {
+    it('should return the id of the parent glyph', (done) => {
+      const nodes = {
+        'root': {
+          childIds: ['node-0'],
+        },
+        'node-0': {
+          type: 'glyph',
+          childIds: ['node-1'],
+        },
+        'node-1': {
+          childIds: ['node-2', 'node-3', 'node-4'],
+        },
+        'node-2': {
+          childIds: [],
+        },
+      };
+
+      expect(getParentGlyphId(nodes, 'node-2')).toEqual('node-0');
+
+      done();
+
+      done();
+    });
+  });
+
   describe('getSegmentIds', () => {
     it('should return the ids of all nodes in a segment of the graph', (done) => {
       const nodes = {
@@ -168,7 +195,7 @@ describe('graph', () => {
       done();
     });
 
-    it('should throw when the second childId isn\'t a sibling of the first one', (done) => {
+    it('should throw when the 2nd childId isn\'t a sibling of the 1st one', (done) => {
       const nodes = {
         'path': {
           childIds: ['node-0'],

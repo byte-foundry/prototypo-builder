@@ -1,4 +1,3 @@
-import * as Graph from '~/_utils/Graph';
 import Virtual from '~/_utils/Virtual';
 
 describe('virtual', () => {

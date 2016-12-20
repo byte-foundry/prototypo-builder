@@ -28,6 +28,7 @@ class TextContour extends PureComponent {
     const { id } = this.props;
     const { addPath, createPath } = this.props.actions;
     const childId = createPath().nodeId;
+
     addPath(id, childId);
   }
 
@@ -43,9 +44,11 @@ class TextContour extends PureComponent {
     } = this.props.actions;
 
     const pathId = createPath().nodeId;
+
     addPath(id, pathId);
 
     const oncurveId = createOncurve(this.props.ui.baseExpand).nodeId;
+
     addOncurve(pathId, oncurveId);
   }
 

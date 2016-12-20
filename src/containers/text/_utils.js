@@ -36,6 +36,7 @@ export function renderTextChild(childId) {
 export function shouldBeUnfolded() {
   const { id, childIds, _isChildrenUnfolded, offcurveIds } = this.props;
   const { nodeOptions } = this.props.ui.selected;
+
   return _isChildrenUnfolded ? true :
       _isChildrenUnfolded ||
       id === nodeOptions ||
@@ -61,6 +62,7 @@ export function validateChildTypes(props, propName, componentName, prop, _model)
 
   for ( let childId in props[propName] ) {
     const childType = props[propName][childId];
+
     if ( !(childType in validChildTypes) ) {
       return new Error(
         `Invalid prop '${propName}' supplied to '${componentName}':
@@ -74,5 +76,6 @@ export function validateChildTypes(props, propName, componentName, prop, _model)
 
 export function mapDispatchToProps(dispatch) {
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
+
   return actionMap;
 }

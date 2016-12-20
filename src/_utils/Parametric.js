@@ -12,12 +12,12 @@ import * as Path from '~/_utils/Path';
 export const getUpdater = Memoize(( _strFormula ) => {
   const strFormula = _strFormula.trim();
   const usedParams = strFormula.match(/(\$[a-z0-9_]+)/ig) || [];
-  /*eslint no-useless-escape: "warn"*/
   const usedRefs = (strFormula.match(/glyph\.[a-z0-9_.]+/ig) || []).map((id) => {
     return id.replace('glyph.', '');
   });
 
   let fn;
+
   try  {
     fn = new Function( 'glyph', ...usedParams, 'return ' + strFormula );
   }
@@ -87,6 +87,7 @@ export const getCalculatedParams = Memoize((params, parentParams) => {
             null, buildArgs(null, calculatedParams, updater.params)
           )
         );
+
         if ( Number.isNaN(tmp) ) {
           throw new Error('result is NaN');
         }
@@ -115,6 +116,7 @@ export const getSolvingOrder = Memoize((glyphUpdaters = {}) => {
 
   Object.keys(glyphUpdaters).forEach((strPath) => {
     const propUpdater = glyphUpdaters[strPath];
+
     if ( typeof propUpdater !== 'object' || !('refs' in propUpdater) ) {
       return;
     }
@@ -133,8 +135,10 @@ export const getCalculatedGlyph = Memoize((state, parentParams, glyphId) => {
   const calculatedGlyph = R.map((node) => {
     // copy static properties of the node as is
     const staticNode = {};
+
     Object.keys(node).forEach((propName) => {
       const propType = typeof node[propName];
+
       if (
         // TODO: remove _ghost from here once it's removed from the state
         propName === '_ghost' ||
@@ -155,9 +159,14 @@ export const getCalculatedGlyph = Memoize((state, parentParams, glyphId) => {
       const tmp = (
         glyphUpdaters[strPath].fn.apply(
           calculatedGlyph[path[0]],
-          buildArgsMemoized(calculatedGlyph, parentParams, glyphUpdaters[strPath].params)
+          buildArgsMemoized(
+            calculatedGlyph,
+            parentParams,
+            glyphUpdaters[strPath].params
+          )
         )
       );
+
       if ( Number.isNaN(tmp) ) {
         throw new Error('result is NaN');
       }
@@ -166,7 +175,8 @@ export const getCalculatedGlyph = Memoize((state, parentParams, glyphId) => {
       }
     }
     catch(e) {
-      e.message = `Calculating prop '${path[1]}' of node '${path[0]}' errored: ${e.message}`;
+      e.message =
+        `Calculating prop '${path[1]}' of node '${path[0]}' errored: ${e.message}`;
       calculatedGlyph[path[0]][path[1]] = e;
     }
 
@@ -201,14 +211,16 @@ export function expandPath( nodes, pathId, virtual ) {
       x: node.x + shift.x * distrib,
       y: node.y + shift.y * distrib,
     };
-    const outCurveVec = {
-      x: cOut.x - node.x,
-      y: cOut.y - node.y,
-    };
-    const inCurveVec = {
-      x: cIn.x - node.x,
-      y: cIn.y - node.y,
-    };
+    // TODO: I can't remember what this vars were for. On the other hand, this
+    // function was never really used. So finish it or get rid of it.
+    // const outCurveVec = {
+    //   x: cOut.x - node.x,
+    //   y: cOut.y - node.y,
+    // };
+    // const inCurveVec = {
+    //   x: cIn.x - node.x,
+    //   y: cIn.y - node.y,
+    // };
     let nodeId;
 
     // TODO: investigate where this.props.ui.baseExpand comes from

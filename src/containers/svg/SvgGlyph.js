@@ -13,6 +13,7 @@ class SvgGlyph extends PureComponent {
     const { childIds } = this.props;
     const children = childIds.map(renderSvgChild.bind(this));
     const selectionAreas = childIds.map(renderSelectionAreas.bind(this));
+
     return (
       <g>
         {children}

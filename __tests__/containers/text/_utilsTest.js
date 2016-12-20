@@ -7,6 +7,7 @@ describe('containers/text/_utils', () => {
     const modelBefore = {
       ab: { cd: true, ef: true },
     };
+
     deepFreeze(modelBefore);
 
     it('should accept valid child types for the font model', (done) => {

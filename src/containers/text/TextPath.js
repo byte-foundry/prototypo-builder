@@ -35,6 +35,7 @@ class TextGlyph extends PureComponent {
     const offcurve1Id = createOffcurve().nodeId;
     const offcurve2Id = createOffcurve().nodeId;
     const oncurveId = createOncurve(this.props.ui.baseExpand).nodeId;
+
     addOffcurve(id, offcurve1Id);
     addOffcurve(id, offcurve2Id);
     addOncurve(id, oncurveId);
@@ -50,6 +51,7 @@ class TextGlyph extends PureComponent {
     }
 
     const offcurveIds = [];
+
     if ( /^offcurve[-_]/.test(childIds[i-1]) ) {
         offcurveIds.push(childIds[i-1]);
     }

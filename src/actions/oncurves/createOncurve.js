@@ -4,6 +4,7 @@ import { ONCURVE_SMOOTH, DEFAULT_DISTRIB, DEFAULT_ANGLE, DEFAULT_EXPAND } from '
 
 export default function(expand) {
   const nodeType = 'oncurve';
+
   return {
     type: CREATE_ONCURVE,
     nodeId: getNodeId(nodeType),

@@ -26,6 +26,7 @@ class SvgContourSelection extends PureComponent {
 
     childIds.forEach((pathId) => {
       const path = nodes[pathId];
+
       if (this.props.ui.selected.path === pathId || this.props.ui.hovered.path === pathId || this.props.ui.uiState === SELECTION_MODE) {
         Path.forEachNode(pathId, nodes, (point, inControl, outControl, i, length) => {
           //Draw on curve point
@@ -102,6 +103,7 @@ class SvgContourSelection extends PureComponent {
         if (this.props.ui.uiState !== SELECTION_MODE) {
           const bbox = Path.bbox(pathId, nodes);
           //Draw path bounding box
+
           result.push(
             <path className="bbox" key={`bbox-${pathId}`} d={`M${bbox.x.min} ${bbox.y.min} L${bbox.x.max} ${bbox.y.min} L${bbox.x.max} ${bbox.y.max} L${bbox.x.min} ${bbox.y.max} L${bbox.x.min} ${bbox.y.min}`}/>
           );

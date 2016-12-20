@@ -13,8 +13,10 @@ export function lerpValues(v0, v1, t) {
 
 // TODO: What is this function? What is it doing? How is it special?
 export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
-  let n, c;
-  let tangentPointsOn = [], tangentPointsOff = [];
+  let n;
+  let c;
+  let tangentPointsOn = [];
+  let tangentPointsOff = [];
 
   //get the first offcurve tangent
   ({ n, c } = Bezier.offset([c0, c1, c2, c3], 0, c0.expand));
@@ -47,8 +49,10 @@ export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   }
   let tangentOutlineOn = getCurvePoints(tangentPointsOn, 0.5,25,false);
   let tangentOutlineOff = getCurvePoints(tangentPointsOff, 0.5,25,false);
-  let inContour = '', outContour = '';
+  let inContour = '';
+  let outContour = '';
   //inContour = inContour.concat(`${tangentOutlineOn[0]},${tangentOutlineOn[1]} `);
+
   for (let i = 0; i < tangentOutlineOn.length; i+=2) {
     inContour = inContour.concat(`${tangentOutlineOn[i]},${tangentOutlineOn[i+1]} `);
   }
@@ -64,14 +68,15 @@ export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   };
 });
 
-/*!	Curve calc function for canvas 2.3.6
- *	(c) Epistemex 2013-2016
- *	www.epistemex.com
- *	License: MIT
+/*!  Curve calc function for canvas 2.3.6
+ *  (c) Epistemex 2013-2016
+ *  www.epistemex.com
+ *  License: MIT
  */
 
 /**
- * Calculates an array containing points representing a cardinal spline through given point array.
+ * Calculates an array containing points representing a cardinal spline through
+ * given point array.
  * Points must be arranged as: [x1, y1, x2, y2, ..., xn, yn].
  *
  * There must be a minimum of two points in the input array but the function
@@ -80,114 +85,120 @@ export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
  * The points for the cardinal spline are returned as a new array.
  *
  * @param {Array} points - point array
- * @param {Number} [tension=0.5] - tension. Typically between [0.0, 1.0] but can be exceeded
+ * @param {Number} [tension=0.5] - tension. Typically between [0.0, 1.0] but can
+ *        be exceeded
  * @param {Number} [numOfSeg=25] - number of segments between two points (line resolution)
  * @param {Boolean} [close=false] - Close the ends making the line continuous
  * @returns {Float32Array} New array with the calculated points that was added to the path
  */
 export function getCurvePoints(points, tension, numOfSeg, close) {
 
-	'use strict';
+  'use strict';
 
-	if (typeof points === 'undefined' || points.length < 2) {return new Float32Array(0);}
+  if (typeof points === 'undefined' || points.length < 2) {return new Float32Array(0);}
 
-	// options or defaults
-	let _tension = typeof tension === 'number' ? tension : 0.5;
-	let _numOfSeg = typeof numOfSeg === 'number' ? numOfSeg : 25;
+  // options or defaults
+  let _tension = typeof tension === 'number' ? tension : 0.5;
+  let _numOfSeg = typeof numOfSeg === 'number' ? numOfSeg : 25;
 
-	var pts,// for cloning point array
-		i = 1,
-		l = points.length,
-		rPos = 0,
-		rLen = (l-2) * _numOfSeg + 2 + (close ? 2 * _numOfSeg: 0),
-		res = new Float32Array(rLen),
-		cache = new Float32Array((_numOfSeg + 2) << 2),
-		cachePtr = 4;
+  var pts;// for cloning point array
+  var i = 1;
+  var l = points.length;
+  var rPos = 0;
+  var rLen = (l-2) * _numOfSeg + 2 + (close ? 2 * _numOfSeg: 0);
+  var res = new Float32Array(rLen);
+  var cache = new Float32Array((_numOfSeg + 2) << 2);
+  var cachePtr = 4;
 
-	pts = points.slice(0);
+  pts = points.slice(0);
 
-	if (close) {
-		pts.unshift(points[l - 1]);// insert end point as first point
-		pts.unshift(points[l - 2]);
-		pts.push(points[0], points[1]);// first point as last point
-	}
-	else {
-		pts.unshift(points[1]);// copy 1. point and insert at beginning
-		pts.unshift(points[0]);
-		pts.push(points[l - 2], points[l - 1]);// duplicate end-points
-	}
+  if (close) {
+    pts.unshift(points[l - 1]);// insert end point as first point
+    pts.unshift(points[l - 2]);
+    pts.push(points[0], points[1]);// first point as last point
+  }
+  else {
+    pts.unshift(points[1]);// copy 1. point and insert at beginning
+    pts.unshift(points[0]);
+    pts.push(points[l - 2], points[l - 1]);// duplicate end-points
+  }
 
-	// cache inner-loop calculations as they are based on t alone
-	cache[0] = 1;// 1,0,0,0
+  // cache inner-loop calculations as they are based on t alone
+  cache[0] = 1;// 1,0,0,0
 
-	for (; i < numOfSeg; i++) {
+  for (; i < numOfSeg; i++) {
 
-		var st = i / numOfSeg,
-			st2 = st * st,
-			st3 = st2 * st,
-			st23 = st3 * 2,
-			st32 = st2 * 3;
+    var st = i / numOfSeg;
+    var st2 = st * st;
+    var st3 = st2 * st;
+    var st23 = st3 * 2;
+    var st32 = st2 * 3;
 
-		cache[cachePtr++] =	st23 - st32 + 1;// c1
-		cache[cachePtr++] =	st32 - st23;// c2
-		cache[cachePtr++] =	st3 - 2 * st2 + st;// c3
-		cache[cachePtr++] =	st3 - st2;// c4
-	}
+    cache[cachePtr++] =  st23 - st32 + 1;// c1
+    cache[cachePtr++] =  st32 - st23;// c2
+    cache[cachePtr++] =  st3 - 2 * st2 + st;// c3
+    cache[cachePtr++] =  st3 - st2;// c4
+  }
 
-	cache[++cachePtr] = 1;// 0,1,0,0
+  cache[++cachePtr] = 1;// 0,1,0,0
 
-	// calc. points
-	parse(pts, cache, l, _tension);
+  // calc. points
+  parse(pts, cache, l, _tension);
 
-	if (close) {
-		//l = points.length;
-		pts = [];
-		pts.push(points[l - 4], points[l - 3],
-        points[l - 2], points[l - 1],// second last and last
-        points[0], points[1],
-        points[2], points[3]);// first and second
-		parse(pts, cache, 4, _tension);
-	}
+  if (close) {
+    //l = points.length;
+    pts = [];
+    pts.push(points[l - 4], points[l - 3],
+          points[l - 2], points[l - 1],// second last and last
+          points[0], points[1],
+          points[2], points[3]);// first and second
+    parse(pts, cache, 4, _tension);
+  }
 
-	function parse(pts, cache, l, tension) {
+  function parse(pts, cache, l, tension) {
 
-		for (var i = 2, t; i < l; i += 2) {
+    for (var i = 2, t; i < l; i += 2) {
 
-			var pt1 = pts[i],
-				pt2 = pts[i+1],
-				pt3 = pts[i+2],
-				pt4 = pts[i+3],
+      var pt1 = pts[i];
+      var pt2 = pts[i+1];
+      var pt3 = pts[i+2];
+      var pt4 = pts[i+3];
 
-				t1x = (pt3 - pts[i-2]) * tension,
-				t1y = (pt4 - pts[i-1]) * tension,
-				t2x = (pts[i+4] - pt1) * tension,
-				t2y = (pts[i+5] - pt2) * tension,
-				c = 0, c1, c2, c3, c4;
+      var t1x = (pt3 - pts[i-2]) * tension;
+      var t1y = (pt4 - pts[i-1]) * tension;
+      var t2x = (pts[i+4] - pt1) * tension;
+      var t2y = (pts[i+5] - pt2) * tension;
+      var c = 0;
+      var c1;
+      var c2;
+      var c3;
+      var c4;
 
-			for (t = 0; t < _numOfSeg; t++) {
+      for (t = 0; t < _numOfSeg; t++) {
 
-				c1 = cache[c++];
-				c2 = cache[c++];
-				c3 = cache[c++];
-				c4 = cache[c++];
+        c1 = cache[c++];
+        c2 = cache[c++];
+        c3 = cache[c++];
+        c4 = cache[c++];
 
-				res[rPos++] = c1 * pt1 + c2 * pt3 + c3 * t1x + c4 * t2x;
-				res[rPos++] = c1 * pt2 + c2 * pt4 + c3 * t1y + c4 * t2y;
-			}
-		}
-	}
+        res[rPos++] = c1 * pt1 + c2 * pt3 + c3 * t1x + c4 * t2x;
+        res[rPos++] = c1 * pt2 + c2 * pt4 + c3 * t1y + c4 * t2y;
+      }
+    }
+  }
 
-	// add last point
-	l = close ? 0 : points.length - 2;
-	res[rPos++] = points[l++];
-	res[rPos] = points[l];
+  // add last point
+  l = close ? 0 : points.length - 2;
+  res[rPos++] = points[l++];
+  res[rPos] = points[l];
 
-	return res;
+  return res;
 }
 
 export function getTangentPoints(point, inControl) {
   //Get normal vector
   let normal = {x: inControl.x - point.x, y: inControl.y - point.y};
+
   normal = TwoD.rotate(normal, point.angle);
   //http://math.stackexchange.com/a/1630886
   let normalDistance = Math.sqrt(
@@ -204,6 +215,7 @@ export function getTangentPoints(point, inControl) {
     x: ((1 - distanceRatioOut) * point.x + distanceRatioOut * (point.x + normal.y)),
     y: ((1 - distanceRatioOut) * point.y + distanceRatioOut * (point.y - normal.x)),
   };
+
   return {
     in: tanIn,
     out: tanOut,
@@ -234,8 +246,9 @@ export function getNodeControls(point, inControl) {
     x: distribControl1.x,
     y: distribControl1.y - 10,
   };
-  let angle = TwoD.lla({x: point.x + 100, y: point.y}, point, point, inControl);
+  let angle = TwoD.lineLineAngle({x: point.x + 100, y: point.y}, point, point, inControl);
   let pointAngle = point.angle * Math.PI/180;
+
   distribControl1= TwoD.rotateAroundDeg(distribControl1, - angle + pointAngle, point);
   distribControl2= TwoD.rotateAroundDeg(distribControl2, - angle + pointAngle, point);
   distribControl3= TwoD.rotateAroundDeg(distribControl3, - angle + pointAngle, point);
@@ -257,6 +270,7 @@ export function getNodeControls(point, inControl) {
     x: angleControl1.x,
     y: angleControl1.y - 30,
   };
+
   angleControl1= TwoD.rotateAroundDeg(angleControl1, - angle + pointAngle, point);
   angleControl2= TwoD.rotateAroundDeg(angleControl2, - angle + pointAngle, point);
   angleControl3= TwoD.rotateAroundDeg(angleControl3, - angle + pointAngle, point);

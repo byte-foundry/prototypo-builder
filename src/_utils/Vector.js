@@ -10,6 +10,7 @@ import Bezier from 'bezier-js/fp';
 const NULL_VEC = {x: 0, y: 0};
 
 const { dist, lerp } = Bezier.getUtils();
+
 export { dist, lerp };
 
 export function add(a, b) {

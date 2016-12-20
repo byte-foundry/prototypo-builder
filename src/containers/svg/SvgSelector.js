@@ -19,10 +19,12 @@ class SvgSelector extends PureComponent {
 
   componentWillUpdate() {
     let handlePoint = this.props.point;
+
     if (this.props.source && Vector.isEqual(this.props.source, handlePoint) && !handlePoint._isGhost) {
       const [point, pointIn, pointOut] = Path.getNode(this.props.parent, this.props.source.id, this.props.nodes);
+
       if (this.props.type === 'in') {
-        const [target, unused, targetOut] = Path.getPrevNode(this.props.parent, this.props.source.id, this.props.nodes);
+        const [target, , targetOut] = Path.getPrevNode(this.props.parent, this.props.source.id, this.props.nodes);
 
         if (target) {
           // TODO: ghost handles are calculated and should be removed from the state
@@ -31,6 +33,7 @@ class SvgSelector extends PureComponent {
           const ghostVec = Vector.multiply(normalizedD, -Vector.dist(target, point) / 3);
 
           const ghostHandlePoint = Vector.add(this.props.source, ghostVec);
+
           this.props.actions.updateProp(this.props.point.id, '_ghost', {
             x: ghostHandlePoint.x,
             y: ghostHandlePoint.y,
@@ -40,11 +43,13 @@ class SvgSelector extends PureComponent {
       }
       else if (this.props.type === 'out') {
         const [target, targetIn] = Path.getNextNode(this.props.parent, this.props.source.id, this.props.nodes);
+
         if (target) {
           const derivative = Bezier.derivative([point, pointOut, targetIn, target], 1 / 3);
           const normalizedD = Vector.normalize(derivative);
           const ghostVec = Vector.multiply(normalizedD, Vector.dist(target, point) / 3);
           const ghostHandlePoint = Vector.add(this.props.source, ghostVec);
+
           this.props.actions.updateProp(this.props.point.id, '_ghost', {
             x: ghostHandlePoint.x,
             y: ghostHandlePoint.y,
@@ -57,9 +62,11 @@ class SvgSelector extends PureComponent {
 
   render() {
     let indicator = false;
+
     if (this.props.point.type === 'oncurve' && this.props.hovered === this.props.point.id) {
       if (this.props.point.state === ONCURVE_SMOOTH) {
         const path = `M${this.props.point.x - 20} ${this.props.point.y + 20} L${this.props.point.x - 20} ${this.props.point.y + 60}`;
+
         indicator = <g className="state-indicator">
           <path d={path}/>
           <circle className="state-indicator-circle"
@@ -72,6 +79,7 @@ class SvgSelector extends PureComponent {
         const path = `M${this.props.point.x - 30} ${this.props.point.y + 20}
           L${this.props.point.x - 20} ${this.props.point.y + 60}
           L${this.props.point.x - 10} ${this.props.point.y + 20}`;
+
         indicator = <g className="state-indicator">
           <path d={path} />
           <circle className="state-indicator-circle"

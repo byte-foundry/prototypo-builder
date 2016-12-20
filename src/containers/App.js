@@ -14,6 +14,7 @@ import Main from '~/components/Main';
 class App extends PureComponent {
   render() {
     const {actions, nodes, ui, updaters} = this.props;
+
     return (
       <Main
         actions={actions}
@@ -41,12 +42,14 @@ function mapStateToProps(state) {
     ui: state.ui,
     formulas: state.formulas,
   };
+
   return props;
 }
 function mapDispatchToProps(dispatch) {
   /* Populated by react-webpack-redux:action */
   const actions = {};
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
+
   return actionMap;
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App);

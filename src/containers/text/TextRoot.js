@@ -22,9 +22,11 @@ class TextRoot extends PureComponent {
   render() {
     const { childIds } = this.props;
     let nodeSelected = false;
+
     if (this.props.ui.selected.nodeOptions) {
       const id = this.props.ui.selected.nodeOptions;
       const type = Graph.getNodeType(id);
+
       nodeSelected = (
         <div className="unstyled">
           <p>{id}</p>

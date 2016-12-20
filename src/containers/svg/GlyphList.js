@@ -29,6 +29,7 @@ class GlyphList extends PureComponent {
     let first = '!'.charCodeAt(0);
     let last = '~'.charCodeAt(0)+1;
     let glyphs = [];
+
     for (var i = first; i < last; i++) {
       glyphs.push(String.fromCharCode(i));
     }
@@ -53,6 +54,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const actionMap = { actions: bindActionCreators(actions, dispatch) };
+
   return actionMap;
 }
 

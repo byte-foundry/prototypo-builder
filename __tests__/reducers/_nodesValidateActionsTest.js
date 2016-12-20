@@ -159,7 +159,7 @@ describe('reducers/_nodesValidateAction', () => {
     });
 
     // I'm not sure whether this test still makes sense or not
-    // it('should check that the node doesn\'t have a param with the same name', (done) => {
+    // it('should check that the node doesn\'t have a param with same name', (done) => {
     //   const state = {
     //     'node-0': {
     //       id: 'node-0',

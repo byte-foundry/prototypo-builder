@@ -161,7 +161,10 @@ class TextFont extends PureComponent {
                   'renderParamFormula' :
                   'renderParamSlider'
               )](name)}
-              <input type="button" defaultValue="✕" name={name} onClick={this.handleDeleteParamClick} />
+              <input type="button"
+                defaultValue="✕"
+                name={name}
+                onClick={this.handleDeleteParamClick} />
             </li>
           );
         })}
@@ -170,12 +173,22 @@ class TextFont extends PureComponent {
           <input type="number" ref="paramMin" placeholder="min" />
           <input type="number" ref="paramMax" placeholder="max" />
           <input type="number" ref="paramValue" placeholder="initial value" />
-          <input type="button" defaultValue="Add param" onClick={this.handleAddParamClick} />
+          <input type="button"
+            defaultValue="Add param"
+            onClick={this.handleAddParamClick} />
         </li>
         <li>
-          <input type="text" ref="formulaName" placeholder="name" defaultValue="$" />
-          <input type="text" ref="formulaValue" placeholder="formula" onChange={this.handleFormulaChange} />
-          <input type="button" defaultValue="Add formula" onClick={this.handleAddFormulaClick} />
+          <input type="text"
+            ref="formulaName"
+            placeholder="name"
+            defaultValue="$" />
+          <input type="text"
+            ref="formulaValue"
+            placeholder="formula"
+            onChange={this.handleFormulaChange} />
+          <input type="button"
+            defaultValue="Add formula"
+            onClick={this.handleAddFormulaClick} />
         </li>
       </ul>
     );

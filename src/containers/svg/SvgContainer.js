@@ -57,9 +57,11 @@ class SvgContainer extends PureComponent {
         case 46: //del
           if (ui.uiState === NODE_SELECTED || ui.uiState === NODE_SELECTED_AND_MOVE) {
             const node = nodes[ui.selected.point];
+
             if (node.type === 'offcurve') {
               const handles = Path.getNode(ui.selected.path, node.id, nodes);
               const vect = Vector.subtract(handles[0], node);
+
               actions.moveNode(node.id, ui.selected.path, {dx: vect.x, dy: vect.y} );
               actions.setMouseState(PATH_SELECTED);
               actions.setNodeSelected();
@@ -107,11 +109,13 @@ class SvgContainer extends PureComponent {
 
     if (!opts.first) {
       const offcurve1Id = actions.createOffcurve().nodeId;
+
       if (opts.closed) {
         const path = nodes[pathId];
         const offCurveRef = nodes[path.childIds[1]];
 
         const offCurveCoord = Vector.subtract(Vector.multiply(coord, 2), offCurveRef);
+
         actions.updateProp(offcurve1Id, 'x', offCurveCoord.x);
         actions.updateProp(offcurve1Id, 'y', offCurveCoord.y);
       }
@@ -123,12 +127,14 @@ class SvgContainer extends PureComponent {
     }
 
     const oncurveId = actions.createOncurve(ui.baseExpand).nodeId;
+
     actions.updateProp(oncurveId, 'x', coord.x);
     actions.updateProp(oncurveId, 'y', coord.y);
     actions.addOncurve(pathId, oncurveId);
 
     if (!opts.closed) {
       const offcurve2Id = actions.createOffcurve().nodeId;
+
       actions.updateProp(offcurve2Id, 'x', coord.x);
       actions.updateProp(offcurve2Id, 'y', coord.y);
       actions.addOffcurve(pathId, offcurve2Id);
@@ -150,6 +156,7 @@ class SvgContainer extends PureComponent {
 
     if (ui.uiState === NO_PATH_SELECTED) {
       const path = Path.findClosestPath(point, ui.selected.contour, nodes);
+
       if (path) {
         actions.setPathSelected(path, ui.selected.contour);
         actions.setNodeOptionsSelected(path);
@@ -159,6 +166,7 @@ class SvgContainer extends PureComponent {
       }
       else {
         const pathId = actions.createPath().nodeId;
+
         actions.addPath( ui.selected.contour, pathId);
 
         this.createNewAddToPathAndSelect(point, pathId,{
@@ -169,6 +177,7 @@ class SvgContainer extends PureComponent {
     else if (ui.uiState === PATH_SELECTED) {
       const node = Path.findClosestNode(point, ui.selected.path, nodes);
       const path = nodes[ui.selected.path];
+
       if (node && node.type === 'node') {
         actions.setCoords(point.x, point.y);
         actions.setNodeSelected(node.point.id, ui.selected.path);
@@ -220,9 +229,11 @@ class SvgContainer extends PureComponent {
     if (ui.uiState === NODE_SELECTED || ui.uiState === NODE_SELECTED_AND_MOVE) {
       const pointToMove = nodes[ui.selected.point];
       const parentPoint = nodes[ui.selected.parent];
+
       if (pointToMove) {
         if (pointToMove._isGhost) {
           const move = Vector.subtract(pointToMove._ghost, pointToMove);
+
           actions.moveNode(pointToMove.id, parentPoint.id, {
             dx: move.x,
             dy: move.y,
@@ -234,6 +245,7 @@ class SvgContainer extends PureComponent {
             dx: point.x - ui.mouse.x,
             dy: point.y - ui.mouse.y,
           };
+
           actions.moveNode(pointToMove.id, parentPoint.id, move);
 
           if (ui.uiState === NODE_SELECTED) {
@@ -256,24 +268,29 @@ class SvgContainer extends PureComponent {
           dx: point.x - ui.mouse.x,
           dy: point.y - ui.mouse.y,
         };
+
         if (!isNaN(move.dx) && !isNaN(move.dy)) {
           if (ui.uiState === CONTROL_EXPAND_SELECTED) {
             let newExpand = pointToUpdate.expand + move.dy/2;
+
             if (newExpand > 0) {
               actions.updateProp(pointToUpdate.id, 'expand', newExpand);
             }
           }
           if (ui.uiState === CONTROL_DISTRIB_SELECTED) {
             let newDistrib = pointToUpdate.distrib - (move.dx/100);
+
             if (newDistrib < 1 && newDistrib > 0) {
               actions.updateProp(pointToUpdate.id, 'distrib', newDistrib);
             }
           }
           if (ui.uiState === CONTROL_ANGLE_SELECTED) {
             if (pointOffCurve) {
-              let angle = TwoD.lla(point, pointOffCurve, ui.mouse, pointOffCurve);
+              let angle = TwoD.lineLineAngle(point, pointOffCurve, ui.mouse, pointOffCurve);
+
               angle = angle * (180/Math.PI);
               let newAngle = pointToUpdate.angle - angle;
+
               if (newAngle > 0 && newAngle < 360) {
                 actions.updateProp(pointToUpdate.id, 'angle', newAngle);
               }
@@ -285,6 +302,7 @@ class SvgContainer extends PureComponent {
     else {
       if (ui.uiState === PATH_SELECTED) {
         const node = Path.findClosestNode(point, ui.selected.path, nodes);
+
         if (node) {
           if (node.type === 'node') {
             actions.setNodeHovered(node.point.id, ui.selected.path);
@@ -302,6 +320,7 @@ class SvgContainer extends PureComponent {
             dx: point.x - ui.mouse.x,
             dy: point.y - ui.mouse.y,
           };
+
           actions.moveNode(ui.selected.path, ui.selected.contour, move);
       }
       else if (ui.uiState === SELECTION_MODE) {
@@ -309,10 +328,13 @@ class SvgContainer extends PureComponent {
         let path = undefined;
         let pathHovered = undefined;
         let contour = undefined;
+
         Object.keys(nodes).forEach((key) => {
           const currentNode = nodes[key];
+
           if (currentNode.type === 'path') {
             const newNode = Path.findClosestNode(point, currentNode.id, nodes);
+
             if (newNode && newNode.type === 'node') {
               node = newNode.point.id;
               path = currentNode.id;
@@ -320,6 +342,7 @@ class SvgContainer extends PureComponent {
           }
           if (currentNode.type === 'contour') {
             const newPath = Path.findClosestPath(point, currentNode.id, nodes);
+
             if (newPath) {
               pathHovered = newPath;
               contour = currentNode;
@@ -345,6 +368,7 @@ class SvgContainer extends PureComponent {
           dx: point.x - ui.mouse.x,
           dy: point.y - ui.mouse.y,
         };
+
         if (!isNaN(move.dx) && !isNaN(move.dy)) {
           this.setState(function (previousState){
             return {
@@ -360,6 +384,7 @@ class SvgContainer extends PureComponent {
       }
       else {
         const path = Path.findClosestPath(point, ui.selected.contour, nodes);
+
         actions.setPathHovered(path, ui.selected.contour);
       }
     }
@@ -368,11 +393,14 @@ class SvgContainer extends PureComponent {
 
   handleUp() {
     const { actions, ui, nodes } = this.props;
+
     if (ui.uiState === NODE_SELECTED || ui.uiState === NODE_SELECTED_AND_MOVE) {
       if (ui.uiState === NODE_SELECTED) {
         const path = nodes[ui.selected.path];
+
         if (path.childIds.indexOf(ui.selected.point) === 0 && !path.isClosed) {
           const point = nodes[ui.selected.point];
+
           this.createNewAddToPathAndSelect(point, ui.selected.path, {
             closed: true,
           });
@@ -407,6 +435,7 @@ class SvgContainer extends PureComponent {
     if (ui.uiState === PATH_SELECTED || ui.uiState === NODE_SELECTED) {
       const nodeId = Path.findClosestNode(point, ui.selected.path, nodes);
       const node = nodes[nodeId.point.id];
+
       if (node) {
         actions.updateProp(nodeId, 'state', node.state === ONCURVE_CORNER ? ONCURVE_SMOOTH : ONCURVE_CORNER);
         if (node.state === ONCURVE_CORNER) {
@@ -426,6 +455,7 @@ class SvgContainer extends PureComponent {
     const { actions } = this.props;
     const reader = new FileReader();
     const extension = e.dataTransfer.files[0].name.split('.')[1];
+
     reader.onloadend = (data) => {
       if (extension !== 'json') {
         const dataUrl = data.target.result;
@@ -434,6 +464,7 @@ class SvgContainer extends PureComponent {
       }
       else {
         const state = JSON.parse(data.target.result);
+
         actions.loadNodes(state.nodes, state.formulas);
       }
     };
@@ -448,9 +479,11 @@ class SvgContainer extends PureComponent {
 
   handleScroll(e) {
     const { ui } = this.props;
+
     if (ui.uiState === CAMERA_MODE){
       e.persist();
       let newZoom = this.state.camera.zoom - e.deltaY/200;
+
       if (newZoom <= 0.5) {
         newZoom = 0.5;
       }
@@ -473,6 +506,7 @@ class SvgContainer extends PureComponent {
   cacheSize(svgElement) {
     if (svgElement) {
       var rect = svgElement.getBoundingClientRect();
+
       this.setSize({
         width: rect.width,
         height: rect.height,
@@ -529,6 +563,7 @@ class SvgContainer extends PureComponent {
       position: 'relative',
       display:'block',
     };
+
     if (ui.uiState === CAMERA_MODE) {
       svgContainerStyles.cursor = 'move';
     }

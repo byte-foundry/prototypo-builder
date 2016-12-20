@@ -25,6 +25,7 @@ export function validateAddChildren(state, action, model = FontModel) {
 
   for ( let childId of childIds ) {
     const childType = state[childId].type;
+
     if ( !(childType in model[parentType].children) ) {
       return new Error(
         `Can't make '${childId}' a child of '${nodeId}':

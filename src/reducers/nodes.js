@@ -154,6 +154,7 @@ function node(state = initialNode, action) {
 
 function deleteMany(state, ids) {
   const nextState = Object.assign({}, state);
+
   ids.forEach((id) => { delete nextState[id]; });
   return nextState;
 }
@@ -171,6 +172,7 @@ function deepPositionUpdate(node, nodes, x=0, y=0, result) {
   else {
     node.childIds.forEach((childId) => {
       const target = nodes[childId];
+
       deepPositionUpdate(target, nodes, x, y, result);
     });
   }
@@ -210,18 +212,22 @@ export default function(state = initialState, action) {
   switch (type) {
     case DELETE_NODE: {
       const descendantIds = Object.keys(Graph.getDescendants(state, nodeId));
+
       return deleteMany(state, [ nodeId, ...descendantIds ]);
     }
     // TODO: rename, cleanup and test this reducer (and move it elsewhere probably)
     case MOVE_NODE: {
       const path = state[nodeId];
       const type = path.type;
+
       if ( type === 'oncurve') {
         const nodesToMove = Path.getNode(parentId, nodeId, state);
         const resultNode = {};
+
         nodesToMove.forEach((node) => {
           if (node !== null) {
             const newNode = { ...node };
+
             newNode.x = (newNode.x || 0) + action.dx;
             newNode.y = (newNode.y || 0) + action.dy;
             if (newNode._isGhost) {
@@ -231,12 +237,14 @@ export default function(state = initialState, action) {
           }
         });
 
-        const [nextOn, nextIn] = Path.getNextNode(parentId, nodeId, state);
+        const [, nextIn] = Path.getNextNode(parentId, nodeId, state);
+
         if (nextIn) {
           resultNode[nextIn.id] = { ...nextIn, _isGhost: false};
         }
 
-        const [prevOn, prevIn, prevOut] = Path.getPrevNode(parentId, nodeId, state);
+        const [,, prevOut] = Path.getPrevNode(parentId, nodeId, state);
+
         if (prevOut) {
           resultNode[prevOut.id] = { ...prevOut, _isGhost: false};
         }
@@ -247,16 +255,25 @@ export default function(state = initialState, action) {
         const result = {...state,
           [nodeId]: {...state[nodeId], x: path.x + action.dx, y: path.y + action.dy},
         };
+
         if (nodesToMove[0].state === ONCURVE_SMOOTH) {
-          const oppositeNode = nodeId === nodesToMove[2].id ? nodesToMove[1] : nodesToMove[2];
+          const oppositeNode =
+            nodeId === nodesToMove[2].id ? nodesToMove[1] : nodesToMove[2];
+
           if (oppositeNode) {
-            result[oppositeNode.id] = {...state[oppositeNode.id], x: oppositeNode.x - action.dx, y: oppositeNode.y - action.dy, _isGhost: false};
+            result[oppositeNode.id] = {
+              ...state[oppositeNode.id],
+              x: oppositeNode.x - action.dx,
+              y: oppositeNode.y - action.dy,
+              _isGhost: false,
+            };
           }
         }
         return result;
       }
       else {
         const result = {};
+
         deepPositionUpdate(path, state, action.dx, action.dy, result);
         return {...state, ...result};
       }

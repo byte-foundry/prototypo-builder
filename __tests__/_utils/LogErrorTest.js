@@ -1,6 +1,6 @@
 import logError from '../../src/_utils/LogError';
 
-describe('logError', () => {
+describe('LogError', () => {
   it('should pass errors to the provided logger function', (done) => {
     let nbErrors = 0;
     const logger = function(error) {

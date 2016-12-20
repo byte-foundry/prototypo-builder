@@ -10,6 +10,7 @@ import {
 class SvgFont extends PureComponent {
   render() {
     const { childIds } = this.props;
+
     return (
       <g>
         {childIds.map(renderSvgChild.bind(this))}

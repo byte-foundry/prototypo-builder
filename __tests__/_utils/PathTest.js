@@ -6,7 +6,7 @@ import {
   getNode,
 } from '../../src/_utils/Path';
 
-describe('path', () => {
+describe('Path', () => {
   describe('forEachCurve', () => {
     let curves;
     const callback = function() {

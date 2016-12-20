@@ -29,6 +29,7 @@ class SvgContour extends React.PureComponent {
     const result = childIds.map((pathId) => {
       return this.renderPathData(pathId);
     }).join(' ');
+
     return result;
   }
 
@@ -44,6 +45,7 @@ class SvgContour extends React.PureComponent {
         .map((pathId) => {
 
           const paths = [];
+
           Path.forEachCurve(pathId, nodes, (c0, _c1, _c2, c3, i) => {
             let pathString = '';
             let c1 = _c1;
@@ -52,12 +54,14 @@ class SvgContour extends React.PureComponent {
             if (c2 && c3) {
               if (Vector.isEqual(c0, c1)) {
                 const relC1 = Vector.subtract(c1._ghost, c0);
+
                 relC1.x += 0.1;
                 relC1.y += 0.1;
                 c1 = Vector.add(c0, Vector.multiply(relC1, 0.1));
               }
               if (Vector.isEqual(c2, c3)) {
                 const relC2 = Vector.subtract(c2._ghost, c3);
+
                 relC2.x += 0.1;
                 relC2.y += 0.1;
                 c2 = Vector.add(c3, Vector.multiply(relC2, 0.1));
@@ -69,6 +73,7 @@ class SvgContour extends React.PureComponent {
                 (c3.expand || 20) * (c3.distrib || 0.5),
                 (c3.expand || 20) * (1 - (c3.distrib || 0.5))
               );
+
               curves.forEach((curve, i) => {
                 if (pathString.length === 0) {
                   pathString += `M${curve.c0.x} ${curve.c0.y}`;
@@ -113,9 +118,16 @@ class SvgContour extends React.PureComponent {
     );
   }
   drawInterpolatedTangents(c0, c1, c2, c3, steps, pathId, j) {
-    let n, c, result = [];
+    let n;
+    let c;
+    let result = [];
+
     for (let i = 1; i < steps; i++) {
-      ({ n, c } = Bezier.offset([c0, c1, c2, c3], i/steps, Utils.lerpValues(c0.expand, c3.expand, i/steps)));
+      ({ n, c } = Bezier.offset(
+        [c0, c1, c2, c3],
+        i/steps,
+        Utils.lerpValues(c0.expand, c3.expand, i/steps))
+      );
       if (!Number.isNaN(n.x) && !Number.isNaN(c.x)) {
         let t = i/steps;
         let angleLerp = Utils.lerpValues(c0.angle % 360, c3.angle % 360, t);
@@ -141,11 +153,16 @@ class SvgContour extends React.PureComponent {
     return Utils.getCurveOutline(c0,c1,c2,c3,steps);
   }
   drawSimpleOutline(c0,c1,c2,c3, c0tanIn, c3tanIn, c0tanOut, c3tanOut, beta1, beta2) {
-    let inContour = '', outContour = '';
+    let inContour = '';
+    let outContour = '';
     const c0c1Inray = {point: c0tanIn, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))};
     const c2c3Inray = {point: c3tanIn, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))};
-    const intersectIn = {}, c0tanInCurve = {}, c3tanInCurve = {};
-    [intersectIn.x, intersectIn.y] = TwoD.rri(c0c1Inray.point, c0c1Inray.angle, c2c3Inray.point, c2c3Inray.angle);
+    const intersectIn = TwoD.rayRayIntersection(
+      c0c1Inray.point, c0c1Inray.angle, c2c3Inray.point, c2c3Inray.angle
+    );
+    const c0tanInCurve = {};
+    const c3tanInCurve = {};
+
     c0tanInCurve.x = c0tanIn.x + (intersectIn.x - c0tanIn.x) * beta1;
     c0tanInCurve.y = c0tanIn.y + (intersectIn.y - c0tanIn.y) * beta1;
     c3tanInCurve.x = c3tanIn.x + (intersectIn.x - c3tanIn.x) * beta1;
@@ -157,8 +174,15 @@ class SvgContour extends React.PureComponent {
           `;
     const c0c1Outray = {point: c0tanOut, angle: (Math.atan2(c1.y - c0.y, c1.x - c0.x))};
     const c2c3Outray = {point: c3tanOut, angle: (Math.atan2(c2.y - c3.y, c2.x - c3.x))};
-    const intersectOut = {}, c0tanOutCurve = {}, c3tanOutCurve = {};
-    [intersectOut.x, intersectOut.y] = TwoD.rri(c0c1Outray.point, c0c1Outray.angle, c2c3Outray.point, c2c3Outray.angle);
+    const intersectOut = TwoD.rayRayIntersection(
+      c0c1Outray.point,
+      c0c1Outray.angle,
+      c2c3Outray.point,
+      c2c3Outray.angle
+    );
+    const c0tanOutCurve = {};
+    const c3tanOutCurve = {};
+
     c0tanOutCurve.x = c0tanOut.x + (intersectOut.x - c0tanOut.x) * beta2;
     c0tanOutCurve.y = c0tanOut.y + (intersectOut.y - c0tanOut.y) * beta2;
     c3tanOutCurve.x = c3tanOut.x + (intersectOut.x - c3tanOut.x) * beta2;
@@ -178,6 +202,7 @@ class SvgContour extends React.PureComponent {
     const { childIds } = nodes[id];
     const contourMode = ui.contourMode || 'catmull';
     const drawInterpolatedTangents = ui.showInterpolatedTangents || false;
+
     return (
       childIds
         .filter((pathId) => {
@@ -185,10 +210,14 @@ class SvgContour extends React.PureComponent {
         })
         .map((pathId) => {
           let result = [];
-          let inContour = '', outContour = '';
+          let inContour = '';
+          let outContour = '';
           // draw tangents
-          let j = 0, steps = 10,
-          beta1 = 0.55, beta2 = 0.65;
+          let j = 0;
+          let steps = 10;
+          let beta1 = 0.55;
+          let beta2 = 0.65;
+
           Path.forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
             if (c2 && c3) {
               if (drawInterpolatedTangents) {
@@ -197,6 +226,7 @@ class SvgContour extends React.PureComponent {
               j++;
               if (contourMode === 'catmull') {
                 let catmullContour = this.drawCatmullOutline(c0, c1, c2, c3, steps, pathId, j);
+
                 inContour += catmullContour.inContour;
                 outContour = catmullContour.outContour + outContour;
               }
@@ -210,12 +240,14 @@ class SvgContour extends React.PureComponent {
               }
               const c0tangents = Utils.getTangentPoints(c0, c1);
               const c3tangents = Utils.getTangentPoints(c3, c2);
+
               if (contourMode === 'simple' && c3tangents.in && c0tangents.in) {
                 if (j === 1) {
                   inContour += `M ${c0tangents.in.x},${c0tangents.in.y}`;
                   outContour += `M ${c0tangents.out.x},${c0tangents.out.y}`;
                 }
                 let simpleContour = this.drawSimpleOutline(c0,c1,c2,c3, c0tangents.out, c3tangents.in, c0tangents.in, c3tangents.out, beta1, beta2, pathId, j);
+
                 inContour += simpleContour.inContour;
                 outContour += simpleContour.outContour;
               }
@@ -254,6 +286,7 @@ class SvgContour extends React.PureComponent {
     const classes = classnames({
       contour: true,
     });
+
     return (
       <g>
         <path className={classes} d={this.renderChildren()} />

@@ -15,6 +15,7 @@ class SvgNodeControls extends PureComponent {
     const { point, inControl, pathId, i} = this.props;
     let { expand, distribution, angle } = Utils.getNodeControls(point, inControl);
     let result = [];
+
     result.push(
       <circle
         key={`${pathId}inTangent${i}`}

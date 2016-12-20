@@ -230,12 +230,15 @@ export function findClosestPath(coord, contour, nodes, error = 30) {
   }
 
   let result;
+
   nodes[contour].childIds.forEach((key) => {
     const node = nodes[key];
+
     if (node.type === 'path') {
       Path.forEachCurve(node.id, nodes, (c0, c1, c2, c3) => {
         if (!result && c2 && c3) {
           const on = Bezier.crosses([c0, c1, c2, c3], coord, error);
+
           if (on) {
             result = node.id;
           }
@@ -249,6 +252,7 @@ export function findClosestPath(coord, contour, nodes, error = 30) {
 export function findClosestNode(coord, pathId, nodes, error = 35) {
   const path = nodes[pathId];
   const length = path.isClosed ? path.childIds.length - 1 : path.childIds.length;
+
   for (let i = 0; i < length; i++) {
     let point = nodes[path.childIds[i]];
 
@@ -260,11 +264,13 @@ export function findClosestNode(coord, pathId, nodes, error = 35) {
     }
 
     const distance = Vector.dist(point,coord);
+
     if ( distance < error) {
       if (point.type === 'oncurve' && point.x) {
         // An oncurve is selected. Reduce the error to find which control is hovered
         let error = 8;
         let control;
+
         if (nodes[path.childIds[i-1]]){
           control = nodes[path.childIds[i-1]];
         }
@@ -284,6 +290,7 @@ export function findClosestNode(coord, pathId, nodes, error = 35) {
         const distanceOutExpand = Vector.dist(controls.expand.out, coord);
         const distanceDistrib = Vector.dist(distribMiddle, coord);
         const distanceAngle = Vector.dist(angleMiddle, coord);
+
         if (distanceInExpand < error) {
           return {type: 'expandControl', point: controls.expand.in, baseNode: point};
         }

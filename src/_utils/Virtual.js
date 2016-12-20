@@ -3,6 +3,7 @@
  * Using it lets you calculate nodes without denormalizing the global state
  * It's most often used to store expanded skeletons.
  */
+/* eslint-disable import/namespace */
 import * as actions from '~/actions';
 import nodesReducer from '~/reducers/nodes';
 
@@ -11,9 +12,11 @@ const virtualState = {
 };
 
 const virtualActions = {};
+
 Object.keys(actions).forEach((actionName) => {
   virtualActions[actionName] = (...args) => {
     const action = actions[actionName]( ...args );
+
     virtualState.nodes = nodesReducer( virtualState.nodes, action );
     return action;
   };
