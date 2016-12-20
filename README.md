@@ -90,3 +90,13 @@ const node = Path.mapCurve( nodeId, childId, nodes );
 ### Test Coverage
 
 Using `npm run test` will test the code and provide full coverage using Istanbul. All files in `src/_utils`, and `src/reducers` should have 100% coverage at all time!
+
+### Performances
+
+This application uses many algorithms that are inherently slow. Also, all these algorithms are implemented as pure functions, so that results can be memoized to avoid wasting resources calculating the same thing twice.
+
+There are therefore two ways to optimize performances in the app:
+- Making sure browser VMs do not deoptimize our most critical algorithms
+  - make sure methods are monomorphic (do not memoize )
+- Make sure memoization is used appropriately and most efficiently
+  - do not include a part of the state that is highly likely to change in the memoization key (e.g. state.nodes)

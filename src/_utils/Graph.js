@@ -1,13 +1,43 @@
 import Memoize from '~/_utils/Memoize';
+import nodesReducer from '~/reducers/nodes';
 
-export const getAllDescendants = Memoize((nodes, parentId, descendants = {}) => {
+// Returns a nodeId-indexed map of all descendants of a node
+export function getDescendants(nodes, parentId, descendants = {}) {
+  return getDescendantsMonomorphic(nodes, parentId, descendants);
+}
+// It's much more efficient to memoize a monomorphic version of the function
+const getDescendantsMonomorphic = Memoize((nodes, parentId, descendants) => {
   return nodes[parentId].childIds.reduce((acc, childId) => {
     acc[childId] = nodes[childId];
-    return getAllDescendants(nodes, childId, descendants);
+
+    // Save a few function calls when reaching leaves
+    return nodes[childId].length ?
+      getDescendantsMonomorphic(nodes, childId, descendants) :
+      null;
   }, descendants);
 });
 
-export function getParentId(nodes, nodeId) {
+// Returns the subgraph of a parent node:
+// a list of node containing the parent node itself + all of its descendants
+// (I'm not sure this function will ever be useful though)
+// export function getSubgraph(nodes, parentId, subgraph = [ nodes[parentId] ]) {
+//   return getSubgraphMonomorphic(nodes, parentId, subgraph);
+// }
+// // It's much more efficient to memoize a monomorphic version of the function
+// const getSubgraphMonomorphic = Memoize((nodes, parentId, subgraph ) => {
+//   return nodes[parentId].childIds.reduce((acc, childId) => {
+//     acc.push(nodes[childId]);
+//
+//     // Save a few function calls when reaching leaves
+//     return nodes[childId].length ?
+//       getSubgraphMonomorphic(nodes, childId, subgraph) :
+//       null;
+//   }, subgraph);
+// });
+
+// Returns the parentId of a node
+// in most cases, getParentIdMemoized should be used instead of this function
+export function _getParentId(nodes, nodeId) {
   for (let id in nodes) {
     if ( 'childIds' in nodes[id] && nodes[id].childIds.includes(nodeId) ) {
       return id;
@@ -15,6 +45,20 @@ export function getParentId(nodes, nodeId) {
   }
 
   return null;
+}
+
+// Use this function if you want graph-related actions to affect a virtual state
+export function rewireActionCreators(state, actions) {
+  const virtualActions = {};
+  Object.keys(actions).forEach((actionName) => {
+    virtualActions[actionName] = (...args) => {
+      const action = actions[actionName]( ...args );
+      state.nodes = nodesReducer( state.nodes, action );
+      return action;
+    };
+  });
+
+  return virtualActions;
 }
 
 // a special kind of memoization that checks that the result of the function
@@ -31,16 +75,16 @@ export function getParentIdMemoized(nodes, nodeId, parentCache = _parentCache) {
   }
 
   // if not, search for it anew
-  parentCache[nodeId] = getParentId(nodes, nodeId);
+  parentCache[nodeId] = _getParentId(nodes, nodeId);
 
   return parentCache[nodeId];
 }
 
-export const getNodeType = ( node ) => {
+export function getNodeType( node ) {
   const nodeId = typeof node === 'string' ? node : node.id;
 
   return nodeId.split('_')[0];
-};
+}
 
 export const getNodePath = Memoize((nodes, nodeId) => {
   const path = [];

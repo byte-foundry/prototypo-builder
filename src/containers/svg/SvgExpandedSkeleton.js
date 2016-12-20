@@ -1,7 +1,11 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { makeGetExpandedSkeleton } from '~/selectors/makeGetExpandedSkeleton';
+import * as actions from '~/actions';
+import Virtual as '~/_utils/Virtual';
+import * as Graph from '~/_utils/Graph';
+import * as Parametric from '~/_utils/Parametric';
+
 
 import {
   renderPathData,
@@ -28,16 +32,16 @@ class SvgExpandedSkeleton extends PureComponent {
 
 SvgExpandedSkeleton.propTypes = {
   actions: PropTypes.object.isRequired,
+  // TODO: validate that the first node of expandedPath is a group
+  // that has no parent and only on or two children path
 };
 
 function makeMapStateToProps() {
-  const expanded = { nodes: {} };
-  const getExpandedSkeleton = makeGetExpandedSkeleton(expanded);
   const mapStateToProps = (state, props) => {
     return {
       nodes: state.nodes,
-      expanded,
-      expandedSkeletonId: getExpandedSkeleton( state, props ),
+      expandedPath:
+        Parametric.expandPath(state.nodes, props.id, Virtual()),
     };
   };
   return mapStateToProps;

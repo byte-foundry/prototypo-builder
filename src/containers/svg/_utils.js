@@ -1,7 +1,6 @@
-// This file should only be used to avoid repeating boilerplate code in containers.
-// TODO: It is currently full of business logic. This logic should be moved back
-// to appropriate files in ~/_utils/. The content of ~/containers/text/_utils is
-// a better example of what can be expected in such files.
+/*
+ * This si used to avoid repeating boilerplate code in containers.
+ */
 import React from 'react';
 import { bindActionCreators } from 'redux';
 

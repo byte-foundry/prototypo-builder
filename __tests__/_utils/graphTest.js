@@ -1,8 +1,8 @@
 import deepFreeze from 'deep-freeze';
 
 import {
-  getAllDescendants,
-  getParentId,
+  getDescendants,
+  _getParentId,
   getParentIdMemoized,
   getNodeType,
   getNodePath,
@@ -10,7 +10,7 @@ import {
 } from '../../src/_utils/Graph';
 
 describe('graph', () => {
-  describe('getAllDescendants', () => {
+  describe('getDescendants', () => {
     it('should extract all descendants of a node from the graph', (done) => {
       const graph = {
         'root': {
@@ -49,7 +49,7 @@ describe('graph', () => {
 
       deepFreeze(graph);
 
-      expect(getAllDescendants(graph, 'root')).toEqual(expected);
+      expect(getDescendants(graph, 'root')).toEqual(expected);
 
       done();
     });
@@ -66,7 +66,7 @@ describe('graph', () => {
         },
       };
 
-      expect(getParentId(nodes, 'node-0')).toEqual('root');
+      expect(_getParentId(nodes, 'node-0')).toEqual('root');
 
       done();
     });

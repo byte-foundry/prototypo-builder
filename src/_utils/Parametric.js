@@ -148,7 +148,7 @@ export const getCalculatedGlyph = Memoize((state, parentParams, glyphId) => {
     });
     return staticNode;
 
-  }, Graph.getAllDescendants(state.nodes, glyphId));
+  }, Graph.getDescendants(state.nodes, glyphId));
 
   solvingOrder.forEach((strPath) => {
     const path = strPath.split('.');
@@ -179,17 +179,11 @@ export const getCalculatedGlyph = Memoize((state, parentParams, glyphId) => {
 
 // the last argument helps with testing
 // TODO: test!
-export function expandPath( nodes, pathId, actions, expanded ) {
+export function expandPath( nodes, pathId, virtual ) {
   const expandedLeft = [];
   const expandedRight = [];
-  const {
-    createPath,
-    createOncurve,
-    createOffcurve,
-    addChild,
-    updateCoords,
-  } = actions;
-  const expandedPathId = createPath().nodeId;
+  const { state, actions } = virtual;
+  const expandedPathId = actions.createPath().nodeId;
 
   Path.forEachNode(pathId, nodes, (node, cIn, cOut, i) => {
     const angle = node.angle || 0;
@@ -219,50 +213,52 @@ export function expandPath( nodes, pathId, actions, expanded ) {
     };
     let nodeId;
 
+    // TODO: investigate where this.props.ui.baseExpand comes from
+    // and restore previous behavior
     if ( i === 0 ) {
-      nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
+      nodeId = actions.createOncurve(this.props.ui.baseExpand).nodeId;
       expandedRight.push( nodeId );
-      updateCoords( nodeId, leftCoords );
+      actions.updateCoords( nodeId, leftCoords );
     }
 
     // if ( cIn ) {
-    nodeId = createOffcurve().nodeId;
+    nodeId = actions.createOffcurve().nodeId;
     if ( i === 0 ) {
       expandedRight.push( nodeId );
     }
     else {
       expandedLeft.push( nodeId );
     }
-    updateCoords( nodeId, leftCoords );
+    actions.updateCoords( nodeId, leftCoords );
 
-    nodeId = createOffcurve().nodeId;
+    nodeId = actions.createOffcurve().nodeId;
     expandedRight.push( nodeId );
-    updateCoords( nodeId, rightCoords );
+    actions.updateCoords( nodeId, rightCoords );
     // }
 
-    nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
+    nodeId = actions.createOncurve(this.props.ui.baseExpand).nodeId;
     expandedLeft.push( nodeId );
-    updateCoords( nodeId, leftCoords );
+    actions.updateCoords( nodeId, leftCoords );
 
-    nodeId = createOncurve(this.props.ui.baseExpand).nodeId;
+    nodeId = actions.createOncurve(this.props.ui.baseExpand).nodeId;
     expandedRight.push( nodeId );
-    updateCoords( nodeId, rightCoords );
+    actions.updateCoords( nodeId, rightCoords );
 
     // if ( cOut ) {
-    nodeId = createOffcurve().nodeId;
+    nodeId = actions.createOffcurve().nodeId;
     expandedLeft.push( nodeId );
-    updateCoords( nodeId, leftCoords );
+    actions.updateCoords( nodeId, leftCoords );
 
-    nodeId = createOffcurve().nodeId;
+    nodeId = actions.createOffcurve().nodeId;
     expandedRight.push( nodeId );
-    updateCoords( nodeId, rightCoords );
+    actions.updateCoords( nodeId, rightCoords );
     // }
   });
 
   expandedLeft.concat(expandedRight.reverse())
     .forEach((pointId) => {
-      addChild(expandedPathId, pointId, expanded.nodes[pointId].type);
+      actions.addChild(expandedPathId, pointId, state.nodes[pointId].type);
     });
 
-  return expandedPathId;
+  return state.nodes;
 }

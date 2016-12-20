@@ -209,7 +209,7 @@ export default function(state = initialState, action) {
 
   switch (type) {
     case DELETE_NODE: {
-      const descendantIds = Object.keys(Graph.getAllDescendants(state, nodeId));
+      const descendantIds = Object.keys(Graph.getDescendants(state, nodeId));
       return deleteMany(state, [ nodeId, ...descendantIds ]);
     }
     // TODO: rename, cleanup and test this reducer (and move it elsewhere probably)
