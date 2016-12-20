@@ -11,9 +11,9 @@ const getDescendantsMonomorphic = Memoize((nodes, parentId, descendants) => {
     acc[childId] = nodes[childId];
 
     // Save a few function calls when reaching leaves
-    return nodes[childId].length ?
+    return nodes[childId].childIds.length ?
       getDescendantsMonomorphic(nodes, childId, descendants) :
-      null;
+      acc;
   }, descendants);
 });
 
@@ -29,7 +29,7 @@ const getDescendantsMonomorphic = Memoize((nodes, parentId, descendants) => {
 //     acc.push(nodes[childId]);
 //
 //     // Save a few function calls when reaching leaves
-//     return nodes[childId].length ?
+//     return nodes[childId].childIds.length ?
 //       getSubgraphMonomorphic(nodes, childId, subgraph) :
 //       null;
 //   }, subgraph);
@@ -80,9 +80,10 @@ export function getParentIdMemoized(nodes, nodeId, parentCache = _parentCache) {
   return parentCache[nodeId];
 }
 
-export function getNodeType( node ) {
-  const nodeId = typeof node === 'string' ? node : node.id;
-
+// Extract the type of a node from its Id
+// This function used to be polymorphic and accept a node, but that was pointless
+// since type is stored in node.nodeType
+export function getNodeType( nodeId ) {
   return nodeId.split('_')[0];
 }
 

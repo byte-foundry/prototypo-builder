@@ -71,7 +71,7 @@ function initParams(node) {
 }
 
 function childIds(state, action) {
-  switch(Graph.getNodeType(action.type)) {
+  switch(action.type.split('_')[0]) {
     case 'ADD':
       return action.childIds ?
         [...state, ...action.childIds ] :

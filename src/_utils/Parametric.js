@@ -125,8 +125,6 @@ export const getSolvingOrder = Memoize((glyphUpdaters = {}) => {
   return depTree.resolve();
 }, { useOneObjArg: true });
 
-export const getOncurveCoordsSolvingOrder = getSolvingOrder;
-
 export const getCalculatedGlyph = Memoize((state, parentParams, glyphId) => {
   // TODO: glyphs should be able to have local parameters
   // const params = Parametric.getCalculatedParams(state, parentParams, glyphId);
@@ -260,5 +258,8 @@ export function expandPath( nodes, pathId, virtual ) {
       actions.addChild(expandedPathId, pointId, state.nodes[pointId].type);
     });
 
-  return state.nodes;
+  return {
+    pathId: expandedPathId,
+    nodes: state.nodes,
+  };
 }

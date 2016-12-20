@@ -7,14 +7,14 @@ import * as actions from '~/actions';
 import nodesReducer from '~/reducers/nodes';
 
 const virtualState = {
-  nodes: [],
+  nodes: {},
 };
 
 const virtualActions = {};
 Object.keys(actions).forEach((actionName) => {
   virtualActions[actionName] = (...args) => {
     const action = actions[actionName]( ...args );
-    virtual.nodes = nodesReducer( virtual.nodes, action );
+    virtualState.nodes = nodesReducer( virtualState.nodes, action );
     return action;
   };
 });
@@ -33,8 +33,8 @@ const virtual = {
 // Current decision: being bitten by a reset will probably cause the app to
 // throw somewhere, so the error will be obvious, whereas forgetting to clear
 // the virtual state is a silent memory-leak.
-export default function(nodes = []) {
-  // Note that you can provide your own node-list
+export default function(nodes = {}) {
+  // Note that you can provide your own node-map
   virtual.state.nodes = nodes;
   return virtual;
 }

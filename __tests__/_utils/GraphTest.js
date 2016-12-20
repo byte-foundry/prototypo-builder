@@ -55,7 +55,7 @@ describe('graph', () => {
     });
   });
 
-  describe('gatParentId', () => {
+  describe('getParentId', () => {
     it('should return the id of the parent node', (done) => {
       const nodes = {
         'root': {
@@ -102,10 +102,8 @@ describe('graph', () => {
   describe('getNodeType', () => {
     it('should extract the node type from the node id', (done) => {
       const nodeId = 'font_UNIQUE';
-      const node = { id: 'glyph_UNIQUE' };
 
       expect(getNodeType(nodeId)).toEqual('font');
-      expect(getNodeType(node)).toEqual('glyph');
 
       done();
     });

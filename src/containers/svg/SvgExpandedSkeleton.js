@@ -2,7 +2,7 @@ import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '~/actions';
-import Virtual as '~/_utils/Virtual';
+import Virtual from '~/_utils/Virtual';
 import * as Graph from '~/_utils/Graph';
 import * as Parametric from '~/_utils/Parametric';
 
