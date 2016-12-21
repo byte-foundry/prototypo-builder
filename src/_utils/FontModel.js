@@ -1,9 +1,12 @@
-// This describes the object model of the font Tree in Prototypo
-// Each type of node in the tree are described below, and informs on:
-// - the type of children it can have
-// - the properties it can have
-// - the order in which those properties are displayed in Text view
-//   (properties taht shouldn't appear in the ui should be  prefixed with '_'
+/*
+ * This describes the object model of the font Tree in Prototypo
+ * Each type of node in the tree are described below, and informs on:
+ * - the type of children it can have
+ * - the properties it can have
+ * - the order in which those properties are displayed in Text view
+ *   (properties taht shouldn't appear in the ui should be  prefixed with '_'
+ * This file is mainly used to validate actions on the state
+ */
 export default {
   root: {
     children: { font: true },

@@ -1,3 +1,7 @@
+/*
+ * This file contains methods to traverse the graph
+ * (mainly finding children of parents and parents of children)
+ */
 import Memoize from '~/_utils/Memoize';
 
 // Returns a nodeId-indexed map of all descendants of a node

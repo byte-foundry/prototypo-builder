@@ -661,13 +661,6 @@ describe('Path', () => {
     });
   });
 
-  describe('bbox', () => {
-    it('should return the bbox of a path', () => {
-      // TODO: write the tests!
-      expect(false).toEqual(true);
-    });
-  });
-
   describe('findClosestPath', () => {
     it('should return the path closest to a point', () => {
       // TODO: write the tests!

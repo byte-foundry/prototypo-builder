@@ -1,5 +1,6 @@
 /*
- * A collection of utilities to work on paths
+ * A collection of utilities to traverse and map paths
+ * (turn a flat list of oncurve and offcurves into lists of segments of nodes)
  */
 import Bezier from 'bezier-js/fp';
 
@@ -182,46 +183,6 @@ export function getNextNode(pathId, oncurveId, nodes) {
   const newPos = currentPos + 3;
 
   return getNode(pathId, nodes[pathId].childIds[newPos], nodes);
-}
-
-// Calculates the bbox of a path
-export function bbox(pathId, nodes) {
-  let resX = { min: Infinity, max: -Infinity };
-  let resY = { min: Infinity, max: -Infinity };
-
-  forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
-    if (c2 && c3) {
-      const bbox = Bezier.bbox([c0, c1, c2, c3]);
-
-      if ( bbox.x.min < resX.min ) {
-        resX.min = bbox.x.min;
-      }
-      if ( bbox.y.min < resY.min ) {
-        resY.min = bbox.y.min;
-      }
-      if ( bbox.x.max > resX.max ) {
-        resX.max = bbox.x.max;
-      }
-      if ( bbox.y.max > resY.max ) {
-        resY.max = bbox.y.max;
-      }
-    }
-  });
-
-  return {
-    x: {
-      min: resX.min,
-      max: resX.max,
-      mid: (resX.min + resX.max) / 2,
-      size: resX.max - resX.min,
-    },
-    y: {
-      min: resY.min,
-      max: resY.max,
-      mid: (resY.min + resY.max) / 2,
-      size: resY.max - resY.min,
-    },
-  };
 }
 
 export function findClosestPath(coord, contour, nodes, error = 30) {

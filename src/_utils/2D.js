@@ -2,7 +2,11 @@
  * This file gathers methods for working with 2D objects (point, line)
  * TODO: write unit tests FFS!
  */
+import Bezier from 'bezier-js/fp';
+
 import * as Vector from '~/_utils/Vector';
+import * as Path from '~/_utils/Path';
+
 
 // Line-Line angle
 // Returns the value of the angle ∠AOD, O being the intersection of (AB) with (CD)
@@ -120,4 +124,44 @@ export function rotateAround(point, angle, center) {
 
 export function rotateAroundDeg(point, degAngle, center) {
   return rotateAround(point, degAngle * DegToRad, center);
+}
+
+// Calculates the bbox of a path
+export function bbox(pathId, nodes) {
+  let resX = { min: Infinity, max: -Infinity };
+  let resY = { min: Infinity, max: -Infinity };
+
+  Path.forEachCurve(pathId, nodes, (c0, c1, c2, c3) => {
+    if (c2 && c3) {
+      const bbox = Bezier.bbox([c0, c1, c2, c3]);
+
+      if ( bbox.x.min < resX.min ) {
+        resX.min = bbox.x.min;
+      }
+      if ( bbox.y.min < resY.min ) {
+        resY.min = bbox.y.min;
+      }
+      if ( bbox.x.max > resX.max ) {
+        resX.max = bbox.x.max;
+      }
+      if ( bbox.y.max > resY.max ) {
+        resY.max = bbox.y.max;
+      }
+    }
+  });
+
+  return {
+    x: {
+      min: resX.min,
+      max: resX.max,
+      mid: (resX.min + resX.max) / 2,
+      size: resX.max - resX.min,
+    },
+    y: {
+      min: resY.min,
+      max: resY.max,
+      mid: (resY.min + resY.max) / 2,
+      size: resY.max - resY.min,
+    },
+  };
 }

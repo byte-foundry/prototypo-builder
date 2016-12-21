@@ -1,3 +1,7 @@
+/*
+ * This file contains methods taht calculate the coordinates and other
+ * properties of each node in a glyph/component
+ */
 import R from 'ramda';
 import DepTree from 'deptree';
 
@@ -67,6 +71,7 @@ export const getUpdaters = Memoize((nodes, formulas) => {
   }, formulas);
 });
 
+// calculate a set of parameters
 export const getCalculatedParams = Memoize((params, parentParams) => {
   const calculatedParams = parentParams ? { ...parentParams } : {};
 

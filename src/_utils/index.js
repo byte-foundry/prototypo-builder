@@ -11,7 +11,8 @@ export function lerpValues(v0, v1, t) {
   return (1 - t) * v0 + t * v1;
 }
 
-// TODO: What is this function? What is it doing? How is it special?
+// expand one segment of a skeleton into two expanded segments
+// using the "simple expansion" from http://lspwww.epfl.ch/publications/typography/sopfbsc.pdf
 export const getCurveOutline = Memoize((c0, c1, c2, c3, steps) => {
   let n;
   let c;

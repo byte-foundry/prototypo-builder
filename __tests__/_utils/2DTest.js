@@ -71,4 +71,11 @@ describe('TwoD', () => {
       done();
     });
   });
+
+  describe('bbox', () => {
+    it('should return the bbox of a path', () => {
+      // TODO: write the tests!
+      expect(false).toEqual(true);
+    });
+  });
 });
